@@ -1,0 +1,13 @@
+{
+  "name": "스피또 레이더",
+  "short_name": "스피또레이더",
+  "description": "동행복권 스피또 출고율·당첨율 실시간 조회",
+  "lang": "ko-KR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef2f9",
+  "theme_color": "#ff7a1a",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://speetto-radar.pages.dev/sitemap.xml

@@ -1,7 +1,8 @@
 node_modules/
 _site/
 .DS_Store
-preview.png
 .github/
+# 스크린샷 등 임시 PNG는 제외하되, OG 이미지는 추적
 *.png
+!og-image.png
 .claude/
