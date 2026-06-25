@@ -8,8 +8,9 @@
 <style>
   :root{
     --bg:#eef2f9; --bg-soft:#f6f8fc; --surface:#ffffff;
-    --ink:#141b2e; --ink2:#475067; --muted:#8b96ab; --faint:#aeb7c7;
-    --line:#e6eaf2; --line-strong:#d8deea;
+    --ink:#141b2e; --ink2:#3d4659; --muted:#5f6a7e; --faint:#7a8599;
+    --line:#e6eaf2; --line-strong:#d3dae6;
+    --slate:#334155;
     --brand:#ff7a1a; --brand-2:#ffb43c; --brand-ink:#9a4a00;
     --amber:#f59e0b; --emerald:#10b981; --rose:#f43f5e;
     --violet:#6d5dfc; --sky:#3b9eff;
@@ -37,7 +38,7 @@
   .brand .logo{width:34px;height:34px;flex:none}
   .brand .name b{color:var(--brand)}
   .brand .tag{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0}
-  .nav .live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);font-weight:600;
+  .nav .live{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink2);font-weight:700;
     background:var(--surface);border:1px solid var(--line);padding:7px 12px;border-radius:999px;box-shadow:var(--shadow-sm)}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 4px rgba(16,185,129,.16)}
 
@@ -57,7 +58,7 @@
   .stat .k{font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:7px}
   .stat .v{font-size:30px;font-weight:900;letter-spacing:-1px;margin-top:6px}
   .stat .v small{font-size:15px;font-weight:800;color:var(--ink2);margin-left:2px}
-  .stat .s{font-size:12.5px;color:var(--faint);font-weight:600;margin-top:2px}
+  .stat .s{font-size:13px;color:var(--muted);font-weight:600;margin-top:3px}
   .ic{width:18px;height:18px}
 
   /* ---------- featured pick ---------- */
@@ -80,7 +81,7 @@
   .pick .preason b{color:var(--ink);background:linear-gradient(180deg,transparent 62%,#ffe2b3 62%)}
   .pick .pmetrics{display:flex;gap:12px;flex-wrap:wrap}
   .pchip{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow-sm)}
-  .pchip .ck{font-size:12px;color:var(--muted);font-weight:700}
+  .pchip .ck{font-size:12.5px;color:var(--muted);font-weight:700}
   .pchip .cv{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-top:3px}
   .pick .scorewrap{display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow-sm)}
@@ -89,7 +90,7 @@
   .bigGauge::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 1px 6px rgba(20,35,80,.06)}
   .bigGauge .inner{position:relative;text-align:center}
   .bigGauge .num{font-size:40px;font-weight:900;letter-spacing:-1.5px;line-height:1}
-  .bigGauge .lab{font-size:12px;font-weight:800;color:var(--muted);margin-top:4px}
+  .bigGauge .lab{font-size:12.5px;font-weight:800;color:var(--muted);margin-top:4px}
   .scorewrap .cap{font-size:13px;color:var(--ink2);font-weight:700;margin-top:14px}
 
   /* ---------- controls ---------- */
@@ -113,15 +114,19 @@
   .card.t2000{--accent:linear-gradient(180deg,#fbbf24,#f59e0b)}
   .card.t1000{--accent:linear-gradient(180deg,#34d399,#10b981)}
   .card.t500{--accent:linear-gradient(180deg,#fb7185,#f43f5e)}
-  .card.sold{opacity:.66}
+  /* 판매 종료: 회색·플랫·뒤로 빼기 */
+  .card.sold{--accent:#cdd4e0;background:var(--bg-soft);border-color:var(--line);
+    filter:grayscale(1);opacity:.62;box-shadow:none}
+  .card.sold:hover{transform:none;box-shadow:none;border-color:var(--line)}
+  .card.sold .ship{background:#eef1f7}
 
   .chead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .title{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .gname{font-size:14px;font-weight:900}
-  .gname.c2000{color:var(--amber)} .gname.c1000{color:var(--emerald)} .gname.c500{color:var(--rose)}
-  .epno{font-size:24px;font-weight:900;letter-spacing:-.5px}
-  .price{font-size:13px;color:var(--muted);font-weight:700}
-  .status{font-size:11.5px;padding:5px 11px;border-radius:999px;font-weight:800;white-space:nowrap}
+  .gname{font-size:14.5px;font-weight:900}
+  .gname.c2000{color:#c47d05} .gname.c1000{color:#0a8f63} .gname.c500{color:#d81c45}
+  .epno{font-size:25px;font-weight:900;letter-spacing:-.5px}
+  .price{font-size:13.5px;color:var(--muted);font-weight:700}
+  .status{font-size:12px;padding:5px 12px;border-radius:999px;font-weight:800;white-space:nowrap}
   .st-sale{background:#e7f9f1;color:#0c8f63;border:1px solid #bdeed9}
   .st-end{background:#f1f3f8;color:var(--muted);border:1px solid var(--line)}
 
@@ -134,31 +139,28 @@
   .track>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b9eff,#2563eb)}
 
   .ranks-h{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 11px}
-  .ranks-h .lbl{font-size:13px;font-weight:900;color:var(--ink2)}
-  .ranks-h .hint{font-size:11.5px;color:var(--faint);font-weight:600}
+  .ranks-h .lbl{font-size:13.5px;font-weight:900;color:var(--ink2)}
+  .ranks-h .hint{font-size:12.5px;color:var(--muted);font-weight:600}
   .ranks{display:grid;gap:11px}
   .rk{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center}
-  .rk .badge{height:32px;border-radius:10px;display:grid;place-items:center;font-size:12.5px;font-weight:900;color:#fff}
-  .rk1 .badge{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
-  .rk2 .badge{background:linear-gradient(135deg,#a78bfa,#7c5cfc)}
-  .rk3 .badge{background:linear-gradient(135deg,#34d399,#10b981)}
+  .rk .badge{height:33px;border-radius:10px;display:grid;place-items:center;font-size:13px;font-weight:900;
+    color:#fff;background:var(--slate)}
+  .rk1 .badge{background:linear-gradient(135deg,#f59e0b,#ea8104)}/* 1등만 강조 */
   .rk .body{display:flex;flex-direction:column;gap:5px;min-width:0}
   .rk .nums{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-  .rk .remain{font-size:16px;font-weight:900}
-  .rk .remain .of{font-size:12.5px;color:var(--muted);font-weight:700;margin-left:3px}
-  .rk .pct{font-size:13px;font-weight:900;color:var(--ink2)}
-  .rk .mini{height:7px;border-radius:999px;background:#e7ecf5;overflow:hidden}
-  .rk .mini>i{display:block;height:100%;border-radius:999px}
-  .rk1 .mini>i{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
-  .rk2 .mini>i{background:linear-gradient(90deg,#a78bfa,#7c5cfc)}
-  .rk3 .mini>i{background:linear-gradient(90deg,#34d399,#10b981)}
+  .rk .remain{font-size:17px;font-weight:900}
+  .rk .remain .of{font-size:13px;color:var(--muted);font-weight:700;margin-left:3px}
+  .rk .pct{font-size:13.5px;font-weight:900;color:var(--ink2)}
+  .rk .mini{height:8px;border-radius:999px;background:#e7ecf5;overflow:hidden}
+  .rk .mini>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#34d399,#10b981)}
+  .rk1 .mini>i{background:linear-gradient(90deg,#fbbf24,#f59e0b)}/* 1등만 강조 */
 
   .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}
-  .cfoot .info{font-size:12.5px;color:var(--muted);line-height:1.7}
+  .cfoot .info{font-size:13px;color:var(--muted);line-height:1.75}
   .cfoot .info b{color:var(--ink2);font-weight:800}
   .rec{display:flex;align-items:center;gap:11px}
   .rec .meta2{text-align:right}
-  .rec .meta2 .t{font-size:11px;color:var(--muted);font-weight:700}
+  .rec .meta2 .t{font-size:12px;color:var(--muted);font-weight:700}
   .rec .meta2 .s{font-size:21px;font-weight:900;line-height:1.1}
   .gauge{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;position:relative;flex:none;
     background:conic-gradient(var(--g,#10b981) calc(var(--p,0)*1%),#e7ecf5 0)}
@@ -166,6 +168,10 @@
   .gauge span{position:relative;font-size:12.5px;font-weight:900}
 
   .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:70px 0;font-size:15px}
+  .divider{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin:20px 2px 4px;
+    color:var(--muted);font-weight:800;font-size:14px;letter-spacing:-.2px}
+  .divider::before,.divider::after{content:"";height:1px;background:var(--line-strong);flex:1}
+  .divider .n{color:var(--faint);font-weight:700}
 
   /* ---------- how to read ---------- */
   .guide{margin:54px 0 0}
@@ -180,7 +186,7 @@
   footer{margin-top:56px;border-top:1px solid var(--line);background:var(--bg-soft)}
   footer .in{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;padding:30px 0 36px}
   footer .brand{font-size:16px}
-  footer .disc{font-size:12px;color:var(--muted);max-width:52ch;line-height:1.75}
+  footer .disc{font-size:12.5px;color:var(--muted);max-width:52ch;line-height:1.8}
   footer a{color:var(--brand-ink);font-weight:700;text-decoration:none}
 
   @media (max-width:860px){
@@ -420,9 +426,17 @@ function render(){
     if(sa!==sb) return sa-sb;
     return key(a,b);
   });
-  const onSale = list.filter(g=>g.status==="판매중").length;
-  document.getElementById("countLabel").innerHTML = `판매중 ${onSale} · 전체 ${list.length}`;
-  grid.innerHTML = list.length ? list.map(cardHTML).join("") : `<div class="empty">표시할 회차가 없습니다.</div>`;
+  const onSaleArr = list.filter(g=>g.status==="판매중");
+  const soldArr = list.filter(g=>g.status!=="판매중");
+  document.getElementById("countLabel").innerHTML = `판매중 ${onSaleArr.length} · 전체 ${list.length}`;
+
+  if(!list.length){ grid.innerHTML = `<div class="empty">표시할 회차가 없습니다.</div>`; return; }
+  let html = onSaleArr.map(cardHTML).join("");
+  if(soldArr.length){
+    html += `<div class="divider">판매 종료 <span class="n">${soldArr.length}개</span></div>`;
+    html += soldArr.map(cardHTML).join("");
+  }
+  grid.innerHTML = html;
 }
 
 function setUpdated(iso){
