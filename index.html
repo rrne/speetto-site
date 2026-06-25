@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>스피또 출고율 · 당첨율 현황</title>
+<meta name="description" content="동행복권 스피또2000·1000·500 회차별 출고율과 등위별 잔여 당첨매수를 한눈에." />
+<style>
+  :root{
+    --bg:#0e1116; --card:#171c26; --card2:#1f2633; --line:#2a3342;
+    --txt:#e7ecf3; --muted:#94a3b8; --accent:#ffcf33; --accent2:#ff6b6b;
+    --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --blue:#60a5fa;
+    --r:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:radial-gradient(1200px 600px at 50% -200px,#1a2230,#0e1116 60%);
+    color:var(--txt);font-family:"Apple SD Gothic Neo","Pretendard","Malgun Gothic",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 80px}
+  header.top{text-align:center;padding:18px 0 8px}
+  .logo{font-size:13px;letter-spacing:3px;color:var(--accent);font-weight:700}
+  h1{margin:6px 0 4px;font-size:clamp(24px,5vw,34px);font-weight:800}
+  .sub{color:var(--muted);font-size:14px}
+  .meta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--muted)}
+  .meta a{color:var(--blue);text-decoration:none}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);display:inline-block;margin-right:5px;vertical-align:middle;box-shadow:0 0 8px var(--good)}
+
+  .tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0 6px}
+  .tab{padding:9px 16px;border:1px solid var(--line);background:var(--card);color:var(--muted);
+    border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s}
+  .tab:hover{border-color:#3a465a;color:var(--txt)}
+  .tab.on{background:var(--accent);color:#1a1300;border-color:var(--accent)}
+
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 2px 14px;flex-wrap:wrap}
+  .toolbar .left{color:var(--muted);font-size:13px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:var(--card);color:var(--muted);border:0;padding:7px 12px;font-size:13px;cursor:pointer}
+  .seg button.on{background:var(--card2);color:var(--txt);font-weight:700}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .card{background:linear-gradient(180deg,var(--card),#141a23);border:1px solid var(--line);
+    border-radius:var(--r);padding:16px 16px 14px;position:relative;overflow:hidden}
+  .card.sold{opacity:.62}
+  .card .ep{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:8px}
+  .b2000{background:#3b2a00;color:#ffd84d}
+  .b1000{background:#062a22;color:#5eead4}
+  .b500{background:#2a0d1a;color:#ff9ec0}
+  .cname{font-size:17px;font-weight:800}
+  .cname small{font-size:12px;color:var(--muted);font-weight:600;margin-left:4px}
+  .status{font-size:11.5px;padding:3px 8px;border-radius:7px;font-weight:700}
+  .st-sale{background:#0c2e22;color:var(--good)}
+  .st-end{background:#262d3a;color:var(--muted)}
+
+  .metric{margin-top:14px}
+  .metric .lab{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:5px}
+  .metric .lab b{color:var(--txt);font-size:13px}
+  .bar{height:9px;border-radius:6px;background:#0c1018;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:6px}
+  .fill-ship{background:linear-gradient(90deg,#60a5fa,#3b82f6)}
+  .fill-r1{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+  .fill-r2{background:linear-gradient(90deg,#a78bfa,#8b5cf6)}
+  .fill-r3{background:linear-gradient(90deg,#5eead4,#2dd4bf)}
+
+  .ranks{margin-top:12px;display:grid;gap:8px}
+  .rk{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:9px}
+  .rk .tag{font-size:11px;font-weight:700;color:var(--muted)}
+  .rk .num{font-size:12.5px;color:var(--txt);white-space:nowrap}
+  .rk .num b{color:var(--accent)}
+
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;
+    padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+  .score{display:flex;align-items:center;gap:8px}
+  .score .v{font-size:18px;font-weight:800}
+  .gauge{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+    background:conic-gradient(var(--g,#34d399) calc(var(--p,0)*1%),#1c2433 0);position:relative}
+  .gauge::after{content:"";position:absolute;inset:5px;border-radius:50%;background:#11161f}
+  .gauge span{position:relative;font-size:12px;font-weight:800}
+
+  .empty{text-align:center;color:var(--muted);padding:60px 0}
+  .note{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;font-size:12.5px;color:var(--muted)}
+  .note b{color:var(--txt)}
+  .note .pill{display:inline-block;background:var(--card2);border-radius:6px;padding:1px 7px;margin:0 2px;color:var(--accent)}
+  footer{text-align:center;color:#5b677a;font-size:12px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">SPEETTO TRACKER</div>
+    <h1>스피또 출고율 · 당첨율 현황</h1>
+    <div class="sub">동행복권 스피또2000 · 1000 · 500 회차별 출고율과 남은 당첨 현황</div>
+    <div class="meta">
+      <span><span class="dot"></span><span id="updated">불러오는 중…</span></span>
+      <span>출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역</a></span>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="toolbar">
+    <div class="left" id="countLabel"></div>
+    <div class="seg" id="sortSeg">
+      <button data-sort="ep" class="on">최신 회차순</button>
+      <button data-sort="score">추천 지수순</button>
+      <button data-sort="ship">출고율순</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="note">
+    <b>용어 안내</b><br>
+    · <span class="pill">출고율</span> 발행된 복권 중 판매점으로 출고(입고)된 비율입니다. 100%면 모든 물량이 시중에 풀린 상태예요.<br>
+    · <span class="pill">잔여 당첨</span> 아직 당첨금이 지급되지 않은 등위별 매수(남은 매수 / 전체 매수)입니다. 남은 매수가 많을수록 당첨 기회가 남아있어요.<br>
+    · <span class="pill">추천 지수</span> <i>출고율이 높은데도 고액 당첨이 많이 남아있을수록</i> 높게 계산한 참고용 휴리스틱 점수입니다(1·2·3등 잔여율을 6:3:1로 가중 × 출고율). 통계적 보장이 아닌 재미용 지표이니 참고만 하세요.
+  </div>
+
+  <footer>데이터는 동행복권 공식 발행내역에서 자동 수집됩니다. 본 사이트는 비공식 정보 제공 페이지입니다.</footer>
+</div>
+
+<script>
+const state = { data:null, tab:"ALL", sort:"ep" };
+const TYPES = [
+  {cd:"ALL", name:"전체"},
+  {cd:"SP2000", name:"스피또2000"},
+  {cd:"SP1000", name:"스피또1000"},
+  {cd:"SP500", name:"스피또500"},
+];
+const BADGE = {SP2000:"b2000", SP1000:"b1000", SP500:"b500"};
+
+function fmt(n){ return n==null ? "-" : n.toLocaleString("ko-KR"); }
+function rateOf(r){ return (r && r.total) ? (r.remain/r.total*100) : 0; }
+function scoreColor(s){
+  if(s==null) return "#475569";
+  if(s>=40) return "#34d399";
+  if(s>=20) return "#fbbf24";
+  return "#fb7185";
+}
+
+function buildTabs(){
+  const el = document.getElementById("tabs");
+  el.innerHTML = "";
+  TYPES.forEach(t=>{
+    const b = document.createElement("button");
+    b.className = "tab" + (state.tab===t.cd?" on":"");
+    b.textContent = t.name;
+    b.onclick = ()=>{ state.tab=t.cd; buildTabs(); render(); };
+    el.appendChild(b);
+  });
+}
+
+function rankRow(tag, r, fill){
+  const pct = rateOf(r).toFixed(0);
+  const rmn = r && r.remain!=null ? r.remain : "-";
+  const tot = r && r.total!=null ? r.total : "-";
+  return `<div class="rk">
+    <div class="tag">${tag}</div>
+    <div class="bar"><i class="${fill}" style="width:${pct}%"></i></div>
+    <div class="num"><b>${fmt(rmn)}</b> / ${fmt(tot)}매</div>
+  </div>`;
+}
+
+function cardHTML(g){
+  const sold = g.status !== "판매중";
+  const ship = g.shipmentRate==null ? 0 : g.shipmentRate;
+  const sc = g.recommendScore;
+  const scP = sc==null ? 0 : Math.min(100, sc);
+  return `<div class="card ${sold?"sold":""}">
+    <div class="ep">
+      <div>
+        <span class="badge ${BADGE[g.typeCd]||""}">${g.typeName}</span>
+        <span class="cname"> ${g.episode}회 <small>${fmt(g.price)}원</small></span>
+      </div>
+      <span class="status ${sold?"st-end":"st-sale"}">${g.status}</span>
+    </div>
+
+    <div class="metric">
+      <div class="lab"><span>출고율</span><b>${ship}%</b></div>
+      <div class="bar"><i class="fill-ship" style="width:${ship}%"></i></div>
+    </div>
+
+    <div class="ranks">
+      ${rankRow("1등", g.rank1, "fill-r1")}
+      ${rankRow("2등", g.rank2, "fill-r2")}
+      ${rankRow("3등", g.rank3, "fill-r3")}
+    </div>
+
+    <div class="foot">
+      <div>판매기한 ${g.saleEndDate||"-"}<br>1등 ${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</div>
+      <div class="score">
+        <div style="text-align:right">
+          <div style="font-size:11px">추천 지수</div>
+          <div class="v" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div>
+        </div>
+        <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const grid = document.getElementById("grid");
+  if(!state.data){ return; }
+  let list = state.data.games.slice();
+  if(state.tab!=="ALL") list = list.filter(g=>g.typeCd===state.tab);
+
+  // 판매중 우선, 그 다음 선택한 정렬
+  const key = {
+    ep:   (a,b)=> b.episode-a.episode,
+    score:(a,b)=> (b.recommendScore??-1)-(a.recommendScore??-1),
+    ship: (a,b)=> (b.shipmentRate??-1)-(a.shipmentRate??-1),
+  }[state.sort];
+  list.sort((a,b)=>{
+    const sa = a.status==="판매중"?0:1, sb = b.status==="판매중"?0:1;
+    if(sa!==sb) return sa-sb;
+    return key(a,b);
+  });
+
+  const onSale = list.filter(g=>g.status==="판매중").length;
+  document.getElementById("countLabel").textContent =
+    `판매중 ${onSale}개 · 전체 ${list.length}개 회차`;
+
+  grid.innerHTML = list.length ? list.map(cardHTML).join("")
+    : `<div class="empty">표시할 회차가 없습니다.</div>`;
+}
+
+function setUpdated(iso){
+  try{
+    const d = new Date(iso);
+    const s = d.toLocaleString("ko-KR",{dateStyle:"medium",timeStyle:"short"});
+    document.getElementById("updated").textContent = `${s} 기준`;
+  }catch(e){ document.getElementById("updated").textContent = iso; }
+}
+
+document.getElementById("sortSeg").addEventListener("click",(e)=>{
+  const b = e.target.closest("button"); if(!b) return;
+  state.sort = b.dataset.sort;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle("on", x===b));
+  render();
+});
+
+fetch("data.json?_="+Date.now())
+  .then(r=>r.json())
+  .then(d=>{ state.data=d; setUpdated(d.updatedAt); render(); })
+  .catch(err=>{
+    document.getElementById("updated").textContent = "데이터를 불러오지 못했습니다";
+    document.getElementById("grid").innerHTML =
+      `<div class="empty">data.json 을 불러올 수 없습니다.<br>로컬에서 열 때는 <code>npx serve</code> 등으로 서버를 띄워 주세요.</div>`;
+    console.error(err);
+  });
+
+buildTabs();
+</script>
+</body>
+</html>
