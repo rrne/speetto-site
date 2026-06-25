@@ -6,3 +6,4 @@ _site/
 *.png
 !og-image.png
 .claude/
+dist/
