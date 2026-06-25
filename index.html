@@ -166,12 +166,14 @@
     padding:20px;box-shadow:var(--shadow-sm);transition:.18s;overflow:hidden}
   .card:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:var(--line-strong)}
   .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent,#ccc)}
-  .card.t2000{--accent:linear-gradient(180deg,#fbbf24,#f59e0b)}
-  .card.t1000{--accent:linear-gradient(180deg,#34d399,#10b981)}
-  .card.t500{--accent:linear-gradient(180deg,#fb7185,#f43f5e)}
+  /* 종류별 컬러 카드 (연한 톤 배경 + 흰 출고율 박스로 가독성 유지) */
+  .card.t2000{--accent:linear-gradient(180deg,#fbbf24,#f59e0b);background:#fff4df;border-color:#f1d9a8}
+  .card.t1000{--accent:linear-gradient(180deg,#34d399,#10b981);background:#e6f8ef;border-color:#bce9d2}
+  .card.t500{--accent:linear-gradient(180deg,#fb7185,#f43f5e);background:#ffe9ef;border-color:#f8c7d2}
+  .card .ship{background:var(--surface);border-color:rgba(20,30,60,.06)}
   /* 판매 종료: 회색·플랫·뒤로 빼기 */
   .card.sold{--accent:#cdd4e0;background:var(--bg-soft);border-color:var(--line);
-    filter:grayscale(1);opacity:.62;box-shadow:none}
+    filter:grayscale(1);opacity:.6;box-shadow:none}
   .card.sold:hover{transform:none;box-shadow:none;border-color:var(--line)}
   .card.sold .ship{background:#eef1f7}
 
