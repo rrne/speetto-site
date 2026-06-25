@@ -1,0 +1,2 @@
+# www → 루트 도메인 301 리다이렉트
+https://www.ge-uk.com/* https://ge-uk.com/:splat 301!
