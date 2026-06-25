@@ -33,13 +33,13 @@
 ## 🔧 배포 전 설정 (중요)
 
 배포 도메인이 정해지면 아래 **플레이스홀더 도메인**을 실제 도메인으로 바꾸세요.
-현재 값은 `https://speetto-radar.pages.dev/` 입니다.
+현재 값은 `https://ge-uk.com/` 입니다.
 
 - `index.html` — `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image`, JSON-LD의 URL들
 - `robots.txt` — `Sitemap:` 줄
 - `sitemap.xml` — `<loc>`
 
-> 빠른 일괄 치환 예: `grep -rl speetto-radar.pages.dev . | xargs sed -i '' 's#speetto-radar.pages.dev#내도메인#g'`
+> 빠른 일괄 치환 예: `grep -rl ge-uk.com . | xargs sed -i '' 's#ge-uk.com#내도메인#g'`
 
 ## 💰 광고(AdSense) 연동
 

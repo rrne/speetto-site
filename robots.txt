@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://speetto-radar.pages.dev/sitemap.xml
+Sitemap: https://ge-uk.com/sitemap.xml
