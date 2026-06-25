@@ -3,169 +3,277 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>스피또 출고율 · 당첨율 현황</title>
-<meta name="description" content="동행복권 스피또2000·1000·500 회차별 출고율과 등위별 잔여 당첨매수를 한눈에." />
+<title>스피또 레이더 — 지금 사기 좋은 즉석복권</title>
+<meta name="description" content="동행복권 스피또2000·1000·500의 출고율과 등위별 잔여 당첨을 실시간으로 추적해, 지금 사기 좋은 회차를 알려드립니다." />
 <style>
   :root{
-    --bg:#0b0f17; --panel:#141b27; --card:#1a2333; --card-hi:#222d40;
-    --line:#2c3a50; --line-soft:#243144;
-    --txt:#f1f5fb; --txt2:#c4cfde; --muted:#8a99ad;
-    --gold:#ffd24a; --blue:#5aa6ff; --green:#41d6a3; --purple:#b08bff; --pink:#ff8fb3;
-    --shadow:0 8px 28px rgba(0,0,0,.35);
+    --bg:#eef2f9; --bg-soft:#f6f8fc; --surface:#ffffff;
+    --ink:#141b2e; --ink2:#475067; --muted:#8b96ab; --faint:#aeb7c7;
+    --line:#e6eaf2; --line-strong:#d8deea;
+    --brand:#ff7a1a; --brand-2:#ffb43c; --brand-ink:#9a4a00;
+    --amber:#f59e0b; --emerald:#10b981; --rose:#f43f5e;
+    --violet:#6d5dfc; --sky:#3b9eff;
+    --shadow-sm:0 1px 2px rgba(18,30,60,.06), 0 2px 8px rgba(18,30,60,.05);
+    --shadow:0 6px 22px rgba(20,35,80,.08);
+    --shadow-lg:0 18px 50px rgba(20,35,80,.14);
+    --r:18px;
   }
   *{box-sizing:border-box}
   html,body{max-width:100%;overflow-x:hidden}
   html{-webkit-text-size-adjust:100%}
   body{
-    margin:0;background:
-      radial-gradient(900px 480px at 50% -260px,#1b2a44 0,transparent 60%),
-      radial-gradient(1100px 600px at 50% -240px,#19233a,transparent 65%),
-      var(--bg);
-    color:var(--txt);
+    margin:0;background:var(--bg);color:var(--ink);
     font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;
     -webkit-font-smoothing:antialiased;line-height:1.55;font-size:16px;
   }
-  .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 90px}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 18px}
 
-  /* ---------- header ---------- */
-  header.top{text-align:center;padding:14px 0 6px}
-  .logo{font-size:12px;letter-spacing:4px;color:var(--gold);font-weight:800}
-  h1{margin:8px 0 6px;font-size:clamp(26px,5.4vw,38px);font-weight:900;letter-spacing:-.5px}
-  .sub{color:var(--txt2);font-size:15px}
-  .meta{display:flex;gap:8px 18px;justify-content:center;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--muted)}
-  .meta a{color:var(--blue);text-decoration:none;font-weight:600}
-  .live{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--txt2)}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(65,214,163,.18)}
+  /* ---------- top brand bar ---------- */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(246,248,252,.82);
+    backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+  .nav .row{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:-.4px;font-size:18px}
+  .brand .logo{width:34px;height:34px;flex:none}
+  .brand .name b{color:var(--brand)}
+  .brand .tag{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0}
+  .nav .live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);font-weight:600;
+    background:var(--surface);border:1px solid var(--line);padding:7px 12px;border-radius:999px;box-shadow:var(--shadow-sm)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 4px rgba(16,185,129,.16)}
 
-  /* ---------- tabs ---------- */
-  .tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 8px}
-  .tab{padding:11px 20px;border:1px solid var(--line);background:var(--panel);color:var(--txt2);
-    border-radius:999px;cursor:pointer;font-size:15px;font-weight:700;transition:.15s}
-  .tab:hover{border-color:#42546f;color:var(--txt);transform:translateY(-1px)}
-  .tab.on{background:linear-gradient(180deg,#ffe177,#ffc62e);color:#241a00;border-color:#ffc62e;box-shadow:0 6px 16px rgba(255,198,46,.25)}
+  /* ---------- hero ---------- */
+  .hero{padding:46px 0 30px;text-align:center;position:relative}
+  .hero::before{content:"";position:absolute;inset:0 0 auto;height:330px;z-index:-1;
+    background:radial-gradient(680px 300px at 50% -40px,rgba(255,160,60,.22),transparent 70%)}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:var(--brand-ink);
+    background:linear-gradient(180deg,#fff3e3,#ffe7c9);border:1px solid #ffd9ad;padding:6px 13px;border-radius:999px}
+  .hero h1{margin:18px auto 12px;font-size:clamp(28px,5.6vw,46px);font-weight:900;letter-spacing:-1px;line-height:1.18;max-width:16ch}
+  .hero h1 .hl{background:linear-gradient(180deg,transparent 62%,#ffd9a8 62%);padding:0 2px}
+  .hero p{margin:0 auto;max-width:48ch;color:var(--ink2);font-size:16.5px}
 
-  /* ---------- toolbar ---------- */
-  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:22px 4px 16px;flex-wrap:wrap}
-  .count{color:var(--txt2);font-size:14px;font-weight:600}
-  .count b{color:var(--gold)}
-  .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
-  .seg button{background:transparent;color:var(--muted);border:0;padding:9px 15px;font-size:13.5px;cursor:pointer;font-weight:600}
+  /* ---------- stat strip ---------- */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0 8px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow-sm)}
+  .stat .k{font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:7px}
+  .stat .v{font-size:30px;font-weight:900;letter-spacing:-1px;margin-top:6px}
+  .stat .v small{font-size:15px;font-weight:800;color:var(--ink2);margin-left:2px}
+  .stat .s{font-size:12.5px;color:var(--faint);font-weight:600;margin-top:2px}
+  .ic{width:18px;height:18px}
+
+  /* ---------- featured pick ---------- */
+  .section-h{display:flex;align-items:baseline;gap:10px;margin:42px 2px 16px}
+  .section-h h2{font-size:21px;font-weight:900;letter-spacing:-.5px;margin:0}
+  .section-h .desc{font-size:13.5px;color:var(--muted);font-weight:600}
+
+  .pick{position:relative;background:
+      linear-gradient(120deg,#fff 60%,#fff8ef);
+    border:1px solid #ffe0b8;border-radius:24px;padding:26px;box-shadow:var(--shadow-lg);overflow:hidden}
+  .pick::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,150,40,.16),transparent 70%)}
+  .pick .ribbon{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:900;color:#fff;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));padding:7px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(255,122,26,.32)}
+  .pick .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:center;margin-top:18px}
+  .pick .ptitle{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pick .pname{font-size:16px;font-weight:900}
+  .pick .pep{font-size:34px;font-weight:900;letter-spacing:-1px}
+  .pick .preason{margin:14px 0 18px;font-size:16px;color:var(--ink2);line-height:1.7}
+  .pick .preason b{color:var(--ink);background:linear-gradient(180deg,transparent 62%,#ffe2b3 62%)}
+  .pick .pmetrics{display:flex;gap:12px;flex-wrap:wrap}
+  .pchip{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow-sm)}
+  .pchip .ck{font-size:12px;color:var(--muted);font-weight:700}
+  .pchip .cv{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-top:3px}
+  .pick .scorewrap{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow-sm)}
+  .bigGauge{width:148px;height:148px;border-radius:50%;display:grid;place-items:center;position:relative;
+    background:conic-gradient(var(--g,#10b981) calc(var(--p,0)*1%), #eef2f9 0)}
+  .bigGauge::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 1px 6px rgba(20,35,80,.06)}
+  .bigGauge .inner{position:relative;text-align:center}
+  .bigGauge .num{font-size:40px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+  .bigGauge .lab{font-size:12px;font-weight:800;color:var(--muted);margin-top:4px}
+  .scorewrap .cap{font-size:13px;color:var(--ink2);font-weight:700;margin-top:14px}
+
+  /* ---------- controls ---------- */
+  .controls{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:14px 2px 18px;flex-wrap:wrap}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{padding:10px 17px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink2);
+    border-radius:999px;cursor:pointer;font-size:14.5px;font-weight:700;transition:.15s;box-shadow:var(--shadow-sm)}
+  .tab:hover{border-color:var(--brand-2);color:var(--ink);transform:translateY(-1px)}
+  .tab.on{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border-color:transparent;box-shadow:0 8px 18px rgba(255,122,26,.28)}
+  .seg{display:flex;border:1px solid var(--line-strong);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .seg button{background:transparent;color:var(--muted);border:0;padding:9px 14px;font-size:13.5px;cursor:pointer;font-weight:700}
   .seg button+button{border-left:1px solid var(--line)}
-  .seg button.on{background:var(--card-hi);color:var(--txt);font-weight:800}
+  .seg button.on{background:#fff4e8;color:var(--brand-ink)}
 
   /* ---------- grid + card ---------- */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
-  .card{position:relative;background:linear-gradient(180deg,var(--card),#131a28);
-    border:1px solid var(--line-soft);border-radius:20px;padding:20px 20px 18px;
-    box-shadow:var(--shadow);overflow:hidden}
-  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent,#666)}
-  .card.t2000{--accent:linear-gradient(180deg,#ffd24a,#ff9f1c)}
-  .card.t1000{--accent:linear-gradient(180deg,#41d6a3,#16b07f)}
-  .card.t500{--accent:linear-gradient(180deg,#ff8fb3,#ff5d8a)}
-  .card.sold{opacity:.55;filter:saturate(.7)}
+  .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    padding:20px;box-shadow:var(--shadow-sm);transition:.18s;overflow:hidden}
+  .card:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:var(--line-strong)}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent,#ccc)}
+  .card.t2000{--accent:linear-gradient(180deg,#fbbf24,#f59e0b)}
+  .card.t1000{--accent:linear-gradient(180deg,#34d399,#10b981)}
+  .card.t500{--accent:linear-gradient(180deg,#fb7185,#f43f5e)}
+  .card.sold{opacity:.66}
 
   .chead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .title{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .gname{font-size:15px;font-weight:800}
-  .gname.c2000{color:var(--gold)} .gname.c1000{color:var(--green)} .gname.c500{color:var(--pink)}
-  .epno{font-size:23px;font-weight:900;letter-spacing:-.5px}
+  .gname{font-size:14px;font-weight:900}
+  .gname.c2000{color:var(--amber)} .gname.c1000{color:var(--emerald)} .gname.c500{color:var(--rose)}
+  .epno{font-size:24px;font-weight:900;letter-spacing:-.5px}
   .price{font-size:13px;color:var(--muted);font-weight:700}
-  .status{font-size:12px;padding:5px 11px;border-radius:999px;font-weight:800;white-space:nowrap}
-  .st-sale{background:rgba(65,214,163,.16);color:#7ef0c8;border:1px solid rgba(65,214,163,.35)}
-  .st-end{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line)}
+  .status{font-size:11.5px;padding:5px 11px;border-radius:999px;font-weight:800;white-space:nowrap}
+  .st-sale{background:#e7f9f1;color:#0c8f63;border:1px solid #bdeed9}
+  .st-end{background:#f1f3f8;color:var(--muted);border:1px solid var(--line)}
 
-  /* 출고율 hero */
-  .ship{margin-top:18px;background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:13px 15px}
+  .ship{margin-top:18px;background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:13px 15px}
   .ship .row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
-  .ship .k{font-size:13.5px;color:var(--txt2);font-weight:700}
-  .ship .v{font-size:26px;font-weight:900;letter-spacing:-.5px}
-  .ship .v small{font-size:15px;font-weight:800;margin-left:2px;color:var(--txt2)}
-  .track{height:12px;border-radius:999px;background:#0a0f18;overflow:hidden;border:1px solid #0a0f18}
-  .track>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#5aa6ff,#3b82f6)}
+  .ship .k{font-size:13px;color:var(--ink2);font-weight:800}
+  .ship .v{font-size:26px;font-weight:900;letter-spacing:-1px}
+  .ship .v small{font-size:15px;font-weight:800;color:var(--ink2);margin-left:1px}
+  .track{height:11px;border-radius:999px;background:#e7ecf5;overflow:hidden}
+  .track>i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b9eff,#2563eb)}
 
-  /* 등위별 잔여 */
-  .ranks-h{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px}
-  .ranks-h .lbl{font-size:13.5px;font-weight:800;color:var(--txt2)}
-  .ranks-h .hint{font-size:11.5px;color:var(--muted)}
-  .ranks{display:grid;gap:10px}
-  .rk{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:center}
-  .rk .badge{height:34px;border-radius:10px;display:grid;place-items:center;font-size:13px;font-weight:900;color:#0c1018}
-  .rk1 .badge{background:linear-gradient(180deg,#ffe07a,#ffc02e)}
-  .rk2 .badge{background:linear-gradient(180deg,#c4b0ff,#a888ff)}
-  .rk3 .badge{background:linear-gradient(180deg,#7df0cf,#34d6a3)}
+  .ranks-h{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 11px}
+  .ranks-h .lbl{font-size:13px;font-weight:900;color:var(--ink2)}
+  .ranks-h .hint{font-size:11.5px;color:var(--faint);font-weight:600}
+  .ranks{display:grid;gap:11px}
+  .rk{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center}
+  .rk .badge{height:32px;border-radius:10px;display:grid;place-items:center;font-size:12.5px;font-weight:900;color:#fff}
+  .rk1 .badge{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+  .rk2 .badge{background:linear-gradient(135deg,#a78bfa,#7c5cfc)}
+  .rk3 .badge{background:linear-gradient(135deg,#34d399,#10b981)}
   .rk .body{display:flex;flex-direction:column;gap:5px;min-width:0}
   .rk .nums{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
   .rk .remain{font-size:16px;font-weight:900}
   .rk .remain .of{font-size:12.5px;color:var(--muted);font-weight:700;margin-left:3px}
-  .rk .pct{font-size:13px;font-weight:800;color:var(--txt2)}
-  .rk .mini{height:7px;border-radius:999px;background:#0a0f18;overflow:hidden}
+  .rk .pct{font-size:13px;font-weight:900;color:var(--ink2)}
+  .rk .mini{height:7px;border-radius:999px;background:#e7ecf5;overflow:hidden}
   .rk .mini>i{display:block;height:100%;border-radius:999px}
-  .rk1 .mini>i{background:linear-gradient(90deg,#ffd24a,#f59e0b)}
-  .rk2 .mini>i{background:linear-gradient(90deg,#b08bff,#8b5cf6)}
-  .rk3 .mini>i{background:linear-gradient(90deg,#41d6a3,#14b88a)}
+  .rk1 .mini>i{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+  .rk2 .mini>i{background:linear-gradient(90deg,#a78bfa,#7c5cfc)}
+  .rk3 .mini>i{background:linear-gradient(90deg,#34d399,#10b981)}
 
-  /* footer of card */
-  .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;
-    margin-top:18px;padding-top:15px;border-top:1px solid var(--line-soft)}
+  .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}
   .cfoot .info{font-size:12.5px;color:var(--muted);line-height:1.7}
-  .cfoot .info b{color:var(--txt2);font-weight:700}
+  .cfoot .info b{color:var(--ink2);font-weight:800}
   .rec{display:flex;align-items:center;gap:11px}
   .rec .meta2{text-align:right}
   .rec .meta2 .t{font-size:11px;color:var(--muted);font-weight:700}
-  .rec .meta2 .s{font-size:22px;font-weight:900;line-height:1.1}
-  .gauge{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
-    background:conic-gradient(var(--g,#41d6a3) calc(var(--p,0)*1%),#202b3d 0);position:relative;flex:none}
-  .gauge::after{content:"";position:absolute;inset:6px;border-radius:50%;background:#141b27}
-  .gauge span{position:relative;font-size:13px;font-weight:900}
+  .rec .meta2 .s{font-size:21px;font-weight:900;line-height:1.1}
+  .gauge{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;position:relative;flex:none;
+    background:conic-gradient(var(--g,#10b981) calc(var(--p,0)*1%),#e7ecf5 0)}
+  .gauge::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--surface)}
+  .gauge span{position:relative;font-size:12.5px;font-weight:900}
 
   .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:70px 0;font-size:15px}
 
-  .note{margin-top:34px;background:var(--panel);border:1px solid var(--line-soft);border-radius:16px;padding:20px 22px;font-size:13.5px;color:var(--txt2);line-height:1.85}
-  .note h3{margin:0 0 10px;font-size:15px;color:var(--txt)}
-  .note .pill{display:inline-block;background:var(--card-hi);border-radius:7px;padding:2px 9px;color:var(--gold);font-weight:800;font-size:12.5px}
-  footer{text-align:center;color:#5d6b80;font-size:12.5px;margin-top:26px;line-height:1.7}
+  /* ---------- how to read ---------- */
+  .guide{margin:54px 0 0}
+  .guide .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow-sm)}
+  .gcard .gi{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;margin-bottom:13px}
+  .gcard h4{margin:0 0 7px;font-size:16px;font-weight:900}
+  .gcard p{margin:0;font-size:13.5px;color:var(--ink2);line-height:1.7}
+  .gi.a{background:#fef3e2}.gi.b{background:#e7f9f1}.gi.c{background:#eef0ff}
 
-  @media (max-width:480px){
-    .wrap{padding:20px 13px 70px}
-    .grid{grid-template-columns:1fr;gap:14px}
-    .epno{font-size:21px}
+  /* ---------- footer ---------- */
+  footer{margin-top:56px;border-top:1px solid var(--line);background:var(--bg-soft)}
+  footer .in{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;padding:30px 0 36px}
+  footer .brand{font-size:16px}
+  footer .disc{font-size:12px;color:var(--muted);max-width:52ch;line-height:1.75}
+  footer a{color:var(--brand-ink);font-weight:700;text-decoration:none}
+
+  @media (max-width:860px){
+    .stats{grid-template-columns:1fr 1fr}
+    .pick .grid2{grid-template-columns:1fr}
+    .guide .cards{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    .stats{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr}
+    .nav .brand .tag{display:none}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="logo">SPEETTO TRACKER</div>
-    <h1>스피또 출고율 · 당첨율 현황</h1>
-    <div class="sub">동행복권 스피또2000 · 1000 · 500 회차별 출고율과 남은 당첨 현황</div>
-    <div class="meta">
-      <span class="live"><span class="dot"></span><span id="updated">불러오는 중…</span></span>
-      <span>출처 <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></span>
+  <!-- NAV -->
+  <div class="nav"><div class="wrap row">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="url(#bg)"/>
+        <circle cx="20" cy="20" r="11.5" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
+        <circle cx="20" cy="20" r="6" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
+        <circle cx="20" cy="20" r="2.2" fill="#fff"/>
+        <path d="M20 4.5V9M20 31v4.5M4.5 20H9M31 20h4.5" stroke="#fff" stroke-opacity=".9" stroke-width="2.2" stroke-linecap="round"/>
+        <defs><linearGradient id="bg" x1="0" y1="0" x2="40" y2="40">
+          <stop stop-color="#ff8a1f"/><stop offset="1" stop-color="#ffb43c"/></linearGradient></defs>
+      </svg>
+      <span class="name">스피또 <b>레이더</b><span class="tag">실시간 즉석복권 출고율·당첨율 추적</span></span>
     </div>
-  </header>
+    <span class="live"><span class="dot"></span><span id="updated">불러오는 중…</span></span>
+  </div></div>
 
-  <div class="tabs" id="tabs"></div>
+  <!-- HERO -->
+  <div class="wrap">
+    <section class="hero">
+      <span class="eyebrow">🎯 동행복권 공식 데이터 기반</span>
+      <h1>지금 사기 좋은 <span class="hl">스피또</span>는<br>어디 있을까?</h1>
+      <p>스피또2000·1000·500의 출고율과 등위별 잔여 당첨을 실시간으로 추적해, 아직 고액 당첨이 많이 남은 회차를 골라 드립니다.</p>
 
-  <div class="toolbar">
-    <div class="count" id="countLabel"></div>
-    <div class="seg" id="sortSeg">
-      <button data-sort="ep" class="on">최신 회차</button>
-      <button data-sort="score">추천 지수</button>
-      <button data-sort="ship">출고율</button>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <!-- FEATURED PICK -->
+    <div class="section-h"><h2>오늘의 추천 PICK</h2><span class="desc">지금 판매중인 회차 중 추천 지수가 가장 높아요</span></div>
+    <section id="pick"></section>
+
+    <!-- CONTROLS -->
+    <div class="section-h" style="margin-bottom:8px"><h2>전체 회차</h2><span class="desc">탭과 정렬로 원하는 회차를 찾아보세요</span></div>
+    <div class="controls">
+      <div class="tabs" id="tabs"></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span class="count" id="countLabel" style="font-size:13.5px;color:var(--ink2);font-weight:700"></span>
+        <div class="seg" id="sortSeg">
+          <button data-sort="ep" class="on">최신 회차</button>
+          <button data-sort="score">추천 지수</button>
+          <button data-sort="ship">출고율</button>
+        </div>
+      </div>
     </div>
+
+    <div class="grid" id="grid"></div>
+
+    <!-- GUIDE -->
+    <section class="guide">
+      <div class="section-h"><h2>지표 읽는 법</h2><span class="desc">세 가지만 보면 됩니다</span></div>
+      <div class="cards">
+        <div class="gcard"><div class="gi a">📦</div><h4>출고율</h4>
+          <p>발행된 복권 중 판매점으로 풀린 비율이에요. 100%면 물량이 모두 시중에 나온 상태입니다.</p></div>
+        <div class="gcard"><div class="gi b">🎟️</div><h4>잔여 당첨</h4>
+          <p>아직 주인을 찾지 못한 등위별 당첨 매수(남은/전체)예요. 많이 남았다면 당첨 기회도 그만큼 남아있어요.</p></div>
+        <div class="gcard"><div class="gi c">⭐</div><h4>추천 지수</h4>
+          <p>출고율이 높은데도 고액 당첨이 많이 남았을수록 높게 매긴 참고 점수예요. 통계적 보장이 아닌 재미용 지표입니다.</p></div>
+      </div>
+    </section>
   </div>
 
-  <div class="grid" id="grid"></div>
-
-  <div class="note">
-    <h3>용어 안내</h3>
-    <span class="pill">출고율</span> 발행된 복권 중 판매점으로 출고(입고)된 비율입니다. 100%면 모든 물량이 시중에 풀린 상태예요.<br>
-    <span class="pill">잔여 당첨</span> 아직 당첨금이 지급되지 않은 등위별 매수(남은 / 전체)입니다. 남은 매수가 많을수록 당첨 기회가 더 남아있어요.<br>
-    <span class="pill">추천 지수</span> <i>출고율이 높은데도 고액 당첨이 많이 남아있을수록</i> 높게 계산한 참고용 점수입니다(1·2·3등 잔여율 6:3:1 가중 × 출고율). 통계적 보장이 아닌 재미용 지표이니 참고만 하세요.
-  </div>
-
-  <footer>데이터는 동행복권 공식 발행내역에서 자동 수집됩니다.<br>본 사이트는 비공식 정보 제공 페이지로, 데이터의 정확성을 보장하지 않습니다.</footer>
-</div>
+  <!-- FOOTER -->
+  <footer><div class="wrap in">
+    <div>
+      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">
+        <svg class="logo" style="width:28px;height:28px" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="url(#bg2)"/>
+          <circle cx="20" cy="20" r="11.5" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
+          <circle cx="20" cy="20" r="6" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
+          <circle cx="20" cy="20" r="2.2" fill="#fff"/>
+          <defs><linearGradient id="bg2" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#ff8a1f"/><stop offset="1" stop-color="#ffb43c"/></linearGradient></defs>
+        </svg>
+        스피또 레이더
+      </div>
+      <p class="disc" style="margin-top:10px">데이터 출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></p>
+    </div>
+    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 복권 구매는 본인의 판단과 책임하에 하시고, 과도한 구매는 삼가주세요. 추천 지수는 통계적 당첨 확률을 보장하지 않습니다.</p>
+  </div></footer>
 
 <script>
 const state = { data:null, tab:"ALL", sort:"ep" };
@@ -178,15 +286,64 @@ const TYPES = [
 const TCLASS = {SP2000:"t2000", SP1000:"t1000", SP500:"t500"};
 const CCLASS = {SP2000:"c2000", SP1000:"c1000", SP500:"c500"};
 
-function fmt(n){ return n==null ? "-" : n.toLocaleString("ko-KR"); }
-function rateOf(r){ return (r && r.total) ? (r.remain/r.total*100) : 0; }
+const fmt = n => n==null ? "-" : n.toLocaleString("ko-KR");
+const rateOf = r => (r && r.total) ? (r.remain/r.total*100) : 0;
 function scoreColor(s){
-  if(s==null) return "#5b6b80";
-  if(s>=40) return "#41d6a3";
-  if(s>=20) return "#ffd24a";
-  return "#ff8fb3";
+  if(s==null) return "#9aa6ba";
+  if(s>=40) return "#10b981";
+  if(s>=20) return "#f59e0b";
+  return "#f43f5e";
 }
 
+/* ----- stat strip ----- */
+function renderStats(){
+  const onSale = state.data.games.filter(g=>g.status==="판매중");
+  const avgShip = onSale.length
+    ? Math.round(onSale.reduce((a,g)=>a+(g.shipmentRate||0),0)/onSale.length) : 0;
+  const remain1 = onSale.reduce((a,g)=>a+((g.rank1&&g.rank1.remain)||0),0);
+  const el = document.getElementById("stats");
+  el.innerHTML = `
+    <div class="stat"><div class="k">🎟️ 판매중 회차</div><div class="v">${onSale.length}<small>개</small></div><div class="s">스피또2000·1000·500 합산</div></div>
+    <div class="stat"><div class="k">📦 평균 출고율</div><div class="v">${avgShip}<small>%</small></div><div class="s">판매중 회차 기준</div></div>
+    <div class="stat"><div class="k">🏆 남은 1등</div><div class="v">${fmt(remain1)}<small>매</small></div><div class="s">아직 안 나온 1등 합계</div></div>`;
+}
+
+/* ----- featured pick ----- */
+function renderPick(){
+  const onSale = state.data.games.filter(g=>g.status==="판매중" && g.recommendScore!=null);
+  const el = document.getElementById("pick");
+  if(!onSale.length){ el.innerHTML=""; return; }
+  const g = onSale.slice().sort((a,b)=>b.recommendScore-a.recommendScore)[0];
+  const sc = g.recommendScore, scP = Math.min(100, sc);
+  const r1 = g.rank1||{}, r1pct = rateOf(r1).toFixed(0);
+  el.innerHTML = `
+    <div class="pick">
+      <span class="ribbon">⭐ 추천 1순위</span>
+      <div class="grid2">
+        <div>
+          <div class="ptitle">
+            <span class="pname ${CCLASS[g.typeCd]||""}">${g.typeName}</span>
+            <span class="pep">${g.episode}회</span>
+            <span class="price" style="color:var(--muted);font-weight:700">${fmt(g.price)}원</span>
+          </div>
+          <p class="preason">출고율 <b>${g.shipmentRate}%</b>로 물량이 많이 풀렸는데<br>1등이 아직 <b>${fmt(r1.remain)}매(${r1pct}%)</b> 남아있어요.</p>
+          <div class="pmetrics">
+            <div class="pchip"><div class="ck">출고율</div><div class="cv">${g.shipmentRate}%</div></div>
+            <div class="pchip"><div class="ck">1등 잔여</div><div class="cv">${fmt(r1.remain)}<span style="font-size:13px;color:var(--muted)">/${fmt(r1.total)}</span></div></div>
+            <div class="pchip"><div class="ck">1등 당첨금</div><div class="cv" style="font-size:18px">${r1.prize||"-"}</div></div>
+          </div>
+        </div>
+        <div class="scorewrap">
+          <div class="bigGauge" style="--p:${scP};--g:${scoreColor(sc)}">
+            <div class="inner"><div class="num" style="color:${scoreColor(sc)}">${sc}</div><div class="lab">추천 지수</div></div>
+          </div>
+          <div class="cap">판매기한 ${g.saleEndDate||"-"}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ----- tabs ----- */
 function buildTabs(){
   const el = document.getElementById("tabs");
   el.innerHTML = "";
@@ -218,8 +375,7 @@ function rankRow(n, r, cls){
 function cardHTML(g){
   const sold = g.status !== "판매중";
   const ship = g.shipmentRate==null ? 0 : g.shipmentRate;
-  const sc = g.recommendScore;
-  const scP = sc==null ? 0 : Math.min(100, sc);
+  const sc = g.recommendScore, scP = sc==null ? 0 : Math.min(100, sc);
   return `<div class="card ${TCLASS[g.typeCd]||""} ${sold?"sold":""}">
     <div class="chead">
       <div class="title">
@@ -229,32 +385,20 @@ function cardHTML(g){
       </div>
       <span class="status ${sold?"st-end":"st-sale"}">${g.status}</span>
     </div>
-
     <div class="ship">
       <div class="row"><span class="k">출고율</span><span class="v">${ship}<small>%</small></span></div>
       <div class="track"><i style="width:${ship}%"></i></div>
     </div>
-
-    <div class="ranks-h">
-      <span class="lbl">등위별 잔여 당첨</span>
-      <span class="hint">남은 / 전체</span>
-    </div>
+    <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
     <div class="ranks">
       ${rankRow(1, g.rank1, "rk1")}
       ${rankRow(2, g.rank2, "rk2")}
       ${rankRow(3, g.rank3, "rk3")}
     </div>
-
     <div class="cfoot">
-      <div class="info">
-        1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>
-        판매기한 <b>${g.saleEndDate||"-"}</b>
-      </div>
+      <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b></div>
       <div class="rec">
-        <div class="meta2">
-          <div class="t">추천 지수</div>
-          <div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div>
-        </div>
+        <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
         <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
       </div>
     </div>
@@ -266,24 +410,19 @@ function render(){
   if(!state.data) return;
   let list = state.data.games.slice();
   if(state.tab!=="ALL") list = list.filter(g=>g.typeCd===state.tab);
-
   const key = {
-    ep:   (a,b)=> b.episode-a.episode,
-    score:(a,b)=> (b.recommendScore??-1)-(a.recommendScore??-1),
-    ship: (a,b)=> (b.shipmentRate??-1)-(a.shipmentRate??-1),
+    ep:(a,b)=>b.episode-a.episode,
+    score:(a,b)=>(b.recommendScore??-1)-(a.recommendScore??-1),
+    ship:(a,b)=>(b.shipmentRate??-1)-(a.shipmentRate??-1),
   }[state.sort];
   list.sort((a,b)=>{
-    const sa = a.status==="판매중"?0:1, sb = b.status==="판매중"?0:1;
+    const sa=a.status==="판매중"?0:1, sb=b.status==="판매중"?0:1;
     if(sa!==sb) return sa-sb;
     return key(a,b);
   });
-
   const onSale = list.filter(g=>g.status==="판매중").length;
-  document.getElementById("countLabel").innerHTML =
-    `판매중 <b>${onSale}</b>개 · 전체 ${list.length}개 회차`;
-
-  grid.innerHTML = list.length ? list.map(cardHTML).join("")
-    : `<div class="empty">표시할 회차가 없습니다.</div>`;
+  document.getElementById("countLabel").innerHTML = `판매중 ${onSale} · 전체 ${list.length}`;
+  grid.innerHTML = list.length ? list.map(cardHTML).join("") : `<div class="empty">표시할 회차가 없습니다.</div>`;
 }
 
 function setUpdated(iso){
@@ -302,11 +441,10 @@ document.getElementById("sortSeg").addEventListener("click",(e)=>{
 
 fetch("data.json?_="+Date.now())
   .then(r=>r.json())
-  .then(d=>{ state.data=d; setUpdated(d.updatedAt); render(); })
+  .then(d=>{ state.data=d; setUpdated(d.updatedAt); renderStats(); renderPick(); render(); })
   .catch(err=>{
-    document.getElementById("updated").textContent = "데이터를 불러오지 못했습니다";
-    document.getElementById("grid").innerHTML =
-      `<div class="empty">data.json 을 불러올 수 없습니다.<br>로컬에서는 서버로 띄워 주세요 (예: <code>npx serve</code>).</div>`;
+    document.getElementById("updated").textContent = "데이터 로드 실패";
+    document.getElementById("grid").innerHTML = `<div class="empty">data.json 을 불러올 수 없습니다. 로컬에서는 서버로 띄워 주세요.</div>`;
     console.error(err);
   });
 

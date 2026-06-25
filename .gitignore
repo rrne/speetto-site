@@ -4,3 +4,4 @@ _site/
 preview.png
 .github/
 *.png
+.claude/
