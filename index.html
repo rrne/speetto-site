@@ -170,12 +170,24 @@
   .card.t2000{--accent:linear-gradient(180deg,#fbbf24,#f59e0b);background:#fff4df;border-color:#f1d9a8}
   .card.t1000{--accent:linear-gradient(180deg,#34d399,#10b981);background:#e6f8ef;border-color:#bce9d2}
   .card.t500{--accent:linear-gradient(180deg,#fb7185,#f43f5e);background:#ffe9ef;border-color:#f8c7d2}
-  .card .ship{background:var(--surface);border-color:rgba(20,30,60,.06)}
-  /* 판매 종료: 회색·플랫·뒤로 빼기 */
-  .card.sold{--accent:#cdd4e0;background:var(--bg-soft);border-color:var(--line);
-    filter:grayscale(1);opacity:.6;box-shadow:none}
-  .card.sold:hover{transform:none;box-shadow:none;border-color:var(--line)}
-  .card.sold .ship{background:#eef1f7}
+  /* 컬러 카드 안의 흰 패널 — 내용 가독성 확보 */
+  .card{padding:15px}
+  .panel{background:var(--surface);border:1px solid rgba(20,30,60,.05);border-radius:14px;
+    padding:15px;margin-top:13px;box-shadow:0 1px 3px rgba(20,35,80,.04)}
+  .panel .ship{margin-top:0}
+  .panel .cfoot{margin-bottom:0}
+
+  /* 판매 종료: 컴팩트·회색·뒤로 빼기 */
+  .grid.dense{grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:10px;margin-top:6px}
+  .card.compact{padding:13px 15px;filter:grayscale(.85);opacity:.78;box-shadow:none}
+  .card.compact::before{width:4px}
+  .card.compact:hover{transform:none;box-shadow:0 4px 12px rgba(20,35,80,.07)}
+  .compact .crow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .compact .cname{font-size:14px;font-weight:800;color:var(--ink2)}
+  .compact .cname b{color:var(--ink);font-weight:900}
+  .compact .status{font-size:10.5px;padding:3px 9px}
+  .compact .cmetrics{display:flex;gap:16px;margin-top:9px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .compact .cmetrics b{color:var(--ink2);font-weight:800}
 
   .chead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .title{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
@@ -389,6 +401,9 @@
       <div class="sk"><div class="bar" style="height:18px;width:55%"></div><div class="bar" style="height:46px;margin-top:16px"></div><div class="bar" style="height:14px;width:70%;margin-top:16px"></div><div class="bar" style="height:40px;margin-top:12px"></div></div>
     </div>
 
+    <!-- 판매 종료 (컴팩트) -->
+    <div id="soldSection"></div>
+
     <!-- AD: 중간 배너 -->
     <div class="ad" id="ad-mid" data-ad-slot-key="mid"><div class="lbl">광고</div><div class="slot"></div></div>
 
@@ -598,31 +613,49 @@ function cardHTML(g){
   const sold = g.status !== "판매중";
   const ship = g.shipmentRate==null ? 0 : g.shipmentRate;
   const sc = g.recommendScore, scP = sc==null ? 0 : Math.min(100, sc);
-  return `<div class="card ${TCLASS[g.typeCd]||""} ${sold?"sold":""}">
+  const ddInfo = (()=>{const d=dday(g.saleEndDate);return (d&&!d.over)?` · <b class="dday${d.soon?' soon':''}">${d.txt}</b>`:"";})();
+  return `<div class="card ${TCLASS[g.typeCd]||""}">
     <div class="chead">
       <div class="title">
         <span class="gname ${CCLASS[g.typeCd]||""}">${g.typeName}</span>
         <span class="epno">${g.episode}회</span>
         <span class="price">${fmt(g.price)}원</span>
       </div>
-      <span class="status ${sold?"st-end":"st-sale"}">${g.status}</span>
+      <span class="status st-sale">${g.status}</span>
     </div>
-    <div class="ship">
-      <div class="row"><span class="k">출고율</span><span class="v">${ship}<small>%</small></span></div>
-      <div class="track"><i style="width:${ship}%"></i></div>
-    </div>
-    <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
-    <div class="ranks">
-      ${rankRow(1, g.rank1, "rk1")}
-      ${rankRow(2, g.rank2, "rk2")}
-      ${rankRow(3, g.rank3, "rk3")}
-    </div>
-    <div class="cfoot">
-      <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b>${(()=>{const d=dday(g.saleEndDate);return (!sold&&d&&!d.over)?` · <b class="dday${d.soon?' soon':''}">${d.txt}</b>`:"";})()}</div>
-      <div class="rec">
-        <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
-        <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
+    <div class="panel">
+      <div class="ship">
+        <div class="row"><span class="k">출고율</span><span class="v">${ship}<small>%</small></span></div>
+        <div class="track"><i style="width:${ship}%"></i></div>
       </div>
+      <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
+      <div class="ranks">
+        ${rankRow(1, g.rank1, "rk1")}
+        ${rankRow(2, g.rank2, "rk2")}
+        ${rankRow(3, g.rank3, "rk3")}
+      </div>
+      <div class="cfoot">
+        <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b>${ddInfo}</div>
+        <div class="rec">
+          <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
+          <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function cardCompactHTML(g){
+  const ship = g.shipmentRate==null ? 0 : g.shipmentRate;
+  const r1 = g.rank1||{};
+  return `<div class="card compact ${TCLASS[g.typeCd]||""}">
+    <div class="crow">
+      <span class="cname ${CCLASS[g.typeCd]||""}">${g.typeName} <b>${g.episode}회</b></span>
+      <span class="status st-end">종료</span>
+    </div>
+    <div class="cmetrics">
+      <span>출고율 <b>${ship}%</b></span>
+      <span>1등 <b>${fmt(r1.remain)}</b>/${fmt(r1.total)}매</span>
     </div>
   </div>`;
 }
@@ -647,19 +680,24 @@ function render(){
   const onSaleArr = list.filter(g=>g.status==="판매중");
   const soldArr = list.filter(g=>g.status!=="판매중");
   document.getElementById("countLabel").innerHTML = `판매중 ${onSaleArr.length} · 전체 ${list.length}`;
+  const soldSection = document.getElementById("soldSection");
 
   if(!list.length){
     grid.innerHTML = state.search
       ? `<div class="empty">'${state.search}' 회차를 찾을 수 없어요.<br>다른 번호로 검색해 보세요.</div>`
       : `<div class="empty">표시할 회차가 없습니다.</div>`;
+    soldSection.innerHTML = "";
     return;
   }
-  let html = onSaleArr.map(cardHTML).join("");
-  if(soldArr.length){
-    html += `<div class="divider">판매 종료 <span class="n">${soldArr.length}개</span></div>`;
-    html += soldArr.map(cardHTML).join("");
-  }
-  grid.innerHTML = html;
+
+  grid.innerHTML = onSaleArr.length
+    ? onSaleArr.map(cardHTML).join("")
+    : `<div class="empty">조건에 맞는 판매중 회차가 없어요.</div>`;
+
+  soldSection.innerHTML = soldArr.length
+    ? `<div class="divider">판매 종료 <span class="n">${soldArr.length}개</span></div>
+       <div class="grid dense">${soldArr.map(cardCompactHTML).join("")}</div>`
+    : "";
 }
 
 function relTime(iso){
