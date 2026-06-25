@@ -128,8 +128,8 @@
   .pick-l{flex:1;min-width:0}
   .pick .ribbon{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#fff;
     background:linear-gradient(135deg,var(--brand),var(--brand-2));padding:5px 12px;border-radius:999px}
-  .pick .pick-tag{display:flex;width:fit-content;margin-top:12px}
-  .pick .pep{font-size:32px;font-weight:700;letter-spacing:-.03em;margin-top:6px}
+  .pick .pick-labels{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pick .pep{font-size:32px;font-weight:700;letter-spacing:-.03em;margin-top:10px}
   .pick .preason{margin:11px 0 14px;font-size:16px;color:var(--ink2);line-height:1.5;font-weight:500}
   .pick .preason b{color:var(--ink);font-weight:700}
   .pstickers{display:flex;gap:8px;flex-wrap:wrap}
@@ -537,8 +537,10 @@ function renderPick(){
   el.innerHTML = `
     <div class="pick">
       <div class="pick-l">
-        <span class="ribbon">⭐ 추천 1순위</span>
-        <span class="gname ${CCLASS[g.typeCd]||""} pick-tag">${LOGO_MARK}${g.typeName}</span>
+        <div class="pick-labels">
+          <span class="ribbon">⭐ 추천 1순위</span>
+          <span class="gname ${CCLASS[g.typeCd]||""}">${LOGO_MARK}${g.typeName}</span>
+        </div>
         <div class="pep">${g.episode}회</div>
         <p class="preason">출고율 <b>${g.shipmentRate}%</b>인데 1등이 아직 <b>${fmt(r1.remain)}매(${r1pct}%)</b> 남았어요.</p>
         <div class="pstickers">
