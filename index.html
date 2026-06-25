@@ -222,6 +222,32 @@
   .gauge::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--surface)}
   .gauge span{position:relative;font-size:12.5px;font-weight:900}
 
+  /* ---------- share button ---------- */
+  .share{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--ink2);
+    background:var(--surface);border:1px solid var(--line);padding:7px 13px;border-radius:999px;
+    box-shadow:var(--shadow-sm);cursor:pointer;transition:.15s}
+  .share:hover{border-color:var(--brand-2);color:var(--brand-ink)}
+  .share svg{width:15px;height:15px}
+  .nav .right{display:flex;align-items:center;gap:10px}
+  @media (max-width:520px){ .nav .live{display:none} }
+
+  /* ---------- back to top ---------- */
+  .toTop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:50%;z-index:60;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:0;cursor:pointer;
+    box-shadow:0 10px 24px rgba(255,122,26,.4);font-size:20px;display:grid;place-items:center;
+    opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s}
+  .toTop.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+  /* ---------- skeleton ---------- */
+  .sk{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow-sm)}
+  .sk .bar{background:linear-gradient(90deg,#eef1f7 25%,#e3e8f1 37%,#eef1f7 63%);background-size:400% 100%;
+    border-radius:8px;animation:shimmer 1.3s ease-in-out infinite}
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+  .toast{position:fixed;left:50%;bottom:30px;z-index:90;
+    background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:11px 18px;border-radius:12px;
+    box-shadow:var(--shadow-lg);opacity:0;transition:.22s;pointer-events:none;transform:translateX(-50%) translateY(20px)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
   /* ---------- ads ---------- */
   .ad{margin:30px 0;position:relative}
   .ad .lbl{font-size:10.5px;font-weight:800;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin-bottom:6px;text-align:center}
@@ -304,7 +330,13 @@
       </svg>
       <span class="name">스피또 <b>레이더</b><span class="tag">실시간 즉석복권 출고율·당첨율 추적</span></span>
     </div>
-    <span class="live"><span class="dot"></span><span id="updated">불러오는 중…</span></span>
+    <div class="right">
+      <span class="live"><span class="dot"></span><span id="updated">불러오는 중…</span></span>
+      <button class="share" id="shareBtn" aria-label="공유하기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        공유
+      </button>
+    </div>
   </div></div>
 
   <!-- HERO -->
@@ -347,7 +379,11 @@
       </div>
     </div>
 
-    <div class="grid" id="grid"></div>
+    <div class="grid" id="grid">
+      <div class="sk"><div class="bar" style="height:18px;width:55%"></div><div class="bar" style="height:46px;margin-top:16px"></div><div class="bar" style="height:14px;width:70%;margin-top:16px"></div><div class="bar" style="height:40px;margin-top:12px"></div></div>
+      <div class="sk"><div class="bar" style="height:18px;width:55%"></div><div class="bar" style="height:46px;margin-top:16px"></div><div class="bar" style="height:14px;width:70%;margin-top:16px"></div><div class="bar" style="height:40px;margin-top:12px"></div></div>
+      <div class="sk"><div class="bar" style="height:18px;width:55%"></div><div class="bar" style="height:46px;margin-top:16px"></div><div class="bar" style="height:14px;width:70%;margin-top:16px"></div><div class="bar" style="height:40px;margin-top:12px"></div></div>
+    </div>
 
     <!-- AD: 중간 배너 -->
     <div class="ad" id="ad-mid" data-ad-slot-key="mid"><div class="lbl">광고</div><div class="slot"></div></div>
@@ -401,6 +437,9 @@
     <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 복권 구매는 본인의 판단과 책임하에 하시고, 과도한 구매는 삼가주세요. 추천 지수는 통계적 당첨 확률을 보장하지 않습니다.</p>
   </div></footer>
 
+  <button class="toTop" id="toTop" aria-label="맨 위로">↑</button>
+  <div class="toast" id="toast"></div>
+
 <script>
 /* ====== 사이트 설정 (배포 시 여기만 수정) ====== */
 const CONFIG = {
@@ -429,7 +468,17 @@ function scoreColor(s){
   return "#f43f5e";
 }
 
-/* ----- stat strip ----- */
+/* ----- stat strip (with count-up) ----- */
+function animateValue(el, to){
+  const dur=900, t0=performance.now();
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur);
+    const e=1-Math.pow(1-p,3); // easeOutCubic
+    el.textContent = Math.round(to*e).toLocaleString("ko-KR");
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 function renderStats(){
   const onSale = state.data.games.filter(g=>g.status==="판매중");
   const avgShip = onSale.length
@@ -437,9 +486,10 @@ function renderStats(){
   const remain1 = onSale.reduce((a,g)=>a+((g.rank1&&g.rank1.remain)||0),0);
   const el = document.getElementById("stats");
   el.innerHTML = `
-    <div class="stat"><div class="k">🎟️ 판매중 회차</div><div class="v">${onSale.length}<small>개</small></div><div class="s">스피또2000·1000·500 합산</div></div>
-    <div class="stat"><div class="k">📦 평균 출고율</div><div class="v">${avgShip}<small>%</small></div><div class="s">판매중 회차 기준</div></div>
-    <div class="stat"><div class="k">🏆 남은 1등</div><div class="v">${fmt(remain1)}<small>매</small></div><div class="s">아직 안 나온 1등 합계</div></div>`;
+    <div class="stat"><div class="k">🎟️ 판매중 회차</div><div class="v"><span data-n="${onSale.length}">0</span><small>개</small></div><div class="s">스피또2000·1000·500 합산</div></div>
+    <div class="stat"><div class="k">📦 평균 출고율</div><div class="v"><span data-n="${avgShip}">0</span><small>%</small></div><div class="s">판매중 회차 기준</div></div>
+    <div class="stat"><div class="k">🏆 남은 1등</div><div class="v"><span data-n="${remain1}">0</span><small>매</small></div><div class="s">아직 안 나온 1등 합계</div></div>`;
+  el.querySelectorAll("[data-n]").forEach(s=>animateValue(s, +s.dataset.n));
 }
 
 /* ----- featured pick ----- */
@@ -585,7 +635,12 @@ function render(){
   const soldArr = list.filter(g=>g.status!=="판매중");
   document.getElementById("countLabel").innerHTML = `판매중 ${onSaleArr.length} · 전체 ${list.length}`;
 
-  if(!list.length){ grid.innerHTML = `<div class="empty">표시할 회차가 없습니다.</div>`; return; }
+  if(!list.length){
+    grid.innerHTML = state.search
+      ? `<div class="empty">'${state.search}' 회차를 찾을 수 없어요.<br>다른 번호로 검색해 보세요.</div>`
+      : `<div class="empty">표시할 회차가 없습니다.</div>`;
+    return;
+  }
   let html = onSaleArr.map(cardHTML).join("");
   if(soldArr.length){
     html += `<div class="divider">판매 종료 <span class="n">${soldArr.length}개</span></div>`;
@@ -594,12 +649,35 @@ function render(){
   grid.innerHTML = html;
 }
 
+function relTime(iso){
+  const diff = (Date.now() - new Date(iso).getTime())/1000;
+  if(diff < 90) return "방금 전";
+  if(diff < 3600) return `${Math.round(diff/60)}분 전`;
+  if(diff < 86400) return `${Math.round(diff/3600)}시간 전`;
+  return `${Math.round(diff/86400)}일 전`;
+}
 function setUpdated(iso){
   try{
-    const s = new Date(iso).toLocaleString("ko-KR",{dateStyle:"medium",timeStyle:"short"});
-    document.getElementById("updated").textContent = `${s} 기준`;
+    document.getElementById("updated").textContent = `${relTime(iso)} 갱신`;
+    document.getElementById("updated").title = new Date(iso).toLocaleString("ko-KR",{dateStyle:"medium",timeStyle:"short"})+" 기준";
   }catch(e){ document.getElementById("updated").textContent = iso; }
 }
+
+function showToast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove("show"),1900);
+}
+async function doShare(){
+  const url=location.href, title="스피또 레이더 — 지금 사기 좋은 즉석복권";
+  if(navigator.share){ try{ await navigator.share({title,url}); return; }catch(e){ if(e.name==="AbortError") return; } }
+  try{ await navigator.clipboard.writeText(url); showToast("링크를 복사했어요 🔗"); }
+  catch(e){ showToast(url); }
+}
+document.getElementById("shareBtn").addEventListener("click", doShare);
+
+const toTop = document.getElementById("toTop");
+toTop.addEventListener("click", ()=>window.scrollTo({top:0,behavior:"smooth"}));
+addEventListener("scroll", ()=>toTop.classList.toggle("show", scrollY>600), {passive:true});
 
 document.getElementById("sortSeg").addEventListener("click",(e)=>{
   const b = e.target.closest("button"); if(!b) return;
