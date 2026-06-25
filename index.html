@@ -90,9 +90,10 @@
     backdrop-filter:saturate(1.8) blur(20px);-webkit-backdrop-filter:saturate(1.8) blur(20px);
     border-bottom:1px solid rgba(0,0,0,.06)}
   .nav .row{display:flex;align-items:center;justify-content:space-between;height:56px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.02em;font-size:18px}
-  .brand .logo{width:30px;height:30px;flex:none}
-  .brand .name b{color:var(--brand);font-weight:800}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo{width:32px;height:32px;flex:none}
+  .brand .name{font-size:25px;font-weight:800;letter-spacing:-.04em;line-height:1}
+  .brand .name b{color:var(--ink);font-weight:800}
   .brand .tag{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0}
   .nav .live{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink2);font-weight:700;
     background:var(--surface);border:1px solid var(--line);padding:7px 12px;border-radius:999px;box-shadow:var(--shadow-sm)}
@@ -338,7 +339,7 @@
         <defs><linearGradient id="bg" x1="0" y1="0" x2="40" y2="40">
           <stop stop-color="#0071e3"/><stop offset="1" stop-color="#42a5ff"/></linearGradient></defs>
       </svg>
-      <span class="name">긁<b>?</b><span class="tag">긁기 전에 보는 스피또 출고율·당첨율</span></span>
+      <span class="name">긁<b>?</b></span>
     </div>
     <div class="right">
       <span class="live"><span class="dot"></span><span id="updated">불러오는 중…</span></span>
@@ -363,11 +364,11 @@
     <div class="ad" id="ad-top" data-ad-slot-key="top"><div class="lbl">광고</div><div class="slot"></div></div>
 
     <!-- FEATURED PICK -->
-    <div class="section-h"><h2>오늘의 추천 PICK</h2><span class="desc">지금 판매중인 회차 중 추천 지수가 가장 높아요</span></div>
+    <div class="section-h"><h2>오늘 긁는다면, 여기</h2><span class="desc">판매중인 회차 중 추천 지수 1위</span></div>
     <section id="pick"></section>
 
     <!-- CONTROLS -->
-    <div class="section-h" style="margin-bottom:8px"><h2>전체 회차</h2><span class="desc">검색·탭·정렬로 원하는 회차를 찾아보세요</span></div>
+    <div class="section-h" style="margin-bottom:8px"><h2>뭘 긁어볼까?</h2><span class="desc">검색·탭·정렬로 원하는 회차를 골라보세요</span></div>
     <div class="controls">
       <div class="searchbar">
         <div class="box">
@@ -445,7 +446,8 @@
         </svg>
         긁?
       </div>
-      <p class="disc" style="margin-top:10px">데이터 출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></p>
+      <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p>
+      <p class="disc" style="margin-top:4px">데이터 출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></p>
     </div>
     <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 복권 구매는 본인의 판단과 책임하에 하시고, 과도한 구매는 삼가주세요. 추천 지수는 통계적 당첨 확률을 보장하지 않습니다.</p>
   </div></footer>
@@ -681,8 +683,8 @@ function render(){
 
   if(!list.length){
     grid.innerHTML = state.search
-      ? `<div class="empty">'${state.search}' 회차를 찾을 수 없어요.<br>다른 번호로 검색해 보세요.</div>`
-      : `<div class="empty">표시할 회차가 없습니다.</div>`;
+      ? `<div class="empty">'${state.search}' 회차는 없어요 🤔<br>다른 번호로 긁어보세요.</div>`
+      : `<div class="empty">긁어볼 회차가 없어요.</div>`;
     soldSection.innerHTML = "";
     return;
   }
@@ -692,7 +694,7 @@ function render(){
     : `<div class="empty">조건에 맞는 판매중 회차가 없어요.</div>`;
 
   soldSection.innerHTML = soldArr.length
-    ? `<div class="divider">판매 종료 <span class="n">${soldArr.length}개</span></div>
+    ? `<div class="divider">이미 다 긁힌 회차 <span class="n">${soldArr.length}개</span></div>
        <div class="grid dense">${soldArr.map(cardCompactHTML).join("")}</div>`
     : "";
 }
@@ -718,7 +720,7 @@ function showToast(msg){
 async function doShare(){
   const url=location.href, title="긁? — 이왕 긁을 거, 1등 많이 남은 걸로";
   if(navigator.share){ try{ await navigator.share({title,url}); return; }catch(e){ if(e.name==="AbortError") return; } }
-  try{ await navigator.clipboard.writeText(url); showToast("링크를 복사했어요 🔗"); }
+  try{ await navigator.clipboard.writeText(url); showToast("링크 복사 완료 · 같이 긁어요 🔗"); }
   catch(e){ showToast(url); }
 }
 document.getElementById("shareBtn").addEventListener("click", doShare);
