@@ -222,6 +222,39 @@
   .gauge::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--surface)}
   .gauge span{position:relative;font-size:12.5px;font-weight:900}
 
+  /* ---------- ads ---------- */
+  .ad{margin:30px 0;position:relative}
+  .ad .lbl{font-size:10.5px;font-weight:800;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin-bottom:6px;text-align:center}
+  .ad .ph{display:flex;align-items:center;justify-content:center;min-height:96px;border:1.5px dashed var(--line-strong);
+    border-radius:14px;background:repeating-linear-gradient(45deg,#fbfcfe,#fbfcfe 10px,#f5f7fb 10px,#f5f7fb 20px);
+    color:var(--faint);font-size:13px;font-weight:600;text-align:center;padding:18px}
+  .ad ins{display:block}
+
+  /* ---------- search & toggle ---------- */
+  .searchbar{display:flex;gap:10px;align-items:center;flex:1;min-width:210px}
+  .searchbar .box{flex:1;display:flex;align-items:center;gap:8px;background:var(--surface);
+    border:1px solid var(--line-strong);border-radius:12px;padding:9px 13px;box-shadow:var(--shadow-sm)}
+  .searchbar input{border:0;outline:0;background:transparent;font-size:14.5px;width:100%;color:var(--ink);font-family:inherit}
+  .searchbar input::placeholder{color:var(--faint)}
+  .searchbar .si{width:17px;height:17px;flex:none;opacity:.5}
+  .toggle{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--ink2);
+    cursor:pointer;user-select:none;background:var(--surface);border:1px solid var(--line-strong);
+    border-radius:12px;padding:9px 13px;box-shadow:var(--shadow-sm);white-space:nowrap}
+  .toggle .sw{width:36px;height:20px;border-radius:999px;background:#d4dae6;position:relative;transition:.18s;flex:none}
+  .toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.18s}
+  .toggle.on .sw{background:var(--brand)}
+  .toggle.on .sw::after{transform:translateX(16px)}
+
+  /* ---------- FAQ ---------- */
+  .faq{margin-top:54px}
+  .faq .list{display:grid;gap:12px;margin-top:16px}
+  .faq details{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
+  .faq summary{list-style:none;cursor:pointer;padding:18px 20px;font-size:15.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary .chev{transition:.2s;color:var(--muted);font-size:18px;flex:none}
+  .faq details[open] summary .chev{transform:rotate(180deg)}
+  .faq .ans{padding:0 20px 18px;font-size:14px;color:var(--ink2);line-height:1.8}
+
   .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:70px 0;font-size:15px}
   .divider{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin:20px 2px 4px;
     color:var(--muted);font-weight:800;font-size:14px;letter-spacing:-.2px}
@@ -284,13 +317,25 @@
       <div class="stats" id="stats"></div>
     </section>
 
+    <!-- AD: 상단 배너 -->
+    <div class="ad" id="ad-top" data-ad-slot-key="top"><div class="lbl">광고</div><div class="slot"></div></div>
+
     <!-- FEATURED PICK -->
     <div class="section-h"><h2>오늘의 추천 PICK</h2><span class="desc">지금 판매중인 회차 중 추천 지수가 가장 높아요</span></div>
     <section id="pick"></section>
 
     <!-- CONTROLS -->
-    <div class="section-h" style="margin-bottom:8px"><h2>전체 회차</h2><span class="desc">탭과 정렬로 원하는 회차를 찾아보세요</span></div>
+    <div class="section-h" style="margin-bottom:8px"><h2>전체 회차</h2><span class="desc">검색·탭·정렬로 원하는 회차를 찾아보세요</span></div>
     <div class="controls">
+      <div class="searchbar">
+        <div class="box">
+          <svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="search" type="search" inputmode="numeric" placeholder="회차 번호로 검색 (예: 68)" aria-label="회차 검색" />
+        </div>
+        <div class="toggle" id="saleToggle" role="switch" aria-checked="false"><span class="sw"></span>판매중만</div>
+      </div>
+    </div>
+    <div class="controls" style="margin-top:0">
       <div class="tabs" id="tabs"></div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <span class="count" id="countLabel" style="font-size:13.5px;color:var(--ink2);font-weight:700"></span>
@@ -303,6 +348,26 @@
     </div>
 
     <div class="grid" id="grid"></div>
+
+    <!-- AD: 중간 배너 -->
+    <div class="ad" id="ad-mid" data-ad-slot-key="mid"><div class="lbl">광고</div><div class="slot"></div></div>
+
+    <!-- FAQ -->
+    <section class="faq">
+      <div class="section-h"><h2>자주 묻는 질문</h2><span class="desc">스피또를 더 잘 이해하기</span></div>
+      <div class="list">
+        <details open><summary>스피또 출고율이란 무엇인가요?<span class="chev">⌄</span></summary>
+          <div class="ans">출고율은 발행된 복권 중 판매점으로 출고(입고)된 비율입니다. 100%면 모든 물량이 시중에 풀린 상태를 의미해요. 출고율이 높다는 건 그만큼 많은 복권이 이미 판매되고 있다는 뜻입니다.</div></details>
+        <details><summary>잔여 당첨매수는 어떻게 보나요?<span class="chev">⌄</span></summary>
+          <div class="ans">등위별로 '남은 매수 / 전체 매수' 형태로 표시됩니다. 예를 들어 1등이 7매/8매라면, 8개의 1등 중 7개가 아직 주인을 찾지 못했다는 의미예요. 남은 당첨이 많을수록 당첨 기회도 그만큼 더 남아있습니다.</div></details>
+        <details><summary>추천 지수는 어떤 기준으로 계산되나요?<span class="chev">⌄</span></summary>
+          <div class="ans">출고율이 높은데도 고액 당첨(1·2·3등)이 많이 남아있을수록 높게 계산한 참고용 점수입니다. '물량은 많이 풀렸는데 큰 당첨은 아직 안 나온' 회차일수록 점수가 높아요. 다만 통계적 당첨 확률을 보장하지 않는 재미용 지표이니 참고만 하세요.</div></details>
+        <details><summary>데이터는 얼마나 자주 갱신되나요?<span class="chev">⌄</span></summary>
+          <div class="ans">동행복권 공식 발행내역을 자동으로 수집해 갱신합니다. 화면 상단의 '○○ 기준' 표시에서 마지막 갱신 시각을 확인할 수 있어요.</div></details>
+        <details><summary>스피또 종류별 차이는 무엇인가요?<span class="chev">⌄</span></summary>
+          <div class="ans">스피또2000(2,000원·1등 최고 10억), 스피또1000(1,000원·1등 최고 5억), 스피또500(500원·1등 최고 2억)으로 가격과 당첨금 규모가 다릅니다. 상단 탭에서 종류별로 골라볼 수 있어요.</div></details>
+      </div>
+    </section>
 
     <!-- GUIDE -->
     <section class="guide">
@@ -337,7 +402,15 @@
   </div></footer>
 
 <script>
-const state = { data:null, tab:"ALL", sort:"ep" };
+/* ====== 사이트 설정 (배포 시 여기만 수정) ====== */
+const CONFIG = {
+  // Google AdSense 게시자 ID. 승인 후 "ca-pub-0000000000000000" 형태로 채우면 광고가 활성화됩니다.
+  // 비워두면 광고 영역만 미리보기로 표시되고 실제 광고는 로드되지 않습니다.
+  adsenseClient: "",
+  adSlots: { top: "", mid: "" }  // 각 광고 단위의 슬롯 ID
+};
+
+const state = { data:null, tab:"ALL", sort:"ep", search:"", saleOnly:false };
 const TYPES = [
   {cd:"ALL", name:"전체"},
   {cd:"SP2000", name:"스피또2000"},
@@ -402,6 +475,31 @@ function renderPick(){
         </div>
       </div>
     </div>`;
+}
+
+/* ----- ads ----- */
+let adsLoaded = false;
+function initAds(){
+  const client = CONFIG.adsenseClient;
+  document.querySelectorAll(".ad").forEach(box=>{
+    const key = box.dataset.adSlotKey;
+    const slotEl = box.querySelector(".slot");
+    if(client && CONFIG.adSlots[key]){
+      slotEl.innerHTML = `<ins class="adsbygoogle" style="display:block"
+        data-ad-client="${client}" data-ad-slot="${CONFIG.adSlots[key]}"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+      try{ (window.adsbygoogle = window.adsbygoogle || []).push({}); }catch(e){}
+    } else {
+      slotEl.innerHTML = `<div class="ph">광고 영역 · AdSense 승인 후 자동 표시됩니다</div>`;
+    }
+  });
+  if(client && !adsLoaded){
+    adsLoaded = true;
+    const s = document.createElement("script");
+    s.async = true; s.crossOrigin = "anonymous";
+    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(client);
+    document.head.appendChild(s);
+  }
 }
 
 /* ----- tabs ----- */
@@ -471,6 +569,8 @@ function render(){
   if(!state.data) return;
   let list = state.data.games.slice();
   if(state.tab!=="ALL") list = list.filter(g=>g.typeCd===state.tab);
+  if(state.saleOnly) list = list.filter(g=>g.status==="판매중");
+  if(state.search){ const q=state.search.replace(/\D/g,""); if(q) list = list.filter(g=>String(g.episode).includes(q)); }
   const key = {
     ep:(a,b)=>b.episode-a.episode,
     score:(a,b)=>(b.recommendScore??-1)-(a.recommendScore??-1),
@@ -508,6 +608,15 @@ document.getElementById("sortSeg").addEventListener("click",(e)=>{
   render();
 });
 
+document.getElementById("search").addEventListener("input",(e)=>{ state.search = e.target.value; render(); });
+
+document.getElementById("saleToggle").addEventListener("click",(e)=>{
+  state.saleOnly = !state.saleOnly;
+  e.currentTarget.classList.toggle("on", state.saleOnly);
+  e.currentTarget.setAttribute("aria-checked", state.saleOnly);
+  render();
+});
+
 fetch("data.json?_="+Date.now())
   .then(r=>r.json())
   .then(d=>{ state.data=d; setUpdated(d.updatedAt); renderStats(); renderPick(); render(); })
@@ -518,6 +627,7 @@ fetch("data.json?_="+Date.now())
   });
 
 buildTabs();
+initAds();
 </script>
 </body>
 </html>
