@@ -1,2 +1,3 @@
-# www → 루트 도메인 301 리다이렉트
-https://www.ge-uk.com/* https://ge-uk.com/:splat 301!
+# www → 루트 도메인(apex) 리다이렉트는 Cloudflare 대시보드의 Redirect Rule로 처리합니다.
+# Pages의 _redirects 는 경로(path)만 매칭하고 호스트명(www 여부)은 구분하지 못하므로
+# 여기서 전체 URL(https://www...) 출발 규칙은 사용할 수 없습니다. (최신 wrangler에서 빌드 실패 원인)
