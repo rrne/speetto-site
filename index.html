@@ -213,6 +213,8 @@
   .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}
   .cfoot .info{font-size:13px;color:var(--muted);line-height:1.75}
   .cfoot .info b{color:var(--ink2);font-weight:800}
+  .cfoot .info b.dday{color:var(--brand-ink)}
+  .cfoot .info b.dday.soon{color:#e11d48}
   .rec{display:flex;align-items:center;gap:11px}
   .rec .meta2{text-align:right}
   .rec .meta2 .t{font-size:12px;color:var(--muted);font-weight:700}
@@ -461,6 +463,15 @@ const CCLASS = {SP2000:"c2000", SP1000:"c1000", SP500:"c500"};
 
 const fmt = n => n==null ? "-" : n.toLocaleString("ko-KR");
 const rateOf = r => (r && r.total) ? (r.remain/r.total*100) : 0;
+function dday(end){
+  if(!end) return null;
+  const d = new Date(end+"T23:59:59");
+  if(isNaN(d)) return null;
+  const days = Math.ceil((d - Date.now())/86400000);
+  if(days < 0) return {days, txt:"마감", soon:false, over:true};
+  if(days === 0) return {days, txt:"오늘 마감", soon:true, over:false};
+  return {days, txt:"D-"+days, soon:days<=14, over:false};
+}
 function scoreColor(s){
   if(s==null) return "#9aa6ba";
   if(s>=40) return "#10b981";
@@ -605,7 +616,7 @@ function cardHTML(g){
       ${rankRow(3, g.rank3, "rk3")}
     </div>
     <div class="cfoot">
-      <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b></div>
+      <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b>${(()=>{const d=dday(g.saleEndDate);return (!sold&&d&&!d.over)?` · <b class="dday${d.soon?' soon':''}">${d.txt}</b>`:"";})()}</div>
       <div class="rec">
         <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
         <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
