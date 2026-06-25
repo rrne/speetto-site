@@ -345,6 +345,71 @@
   .ginfo .lead{font-size:15px;color:var(--ink2);line-height:1.75;font-weight:400;max-width:70ch;margin:4px 2px 18px}
   @media (max-width:860px){ .ginfo .igrid{grid-template-columns:1fr} }
 
+  /* ---------- feature: toolbar ---------- */
+  .toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:2px 2px 16px;align-items:center}
+  .tbtn{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;font-family:inherit;
+    font-size:13.5px;font-weight:600;color:var(--ink2);background:var(--surface);
+    padding:9px 15px;border-radius:999px;box-shadow:var(--shadow-sm);transition:.15s}
+  .tbtn:hover{color:var(--ink);transform:translateY(-1px)}
+  .tbtn.on{background:var(--ink);color:#fff}
+  .tbtn .cnt{font-size:11px;font-weight:800;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:999px}
+  .tbtn.on .cnt{background:rgba(255,255,255,.22)}
+  .tbtn.dice{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 6px 18px rgba(0,113,227,.32)}
+  .tbtn.dice:hover{filter:brightness(1.04)}
+
+  /* ---------- feature: ranking chart ---------- */
+  .viz{margin:8px 0 0}
+  .chart{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:20px 22px}
+  .chart .crow{display:grid;grid-template-columns:128px 1fr 42px;align-items:center;gap:12px;margin:7px 0;cursor:pointer;
+    border-radius:10px;padding:3px 6px;transition:.15s}
+  .chart .crow:hover{background:var(--bg-soft)}
+  .chart .clabel{font-size:12.5px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+  .chart .cdot{width:8px;height:8px;border-radius:50%;flex:none}
+  .chart .cbar{height:20px;border-radius:7px;background:var(--bg);overflow:hidden}
+  .chart .cbar>i{display:block;height:100%;border-radius:7px;transition:width .7s cubic-bezier(.2,.7,.3,1)}
+  .chart .cval{font-size:12.5px;font-weight:800;text-align:right;letter-spacing:-.02em}
+  .cd2000{background:var(--amber)} .cd1000{background:var(--emerald)} .cd500{background:var(--rose)}
+
+  /* ---------- feature: card actions (bookmark/compare) ---------- */
+  .cactions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .cact{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
+    border:0;background:var(--bg);border-radius:11px;padding:9px;font-size:13px;font-weight:700;color:var(--ink2);
+    font-family:inherit;transition:.15s;user-select:none}
+  .cact:hover{background:var(--line)}
+  .cact.cmp.on{background:rgba(0,113,227,.1);color:var(--brand-ink)}
+  .cact.bmk.on{background:rgba(245,158,11,.16);color:#b25500}
+  .cact input{display:none}
+
+  @keyframes flashcard{0%{box-shadow:0 0 0 0 rgba(0,113,227,.45)}100%{box-shadow:0 0 0 16px rgba(0,113,227,0)}}
+  .card.flash{animation:flashcard 1s ease-out 2}
+
+  /* ---------- feature: compare bar + modal ---------- */
+  .cmpbar{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);z-index:70;
+    background:var(--ink);color:#fff;border-radius:999px;padding:9px 11px 9px 20px;
+    display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.25s}
+  .cmpbar.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+  .cmpbar .ct{font-size:14px;font-weight:700}
+  .cmpbar .ct b{color:var(--brand-2)}
+  .cmpbar button{border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:13px;border-radius:999px;padding:9px 16px}
+  .cmpbar .go{background:#fff;color:var(--ink)}
+  .cmpbar .clr{background:transparent;color:#fff;opacity:.65;padding:9px 6px}
+  .cmpbar .clr:hover{opacity:1}
+  .modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
+  .modal.show{display:flex}
+  .modal .ov{position:absolute;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+  .modal .box{position:relative;background:var(--surface);border-radius:24px;box-shadow:var(--shadow-lg);
+    max-width:880px;width:100%;max-height:86vh;overflow:auto;padding:24px}
+  .modal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+  .modal .mh h3{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}
+  .modal .x{border:0;background:var(--bg);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:17px;color:var(--ink2);flex:none}
+  .cmptable{width:100%;border-collapse:collapse;font-size:14px;min-width:420px}
+  .cmptable th,.cmptable td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+  .cmptable thead th{font-size:13px;font-weight:700}
+  .cmptable .rh{color:var(--muted);font-weight:600;font-size:12.5px;text-align:left;background:var(--bg-soft)}
+  .cmptable .best{color:var(--brand-ink);font-weight:800}
+  .cmptable .best::after{content:" ★";font-size:11px;color:var(--amber)}
+  .mtag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#fff;padding:3px 9px;border-radius:999px}
+
   /* ---------- footer ---------- */
   footer{margin-top:72px;border-top:1px solid var(--line)}
   footer .in{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;padding:40px 0 48px}
@@ -407,8 +472,17 @@
     <div class="section-h"><h2>오늘 긁는다면, 여기</h2><span class="desc">판매중인 회차 중 추천 지수 1위</span></div>
     <section id="pick"></section>
 
+    <!-- RANKING CHART -->
+    <div class="section-h"><h2>한눈에 보는 추천 순위</h2><span class="desc">판매중 회차 추천 지수 비교 · 막대를 누르면 해당 회차로 이동</span></div>
+    <section class="viz" id="viz"></section>
+
     <!-- CONTROLS -->
     <div class="section-h" style="margin-bottom:8px"><h2>뭘 긁어볼까?</h2><span class="desc">검색·탭·정렬로 원하는 회차를 골라보세요</span></div>
+    <div class="toolbar" id="toolbar">
+      <button class="tbtn dice" id="diceBtn">🎲 아무거나 긁어줘</button>
+      <button class="tbtn" id="bmkFilter" aria-pressed="false">⭐ 관심만 <span class="cnt" id="bmkCnt">0</span></button>
+      <button class="tbtn" id="ddlFilter" aria-pressed="false">⏱ 마감 임박</button>
+    </div>
     <div class="controls">
       <div class="searchbar">
         <div class="box">
@@ -425,6 +499,7 @@
         <div class="seg" id="sortSeg">
           <button data-sort="ep" class="on">최신 회차</button>
           <button data-sort="score">추천 지수</button>
+          <button data-sort="r1">1등 잔여율</button>
           <button data-sort="ship">출고율</button>
         </div>
       </div>
@@ -545,6 +620,23 @@
   <button class="toTop" id="toTop" aria-label="맨 위로">↑</button>
   <div class="toast" id="toast"></div>
 
+  <!-- 비교 바 -->
+  <div class="cmpbar" id="cmpbar">
+    <span class="ct"><b id="cmpCnt">0</b>개 담음</span>
+    <button class="go" id="cmpGo">비교하기</button>
+    <button class="clr" id="cmpClr" aria-label="비교 초기화">✕</button>
+  </div>
+
+  <!-- 비교 모달 -->
+  <div class="modal" id="cmpModal" role="dialog" aria-modal="true" aria-label="회차 비교">
+    <div class="ov" data-close="1"></div>
+    <div class="box">
+      <div class="mh"><h3>🔀 회차 비교</h3><button class="x" id="cmpX" aria-label="닫기">✕</button></div>
+      <div style="overflow-x:auto"><table class="cmptable" id="cmpTable"></table></div>
+      <p class="disc" style="margin:14px 2px 0;color:var(--faint);font-size:12px">★ 표시는 항목별 가장 유리한 값이에요. 추천 지수는 참고용 지표입니다.</p>
+    </div>
+  </div>
+
 <script>
 /* ====== 사이트 설정 (배포 시 여기만 수정) ====== */
 const CONFIG = {
@@ -556,7 +648,19 @@ const CONFIG = {
   gaId: "G-ZG2KZYHQBL"
 };
 
-const state = { data:null, tab:"ALL", sort:"ep", search:"", saleOnly:false };
+const state = { data:null, tab:"ALL", sort:"ep", search:"", saleOnly:false,
+  bmkOnly:false, ddlOnly:false,
+  bookmarks:new Set(), compare:new Set() };
+
+/* ----- 회차 고유키 / 북마크 영속 ----- */
+const gkey = g => `${g.typeCd}-${g.episode}`;
+const BMK_LS = "geuk_bookmarks_v1";
+function loadBookmarks(){
+  try{ const a = JSON.parse(localStorage.getItem(BMK_LS)||"[]"); state.bookmarks = new Set(Array.isArray(a)?a:[]); }
+  catch(e){ state.bookmarks = new Set(); }
+}
+function saveBookmarks(){ try{ localStorage.setItem(BMK_LS, JSON.stringify([...state.bookmarks])); }catch(e){} }
+const gameByKey = k => (state.data?.games||[]).find(g=>gkey(g)===k);
 
 // 라벨용 화이트 레이더 로고 마크
 const LOGO_MARK = '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>';
@@ -700,7 +804,7 @@ function buildTabs(){
     const b = document.createElement("button");
     b.className = "tab" + (state.tab===t.cd?" on":"");
     b.textContent = t.name;
-    b.onclick = ()=>{ state.tab=t.cd; buildTabs(); render(); };
+    b.onclick = ()=>{ state.tab=t.cd; buildTabs(); render(); writeHash(); };
     el.appendChild(b);
   });
 }
@@ -726,7 +830,9 @@ function cardHTML(g){
   const ship = g.shipmentRate==null ? 0 : g.shipmentRate;
   const sc = g.recommendScore, scP = sc==null ? 0 : Math.min(100, sc);
   const ddInfo = (()=>{const d=dday(g.saleEndDate);return (d&&!d.over)?` · <b class="dday${d.soon?' soon':''}">${d.txt}</b>`:"";})();
-  return `<div class="card ${TCLASS[g.typeCd]||""}">
+  const k = gkey(g);
+  const isBmk = state.bookmarks.has(k), isCmp = state.compare.has(k);
+  return `<div class="card ${TCLASS[g.typeCd]||""}" id="card-${k}" data-key="${k}">
     <div class="chead">
       <div class="title">
         <span class="gname ${CCLASS[g.typeCd]||""}">${LOGO_MARK}${g.typeName}</span>
@@ -752,6 +858,10 @@ function cardHTML(g){
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
           <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
         </div>
+      </div>
+      <div class="cactions">
+        <button class="cact bmk${isBmk?' on':''}" data-bmk="${k}" aria-pressed="${isBmk}">${isBmk?'★ 관심':'☆ 관심'}</button>
+        <label class="cact cmp${isCmp?' on':''}"><input type="checkbox" data-cmp="${k}" ${isCmp?'checked':''}>${isCmp?'✓ 비교중':'＋ 비교'}</label>
       </div>
     </div>
   </div>`;
@@ -790,10 +900,13 @@ function render(){
   let list = state.data.games.slice();
   if(state.tab!=="ALL") list = list.filter(g=>g.typeCd===state.tab);
   if(state.saleOnly) list = list.filter(g=>g.status==="판매중");
+  if(state.bmkOnly) list = list.filter(g=>state.bookmarks.has(gkey(g)));
+  if(state.ddlOnly) list = list.filter(g=>{const d=dday(g.saleEndDate);return g.status==="판매중" && d && !d.over && d.soon;});
   if(state.search){ const q=state.search.replace(/\D/g,""); if(q) list = list.filter(g=>String(g.episode).includes(q)); }
   const key = {
     ep:(a,b)=>b.episode-a.episode,
     score:(a,b)=>(b.recommendScore??-1)-(a.recommendScore??-1),
+    r1:(a,b)=>(rateOf(b.rank1))-(rateOf(a.rank1)),
     ship:(a,b)=>(b.shipmentRate??-1)-(a.shipmentRate??-1),
   }[state.sort];
   list.sort((a,b)=>{
@@ -807,10 +920,13 @@ function render(){
   const soldSection = document.getElementById("soldSection");
 
   if(!list.length){
-    grid.innerHTML = state.search
-      ? `<div class="empty">'${state.search}' 회차는 없어요 🤔<br>다른 번호로 긁어보세요.</div>`
+    grid.innerHTML =
+      state.bmkOnly ? `<div class="empty">아직 관심 회차가 없어요 ⭐<br>카드의 '☆ 관심'을 눌러 담아보세요.</div>`
+      : state.ddlOnly ? `<div class="empty">마감 임박(D-14 이내) 회차가 없어요 ⏱</div>`
+      : state.search ? `<div class="empty">'${state.search}' 회차는 없어요 🤔<br>다른 번호로 긁어보세요.</div>`
       : `<div class="empty">긁어볼 회차가 없어요.</div>`;
     soldSection.innerHTML = "";
+    syncToolbar(); renderViz(); updateCmpBar();
     return;
   }
 
@@ -822,6 +938,123 @@ function render(){
     ? `<div class="divider">이미 다 긁힌 회차 <span class="n">${soldArr.length}개</span></div>
        <div class="sold-list">${soldArr.map(soldDetailsHTML).join("")}</div>`
     : "";
+
+  syncToolbar(); renderViz(); updateCmpBar();
+}
+
+/* ----- 추천 순위 막대 차트 ----- */
+function renderViz(){
+  const el = document.getElementById("viz");
+  if(!el || !state.data) return;
+  let arr = state.data.games.filter(g=>g.status==="판매중" && g.recommendScore!=null);
+  if(state.tab!=="ALL") arr = arr.filter(g=>g.typeCd===state.tab);
+  arr = arr.sort((a,b)=>b.recommendScore-a.recommendScore).slice(0,10);
+  if(!arr.length){ el.innerHTML = ""; return; }
+  const max = Math.max(...arr.map(g=>g.recommendScore), 1);
+  const dotCls = {SP2000:"cd2000", SP1000:"cd1000", SP500:"cd500"};
+  el.innerHTML = `<div class="chart">${arr.map(g=>{
+    const w = Math.max(4, (g.recommendScore/max)*100);
+    return `<div class="crow" data-go="${gkey(g)}">
+      <span class="clabel"><i class="cdot ${dotCls[g.typeCd]||""}"></i>${g.typeName} ${g.episode}회</span>
+      <span class="cbar"><i class="${dotCls[g.typeCd]||""}" style="width:${w}%"></i></span>
+      <span class="cval" style="color:${scoreColor(g.recommendScore)}">${g.recommendScore}</span>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+/* ----- 툴바 상태 동기화 ----- */
+function syncToolbar(){
+  const c = document.getElementById("bmkCnt"); if(c) c.textContent = state.bookmarks.size;
+  const b = document.getElementById("bmkFilter"); if(b){ b.classList.toggle("on", state.bmkOnly); b.setAttribute("aria-pressed", state.bmkOnly); }
+  const d = document.getElementById("ddlFilter"); if(d){ d.classList.toggle("on", state.ddlOnly); d.setAttribute("aria-pressed", state.ddlOnly); }
+}
+
+/* ----- 비교 바 / 모달 ----- */
+function updateCmpBar(){
+  const bar = document.getElementById("cmpbar");
+  const cnt = document.getElementById("cmpCnt");
+  if(!bar) return;
+  cnt.textContent = state.compare.size;
+  bar.classList.toggle("show", state.compare.size>0);
+}
+const CMP_MAX = 3;
+function toggleCompare(k){
+  if(state.compare.has(k)){ state.compare.delete(k); }
+  else {
+    if(state.compare.size>=CMP_MAX){ showToast(`비교는 최대 ${CMP_MAX}개까지예요`); render(); return; }
+    state.compare.add(k);
+  }
+  render();
+}
+function openCmpModal(){
+  const games = [...state.compare].map(gameByKey).filter(Boolean);
+  if(games.length<2){ showToast("2개 이상 담아야 비교할 수 있어요"); return; }
+  const tcol = {SP2000:"var(--amber)",SP1000:"var(--emerald)",SP500:"var(--rose)"};
+  const r1r = g=>rateOf(g.rank1), r2r = g=>rateOf(g.rank2), r3r = g=>rateOf(g.rank3);
+  // 항목별 최고값 인덱스(클수록 유리: 출고율 제외하고 잔여율/추천지수, 가격은 낮을수록)
+  const bestIdx = (vals, dir=1)=>{ let bi=0,bv=vals[0]*dir; vals.forEach((v,i)=>{ if(v*dir>bv){bv=v*dir;bi=i;} }); return bi; };
+  const rows = [
+    {h:"종류", cell:g=>`<span class="mtag" style="background:${tcol[g.typeCd]||'#888'}">${g.typeName}</span>`},
+    {h:"회차", cell:g=>`${g.episode}회`},
+    {h:"가격", cell:g=>`${fmt(g.price)}원`},
+    {h:"출고율", cell:g=>`${g.shipmentRate}%`, best:bestIdx(games.map(g=>g.shipmentRate||0))},
+    {h:"1등 잔여", cell:g=>`${fmt(g.rank1?.remain)}/${fmt(g.rank1?.total)} · ${r1r(g).toFixed(0)}%`, best:bestIdx(games.map(r1r))},
+    {h:"2등 잔여", cell:g=>`${fmt(g.rank2?.remain)}/${fmt(g.rank2?.total)} · ${r2r(g).toFixed(0)}%`, best:bestIdx(games.map(r2r))},
+    {h:"3등 잔여", cell:g=>`${r3r(g).toFixed(0)}%`, best:bestIdx(games.map(r3r))},
+    {h:"1등 당첨금", cell:g=>g.rank1?.prize||"-"},
+    {h:"추천 지수", cell:g=>`${g.recommendScore??"-"}`, best:bestIdx(games.map(g=>g.recommendScore??-1))},
+    {h:"판매기한", cell:g=>g.saleEndDate||"-"},
+  ];
+  const head = `<thead><tr><th class="rh">항목</th>${games.map(g=>`<th>${g.typeName.replace("스피또","")}<br>${g.episode}회</th>`).join("")}</tr></thead>`;
+  const body = `<tbody>${rows.map(r=>`<tr><td class="rh">${r.h}</td>${games.map((g,i)=>`<td class="${r.best===i?'best':''}">${r.cell(g)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  document.getElementById("cmpTable").innerHTML = head+body;
+  document.getElementById("cmpModal").classList.add("show");
+  if(window.gtag) gtag("event","compare",{count:games.length});
+}
+function closeCmpModal(){ document.getElementById("cmpModal").classList.remove("show"); }
+
+/* ----- 랜덤 추천 ----- */
+function diceRoll(){
+  const arr = state.data.games.filter(g=>g.status==="판매중" && g.recommendScore!=null);
+  if(!arr.length){ showToast("판매중 회차가 없어요"); return; }
+  // 추천지수 가중 랜덤
+  const weights = arr.map(g=>Math.max(1, g.recommendScore));
+  const sum = weights.reduce((a,b)=>a+b,0);
+  let r = Math.random()*sum, pick = arr[0];
+  for(let i=0;i<arr.length;i++){ r-=weights[i]; if(r<=0){ pick=arr[i]; break; } }
+  // 필터 해제 후 해당 회차로 이동·강조
+  state.bmkOnly=false; state.ddlOnly=false; state.saleOnly=false; state.search="";
+  const si=document.getElementById("search"); if(si) si.value="";
+  if(state.tab!=="ALL" && state.tab!==pick.typeCd) state.tab="ALL";
+  buildTabs(); render();
+  const quips=["오늘은 이거 어때요?","느낌 오는데요?","운명의 한 장 🎯","이거 긁어봐요!","오, 괜찮은데요?"];
+  showToast(`🎲 ${pick.typeName} ${pick.episode}회 · ${quips[Math.floor(Math.random()*quips.length)]}`);
+  setTimeout(()=>{
+    const card=document.getElementById("card-"+gkey(pick));
+    if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+  },120);
+  if(window.gtag) gtag("event","dice_roll",{pick:gkey(pick)});
+}
+
+/* ----- URL 해시로 상태 공유 ----- */
+function writeHash(){
+  const p=new URLSearchParams();
+  if(state.tab!=="ALL") p.set("t",state.tab);
+  if(state.sort!=="ep") p.set("s",state.sort);
+  if(state.saleOnly) p.set("sale","1");
+  if(state.bmkOnly) p.set("bmk","1");
+  if(state.ddlOnly) p.set("ddl","1");
+  const h=p.toString();
+  history.replaceState(null,"",h?("#"+h):location.pathname);
+}
+function readHash(){
+  const h=location.hash.replace(/^#/,""); if(!h) return;
+  const p=new URLSearchParams(h);
+  if(p.get("t")) state.tab=p.get("t");
+  if(p.get("s")) state.sort=p.get("s");
+  state.saleOnly=p.get("sale")==="1";
+  state.bmkOnly=p.get("bmk")==="1";
+  state.ddlOnly=p.get("ddl")==="1";
 }
 
 function relTime(iso){
@@ -858,7 +1091,7 @@ document.getElementById("sortSeg").addEventListener("click",(e)=>{
   const b = e.target.closest("button"); if(!b) return;
   state.sort = b.dataset.sort;
   [...e.currentTarget.children].forEach(x=>x.classList.toggle("on", x===b));
-  render();
+  render(); writeHash();
 });
 
 document.getElementById("search").addEventListener("input",(e)=>{ state.search = e.target.value; render(); });
@@ -867,12 +1100,62 @@ document.getElementById("saleToggle").addEventListener("click",(e)=>{
   state.saleOnly = !state.saleOnly;
   e.currentTarget.classList.toggle("on", state.saleOnly);
   e.currentTarget.setAttribute("aria-checked", state.saleOnly);
-  render();
+  render(); writeHash();
 });
+
+/* ----- 신규 기능 핸들러 ----- */
+document.getElementById("diceBtn").addEventListener("click", diceRoll);
+
+document.getElementById("bmkFilter").addEventListener("click",()=>{
+  state.bmkOnly=!state.bmkOnly; if(state.bmkOnly) state.ddlOnly=false;
+  render(); writeHash();
+});
+document.getElementById("ddlFilter").addEventListener("click",()=>{
+  state.ddlOnly=!state.ddlOnly; if(state.ddlOnly) state.bmkOnly=false;
+  render(); writeHash();
+});
+
+// 카드 액션(북마크/비교) — 이벤트 위임
+document.getElementById("grid").addEventListener("click",(e)=>{
+  const bmk = e.target.closest("[data-bmk]");
+  if(bmk){
+    const k=bmk.dataset.bmk;
+    if(state.bookmarks.has(k)) state.bookmarks.delete(k); else state.bookmarks.add(k);
+    saveBookmarks(); render();
+    if(window.gtag) gtag("event","bookmark",{key:k,on:state.bookmarks.has(k)});
+  }
+});
+document.getElementById("grid").addEventListener("change",(e)=>{
+  const cmp = e.target.closest("[data-cmp]");
+  if(cmp) toggleCompare(cmp.dataset.cmp);
+});
+
+// 차트 막대 클릭 → 해당 회차로 이동
+document.getElementById("viz").addEventListener("click",(e)=>{
+  const row=e.target.closest("[data-go]"); if(!row) return;
+  const k=row.dataset.go, g=gameByKey(k); if(!g) return;
+  if(state.tab!=="ALL" && state.tab!==g.typeCd){ state.tab="ALL"; buildTabs(); render(); writeHash(); }
+  const card=document.getElementById("card-"+k);
+  if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+});
+
+// 비교 바 / 모달
+document.getElementById("cmpGo").addEventListener("click", openCmpModal);
+document.getElementById("cmpClr").addEventListener("click",()=>{ state.compare.clear(); render(); });
+document.getElementById("cmpX").addEventListener("click", closeCmpModal);
+document.getElementById("cmpModal").addEventListener("click",(e)=>{ if(e.target.dataset.close) closeCmpModal(); });
+addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeCmpModal(); });
+
+addEventListener("hashchange",()=>{ readHash(); buildTabs(); syncSortUI(); syncSaleUI(); render(); });
+function syncSortUI(){ document.querySelectorAll("#sortSeg button").forEach(b=>b.classList.toggle("on", b.dataset.sort===state.sort)); }
+function syncSaleUI(){ const t=document.getElementById("saleToggle"); if(t){ t.classList.toggle("on",state.saleOnly); t.setAttribute("aria-checked",state.saleOnly); } }
+
+loadBookmarks();
+readHash();
 
 fetch("data.json?_="+Date.now())
   .then(r=>r.json())
-  .then(d=>{ state.data=d; setUpdated(d.updatedAt); renderPick(); render(); })
+  .then(d=>{ state.data=d; setUpdated(d.updatedAt); buildTabs(); syncSortUI(); syncSaleUI(); renderPick(); render(); })
   .catch(err=>{
     document.getElementById("updated").textContent = "데이터 로드 실패";
     document.getElementById("grid").innerHTML = `<div class="empty">data.json 을 불러올 수 없습니다. 로컬에서는 서버로 띄워 주세요.</div>`;
