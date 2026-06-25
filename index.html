@@ -10,7 +10,7 @@
 <meta name="keywords" content="스피또, 스피또2000, 스피또1000, 스피또500, 스피또 출고율, 스피또 당첨율, 즉석복권, 동행복권, 복권 당첨, 1등 잔여, 스피또 추천 회차" />
 <meta name="author" content="스피또 레이더" />
 <meta name="robots" content="index,follow,max-image-preview:large" />
-<meta name="theme-color" content="#ff7a1a" />
+<meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="https://speetto-radar.pages.dev/" />
 
 <!-- ===== Icons / PWA ===== -->
@@ -66,7 +66,7 @@
     --ink:#1d1d1f; --ink2:#424245; --muted:#86868b; --faint:#a1a1a6;
     --line:#ededf0; --line-strong:#e2e2e6;
     --slate:#48484a;
-    --brand:#ff7a1a; --brand-2:#ffb43c; --brand-ink:#b25500;
+    --brand:#0071e3; --brand-2:#42a5ff; --brand-ink:#0058b0;
     --amber:#f59e0b; --emerald:#10b981; --rose:#f43f5e;
     --violet:#6d5dfc; --sky:#0071e3;
     --shadow-sm:0 2px 10px rgba(0,0,0,.04);
@@ -101,7 +101,7 @@
   /* ---------- hero ---------- */
   .hero{padding:72px 0 44px;text-align:center;position:relative}
   .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--brand-ink);
-    background:rgba(255,122,26,.09);padding:7px 15px;border-radius:999px}
+    background:rgba(0,113,227,.10);padding:7px 15px;border-radius:999px}
   .hero h1{margin:20px auto 16px;font-size:clamp(34px,6.4vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.07;max-width:15ch}
   .hero h1 .hl{color:var(--brand)}
   .hero p{margin:0 auto;max-width:42ch;color:var(--muted);font-size:clamp(17px,2.4vw,21px);font-weight:500;line-height:1.45}
@@ -126,7 +126,7 @@
   .pick .ribbon{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#fff;
     background:linear-gradient(135deg,var(--brand),var(--brand-2));padding:7px 15px;border-radius:999px}
   .pick .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;margin-top:22px}
-  .pick .ptitle{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .pick .ptitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .pick .pname{font-size:16px;font-weight:700}
   .pick .pep{font-size:42px;font-weight:700;letter-spacing:-.03em}
   .pick .preason{margin:16px 0 22px;font-size:19px;color:var(--ink2);line-height:1.55;font-weight:500}
@@ -182,7 +182,8 @@
 
   .chead{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .gname{font-size:12px;font-weight:700;color:#fff;padding:4px 11px;border-radius:999px;letter-spacing:0}
+  .gname{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#fff;padding:4px 11px 4px 8px;border-radius:999px;letter-spacing:0}
+  .gname svg{width:13px;height:13px;flex:none}
   .gname.c2000{background:var(--amber)} .gname.c1000{background:var(--emerald)} .gname.c500{background:var(--rose)}
   .epno{font-size:24px;font-weight:700;letter-spacing:-.03em}
   .price{font-size:14px;color:var(--muted);font-weight:500}
@@ -243,7 +244,7 @@
   /* ---------- back to top ---------- */
   .toTop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:50%;z-index:60;
     background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:0;cursor:pointer;
-    box-shadow:0 10px 24px rgba(255,122,26,.4);font-size:20px;display:grid;place-items:center;
+    box-shadow:0 10px 24px rgba(0,113,227,.4);font-size:20px;display:grid;place-items:center;
     opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s}
   .toTop.show{opacity:1;pointer-events:auto;transform:translateY(0)}
 
@@ -335,7 +336,7 @@
         <circle cx="20" cy="20" r="2.2" fill="#fff"/>
         <path d="M20 4.5V9M20 31v4.5M4.5 20H9M31 20h4.5" stroke="#fff" stroke-opacity=".9" stroke-width="2.2" stroke-linecap="round"/>
         <defs><linearGradient id="bg" x1="0" y1="0" x2="40" y2="40">
-          <stop stop-color="#ff8a1f"/><stop offset="1" stop-color="#ffb43c"/></linearGradient></defs>
+          <stop stop-color="#0071e3"/><stop offset="1" stop-color="#42a5ff"/></linearGradient></defs>
       </svg>
       <span class="name">스피또 <b>레이더</b><span class="tag">실시간 즉석복권 출고율·당첨율 추적</span></span>
     </div>
@@ -440,7 +441,7 @@
           <circle cx="20" cy="20" r="11.5" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
           <circle cx="20" cy="20" r="6" stroke="#fff" stroke-opacity=".9" stroke-width="2.2"/>
           <circle cx="20" cy="20" r="2.2" fill="#fff"/>
-          <defs><linearGradient id="bg2" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#ff8a1f"/><stop offset="1" stop-color="#ffb43c"/></linearGradient></defs>
+          <defs><linearGradient id="bg2" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#0071e3"/><stop offset="1" stop-color="#42a5ff"/></linearGradient></defs>
         </svg>
         스피또 레이더
       </div>
@@ -462,6 +463,9 @@ const CONFIG = {
 };
 
 const state = { data:null, tab:"ALL", sort:"ep", search:"", saleOnly:false };
+
+// 라벨용 화이트 레이더 로고 마크
+const LOGO_MARK = '<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>';
 const TYPES = [
   {cd:"ALL", name:"전체"},
   {cd:"SP2000", name:"스피또2000"},
@@ -527,9 +531,9 @@ function renderPick(){
       <div class="grid2">
         <div>
           <div class="ptitle">
-            <span class="pname ${CCLASS[g.typeCd]||""}">${g.typeName}</span>
+            <span class="gname ${CCLASS[g.typeCd]||""}">${LOGO_MARK}${g.typeName}</span>
             <span class="pep">${g.episode}회</span>
-            <span class="price" style="color:var(--muted);font-weight:700">${fmt(g.price)}원</span>
+            <span class="price" style="color:var(--muted);font-weight:500">${fmt(g.price)}원</span>
           </div>
           <p class="preason">출고율 <b>${g.shipmentRate}%</b>로 물량이 많이 풀렸는데<br>1등이 아직 <b>${fmt(r1.remain)}매(${r1pct}%)</b> 남아있어요.</p>
           <div class="pmetrics">
@@ -610,7 +614,7 @@ function cardHTML(g){
   return `<div class="card ${TCLASS[g.typeCd]||""}">
     <div class="chead">
       <div class="title">
-        <span class="gname ${CCLASS[g.typeCd]||""}">${g.typeName}</span>
+        <span class="gname ${CCLASS[g.typeCd]||""}">${LOGO_MARK}${g.typeName}</span>
         <span class="epno">${g.episode}회</span>
         <span class="price">${fmt(g.price)}원</span>
       </div>
