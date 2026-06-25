@@ -357,18 +357,29 @@
   .tbtn.dice{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 6px 18px rgba(0,113,227,.32)}
   .tbtn.dice:hover{filter:brightness(1.04)}
 
-  /* ---------- feature: ranking chart ---------- */
+  /* ---------- feature: 추천 순위 TOP ---------- */
   .viz{margin:8px 0 0}
-  .chart{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:20px 22px}
-  .chart .crow{display:grid;grid-template-columns:128px 1fr 42px;align-items:center;gap:12px;margin:7px 0;cursor:pointer;
-    border-radius:10px;padding:3px 6px;transition:.15s}
-  .chart .crow:hover{background:var(--bg-soft)}
-  .chart .clabel{font-size:12.5px;font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
-  .chart .cdot{width:8px;height:8px;border-radius:50%;flex:none}
-  .chart .cbar{height:20px;border-radius:7px;background:var(--bg);overflow:hidden}
-  .chart .cbar>i{display:block;height:100%;border-radius:7px;transition:width .7s cubic-bezier(.2,.7,.3,1)}
-  .chart .cval{font-size:12.5px;font-weight:800;text-align:right;letter-spacing:-.02em}
-  .cd2000{background:var(--amber)} .cd1000{background:var(--emerald)} .cd500{background:var(--rose)}
+  .rank-list{display:grid;gap:10px}
+  .rank-item{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:14px;width:100%;text-align:left;
+    background:var(--surface);border:0;border-radius:16px;padding:15px 18px;box-shadow:var(--shadow-sm);cursor:pointer;
+    font-family:inherit;transition:transform .2s cubic-bezier(.2,.7,.3,1),box-shadow .2s}
+  .rank-item:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .rank-no{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:20px;font-weight:800;
+    background:var(--bg);color:var(--muted);letter-spacing:-.02em}
+  .rank-no.r1{background:linear-gradient(135deg,#ffd86b,#f7b500);color:#7a4a00;box-shadow:0 5px 14px rgba(247,181,0,.4)}
+  .rank-no.r2{background:linear-gradient(135deg,#eef1f6,#cdd6e1);color:#56606e}
+  .rank-no.r3{background:linear-gradient(135deg,#f7d0ac,#e2a978);color:#7c4a1e}
+  .rank-main{min-width:0}
+  .rank-title{display:flex;align-items:center;gap:8px;font-size:16.5px;font-weight:700;letter-spacing:-.02em}
+  .rank-title .rdot{width:9px;height:9px;border-radius:50%;flex:none}
+  .rank-reason{margin-top:4px;font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rank-reason b{color:var(--ink2);font-weight:700}
+  .rank-score{text-align:right;flex:none;padding-left:6px}
+  .rank-score .rs{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .rank-score .rl{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+  .rd2000{background:var(--amber)} .rd1000{background:var(--emerald)} .rd500{background:var(--rose)}
+  @media (max-width:520px){ .rank-item{grid-template-columns:42px 1fr auto;padding:14px;gap:11px}
+    .rank-no{width:40px;height:40px;font-size:18px} .rank-title{font-size:15px} .rank-score .rs{font-size:23px} }
 
   /* ---------- feature: card actions (bookmark/compare) ---------- */
   .cactions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
@@ -473,7 +484,7 @@
     <section id="pick"></section>
 
     <!-- RANKING CHART -->
-    <div class="section-h"><h2>한눈에 보는 추천 순위</h2><span class="desc">판매중 회차 추천 지수 비교 · 막대를 누르면 해당 회차로 이동</span></div>
+    <div class="section-h"><h2>추천 회차 순위 TOP 5</h2><span class="desc">출고율 대비 큰 당첨이 많이 남은 순 · 누르면 해당 회차로 이동</span></div>
     <section class="viz" id="viz"></section>
 
     <!-- CONTROLS -->
@@ -942,23 +953,30 @@ function render(){
   syncToolbar(); renderViz(); updateCmpBar();
 }
 
-/* ----- 추천 순위 막대 차트 ----- */
+/* ----- 추천 순위 TOP ----- */
 function renderViz(){
   const el = document.getElementById("viz");
   if(!el || !state.data) return;
   let arr = state.data.games.filter(g=>g.status==="판매중" && g.recommendScore!=null);
   if(state.tab!=="ALL") arr = arr.filter(g=>g.typeCd===state.tab);
-  arr = arr.sort((a,b)=>b.recommendScore-a.recommendScore).slice(0,10);
+  arr = arr.sort((a,b)=>b.recommendScore-a.recommendScore).slice(0,5);
   if(!arr.length){ el.innerHTML = ""; return; }
-  const max = Math.max(...arr.map(g=>g.recommendScore), 1);
-  const dotCls = {SP2000:"cd2000", SP1000:"cd1000", SP500:"cd500"};
-  el.innerHTML = `<div class="chart">${arr.map(g=>{
-    const w = Math.max(4, (g.recommendScore/max)*100);
-    return `<div class="crow" data-go="${gkey(g)}">
-      <span class="clabel"><i class="cdot ${dotCls[g.typeCd]||""}"></i>${g.typeName} ${g.episode}회</span>
-      <span class="cbar"><i class="${dotCls[g.typeCd]||""}" style="width:${w}%"></i></span>
-      <span class="cval" style="color:${scoreColor(g.recommendScore)}">${g.recommendScore}</span>
-    </div>`;
+  const dotCls = {SP2000:"rd2000", SP1000:"rd1000", SP500:"rd500"};
+  el.innerHTML = `<div class="rank-list">${arr.map((g,i)=>{
+    const r1 = g.rank1||{}, r1p = rateOf(r1).toFixed(0);
+    const noCls = i===0?"r1":i===1?"r2":i===2?"r3":"";
+    const medal = i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1);
+    return `<button class="rank-item" data-go="${gkey(g)}">
+      <span class="rank-no ${noCls}">${medal}</span>
+      <span class="rank-main">
+        <span class="rank-title"><i class="rdot ${dotCls[g.typeCd]||""}"></i>${g.typeName} ${g.episode}회</span>
+        <span class="rank-reason">출고율 <b>${g.shipmentRate}%</b> · 1등 <b>${fmt(r1.remain)}매(${r1p}%)</b> 남음</span>
+      </span>
+      <span class="rank-score">
+        <div class="rs" style="color:${scoreColor(g.recommendScore)}">${g.recommendScore}</div>
+        <div class="rl">추천지수</div>
+      </span>
+    </button>`;
   }).join("")}</div>`;
 }
 
