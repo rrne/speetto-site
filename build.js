@@ -786,6 +786,101 @@ games.forEach((g) => {
 });
 console.log(`회차 상세 페이지 생성: ${games.length}개`);
 
+// ============================================================
+//  정보 페이지 (개인정보처리방침·이용약관·소개) — AdSense 승인/신뢰
+// ============================================================
+const INFO_PAGES = [
+  {
+    slug: "privacy", title: "개인정보처리방침 | 긁", h1: "개인정보처리방침",
+    desc: "긁?(ge-uk.com) 개인정보처리방침 — 광고·분석 쿠키 사용 및 데이터 처리 안내.",
+    body:
+      "<p class=\"lead\">‘긁?’(이하 ‘사이트’)은 이용자의 개인정보를 중요하게 생각하며, 다음과 같이 개인정보를 처리합니다.</p>" +
+      "<h2>1. 수집하는 정보</h2><p>사이트는 회원가입이나 로그인 기능이 없어 이름·연락처 등 직접적인 개인정보를 수집하지 않습니다. 다만 서비스 개선과 광고 제공을 위해 쿠키와 접속 통계(방문 수, 페이지뷰, 기기·브라우저 정보 등)가 자동으로 수집될 수 있습니다.</p>" +
+      "<h2>2. 광고 및 쿠키 (Google AdSense)</h2><p>본 사이트는 제3자 광고 게재를 위해 <b>Google AdSense</b>를 사용합니다. Google을 포함한 제3자 광고 공급업체는 쿠키를 사용하여 이용자의 이 사이트 및 다른 사이트 방문 기록을 바탕으로 맞춤형 광고를 제공합니다. 이용자는 <a href=\"https://adssettings.google.com\" target=\"_blank\" rel=\"noopener\">Google 광고 설정</a>에서 맞춤 광고를 거부할 수 있으며, <a href=\"https://www.aboutads.info\" target=\"_blank\" rel=\"noopener\">aboutads.info</a>에서 제3자 쿠키 사용을 거부할 수 있습니다.</p>" +
+      "<h2>3. 분석 도구 (Google Analytics)</h2><p>사이트는 방문 통계 분석을 위해 Google Analytics를 사용하며, 이 과정에서 쿠키를 통해 비식별 통계 정보가 수집됩니다. 브라우저 설정에서 쿠키를 차단할 수 있습니다.</p>" +
+      "<h2>4. 정보 보관 및 제3자 제공</h2><p>사이트는 자체적으로 개인을 식별할 수 있는 정보를 저장하지 않습니다. 수집된 통계는 Google의 정책에 따라 처리·보관되며, 법령에 의한 경우를 제외하고 제3자에게 별도로 판매·제공하지 않습니다.</p>" +
+      "<h2>5. 이용자 권리</h2><p>이용자는 브라우저 쿠키 삭제·차단, 위 광고 설정 페이지를 통해 데이터 수집을 거부할 수 있습니다.</p>" +
+      "<h2>6. 문의</h2><p>개인정보 관련 문의는 사이트 운영자에게 연락해 주세요. (운영 문의처는 ‘소개’ 페이지를 참고하세요.)</p>" +
+      "<p style=\"color:var(--muted);font-size:13px;margin-top:18px\">본 방침은 관련 법령 및 서비스 변경에 따라 개정될 수 있습니다. (최종 갱신: " + ((data.updatedAt || "").slice(0, 10) || "2026-06") + ")</p>",
+  },
+  {
+    slug: "terms", title: "이용약관 | 긁", h1: "이용약관",
+    desc: "긁?(ge-uk.com) 이용약관 — 서비스 정보의 성격과 책임 범위 안내.",
+    body:
+      "<p class=\"lead\">본 약관은 ‘긁?’(ge-uk.com, 이하 ‘사이트’) 이용에 관한 조건을 안내합니다.</p>" +
+      "<h2>1. 서비스 성격</h2><p>사이트는 동행복권에서 공개하는 스피또(즉석복권) 발행내역(출고율·등위별 잔여 당첨 등)을 자동 수집·정리하여 제공하는 <b>비공식 정보 제공 서비스</b>입니다. 동행복권 및 관계 기관과 무관합니다.</p>" +
+      "<h2>2. 정보의 정확성</h2><p>데이터는 자동 수집되어 실제와 시점 차이가 있을 수 있으며, 사이트는 정보의 정확성·완전성을 보장하지 않습니다. 추천 지수 등 지표는 참고용이며 당첨을 보장하지 않습니다.</p>" +
+      "<h2>3. 책임의 한계</h2><p>복권 구매 및 그 결과에 대한 책임은 전적으로 이용자 본인에게 있습니다. 사이트는 정보 이용으로 발생한 어떠한 손해에 대해서도 책임지지 않습니다. 과도한 복권 구매는 삼가시기 바랍니다.</p>" +
+      "<h2>4. 저작권</h2><p>사이트의 디자인·콘텐츠에 대한 권리는 운영자에게 있으며, 원천 데이터의 권리는 동행복권에 있습니다.</p>" +
+      "<h2>5. 미성년자</h2><p>복권 구매·당첨금 수령은 만 19세 이상만 가능합니다.</p>",
+  },
+  {
+    slug: "about", title: "소개·문의 | 긁", h1: "‘긁?’ 소개",
+    desc: "긁?(ge-uk.com)은 스피또 출고율·당첨율을 실시간으로 정리해 보여주는 서비스입니다.",
+    body:
+      "<p class=\"lead\">‘긁?’은 <b>이왕 긁을 거, 1등 많이 남은 걸로 긁자</b>는 생각에서 만든 스피또 정보 서비스예요.</p>" +
+      "<h2>무엇을 하나요</h2><p>동행복권 스피또2000·1000·500의 회차별 <b>출고율</b>과 <b>등위별 잔여 당첨매수</b>를 자동으로 모아, 1등이 가장 많이 남은 회차를 추천 지수로 한눈에 보여드립니다. 데이터는 동행복권 공식 발행내역을 기반으로 주기적으로 갱신됩니다.</p>" +
+      "<h2>데이터 출처</h2><p><a href=\"https://www.dhlottery.co.kr/st/pblcnDsctn\" target=\"_blank\" rel=\"noopener\">동행복권 발행내역</a></p>" +
+      "<h2>문의</h2><p>서비스 관련 문의·제휴는 운영자 이메일로 연락해 주세요: <b>__CONTACT_EMAIL__</b></p>" +
+      "<p style=\"color:var(--muted);font-size:13px;margin-top:18px\">본 사이트는 동행복권과 무관한 개인 제작 비공식 서비스입니다.</p>",
+  },
+];
+
+function infoPage(p) {
+  const url = `https://ge-uk.com/${p.slug}`;
+  const others = INFO_PAGES.filter((x) => x.slug !== p.slug).map((x) => `<a class="tbtn" href="/${x.slug}">${x.h1}</a>`).join("");
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${p.title}</title>
+<meta name="description" content="${p.desc}" />
+<meta name="robots" content="index,follow" />
+<meta name="theme-color" content="#0071e3" />
+<link rel="canonical" href="${url}" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="긁?" />
+<meta property="og:title" content="${p.title}" />
+<meta property="og:description" content="${p.desc}" />
+<meta property="og:url" content="${url}" />
+${STYLE}
+<style>.article h2{font-size:clamp(18px,2.6vw,22px);font-weight:700;margin:28px 0 10px}.article p{font-size:15px;color:var(--ink2);line-height:1.85;margin:8px 0}.article b{color:var(--ink)}.article a{color:var(--brand-ink);font-weight:600;text-decoration:none}</style>
+</head>
+<body>
+  <div class="nav"><div class="wrap row">
+    <a class="brand" href="/" style="text-decoration:none">${NAV_LOGO}<span class="name">긁</span></a>
+    <div class="right"><a class="share" href="/" style="font-weight:700">← 전체 보기</a></div>
+  </div></div>
+  <div class="wrap">
+    <section class="hero" style="padding:40px 0 16px;text-align:left">
+      <h1 style="font-size:clamp(28px,5vw,42px);text-align:left;max-width:none;margin:0">${p.h1}</h1>
+    </section>
+    <article class="article ginfo">${p.body}</article>
+    <div class="section-h"><h2>관련 문서</h2></div>
+    <div class="toolbar">${others}<a class="tbtn" href="/">홈으로 →</a></div>
+  </div>
+  <footer><div class="wrap in">
+    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
+    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
+    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다.</p>
+  </div></footer>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');</script>
+</body>
+</html>`;
+}
+
+const CONTACT_EMAIL = "coco.wapplab@gmail.com"; // 표시용 문의처
+INFO_PAGES.forEach((p) => {
+  const out = infoPage(p).replace("__CONTACT_EMAIL__", CONTACT_EMAIL);
+  fs.writeFileSync(path.join(__dirname, p.slug + ".html"), out, "utf8");
+  fs.writeFileSync(path.join(OUT_DIR, p.slug + ".html"), out, "utf8");
+});
+console.log(`정보 페이지 생성: ${INFO_PAGES.map((p) => "/" + p.slug).join(", ")}`);
+
 // ---- sitemap.xml 동적 생성 ----
 const TODAY = (data.updatedAt || "").slice(0, 10) || "2026-06-26";
 const urls = [];
@@ -794,6 +889,7 @@ u("/", "hourly", "1.0");
 ["2000", "1000", "500"].forEach((p) => u("/" + p, "daily", "0.9"));
 u("/guide", "weekly", "0.7");
 GUIDES.forEach((g) => u("/" + g.slug, "monthly", "0.7"));
+INFO_PAGES.forEach((p) => u("/" + p.slug, "yearly", "0.3"));
 games.forEach((g) => u("/" + detailSlug(g), g.status === "판매중" ? "daily" : "monthly", g.status === "판매중" ? "0.7" : "0.5"));
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
 fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap, "utf8");
