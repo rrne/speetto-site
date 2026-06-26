@@ -449,17 +449,17 @@
   .dana b{color:var(--ink);font-weight:700}
   .dwrap .itable{font-size:15.5px}
   .dwrap .itable td{padding:15px 16px}
-  /* 당첨 판매점 리스트 */
-  .wstores{display:grid;gap:10px}
-  .wstore{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;background:var(--surface);
-    border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px;text-decoration:none;transition:.15s}
-  .wstore:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-  .wrank{font-size:13px;font-weight:800;color:#fff;border-radius:9px;padding:7px 11px;white-space:nowrap}
-  .wrank.wr1{background:var(--amber)}.wrank.wr2{background:var(--slate)}
-  .wmain{min-width:0}
-  .wnm{display:block;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wad{display:block;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wgo{font-size:13.5px;font-weight:800;color:var(--brand-ink);white-space:nowrap;background:rgba(0,113,227,.08);padding:8px 13px;border-radius:999px}
+  /* 당첨 판매점 — 간단한 표 */
+  .wtable-wrap{overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:var(--shadow-sm)}
+  .wtable{width:100%;border-collapse:collapse;font-size:14.5px;min-width:460px}
+  .wtable th,.wtable td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .wtable thead th{font-size:12px;color:var(--muted);font-weight:700;background:var(--bg-soft);white-space:nowrap}
+  .wtable tbody tr:last-child td{border-bottom:0}
+  .wtable .wr{font-weight:800;white-space:nowrap}
+  .wtable .wr1{color:#b25500}.wtable .wr2{color:var(--slate)}
+  .wtable .wn{font-weight:700;color:var(--ink);white-space:nowrap}
+  .wtable .wa{color:var(--ink2);font-size:13.5px;line-height:1.5;min-width:200px}
+  .wtable a{color:var(--brand-ink);font-weight:700;text-decoration:none;white-space:nowrap}
   @media (max-width:520px){ .dstats{grid-template-columns:1fr;gap:10px} .dstat{display:flex;align-items:center;justify-content:space-between;text-align:left} .dstat .track{display:none} .dana{font-size:16px} }
 </style>
 </head>

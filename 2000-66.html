@@ -449,17 +449,17 @@
   .dana b{color:var(--ink);font-weight:700}
   .dwrap .itable{font-size:15.5px}
   .dwrap .itable td{padding:15px 16px}
-  /* 당첨 판매점 리스트 */
-  .wstores{display:grid;gap:10px}
-  .wstore{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;background:var(--surface);
-    border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px;text-decoration:none;transition:.15s}
-  .wstore:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-  .wrank{font-size:13px;font-weight:800;color:#fff;border-radius:9px;padding:7px 11px;white-space:nowrap}
-  .wrank.wr1{background:var(--amber)}.wrank.wr2{background:var(--slate)}
-  .wmain{min-width:0}
-  .wnm{display:block;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wad{display:block;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wgo{font-size:13.5px;font-weight:800;color:var(--brand-ink);white-space:nowrap;background:rgba(0,113,227,.08);padding:8px 13px;border-radius:999px}
+  /* 당첨 판매점 — 간단한 표 */
+  .wtable-wrap{overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:var(--shadow-sm)}
+  .wtable{width:100%;border-collapse:collapse;font-size:14.5px;min-width:460px}
+  .wtable th,.wtable td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .wtable thead th{font-size:12px;color:var(--muted);font-weight:700;background:var(--bg-soft);white-space:nowrap}
+  .wtable tbody tr:last-child td{border-bottom:0}
+  .wtable .wr{font-weight:800;white-space:nowrap}
+  .wtable .wr1{color:#b25500}.wtable .wr2{color:var(--slate)}
+  .wtable .wn{font-weight:700;color:var(--ink);white-space:nowrap}
+  .wtable .wa{color:var(--ink2);font-size:13.5px;line-height:1.5;min-width:200px}
+  .wtable a{color:var(--brand-ink);font-weight:700;text-decoration:none;white-space:nowrap}
   @media (max-width:520px){ .dstats{grid-template-columns:1fr;gap:10px} .dstat{display:flex;align-items:center;justify-content:space-between;text-align:left} .dstat .track{display:none} .dana{font-size:16px} }
 </style>
 </head>
@@ -539,78 +539,10 @@
       <div class="ad"><div class="lbl">광고</div><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6037343600471239" data-ad-slot="5042804616" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
 
       <div class="section-h"><h2>🏆 1·2등 당첨 판매점</h2><span class="desc">이 회차에서 당첨이 나온 곳 · 17곳</span></div>
-    <div class="wstores">
-      <a class="wstore" href="https://map.naver.com/p/search/%EB%93%9C%EB%A6%BC%EB%A1%9C%EB%98%90%EC%95%84%EC%9D%B4%EC%8A%A4%ED%81%AC%EB%A6%BC%ED%8C%90%EB%A7%A4%EC%A0%90%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%ED%8C%94%EB%8B%AC%EA%B5%AC%20%20%EC%95%84%EC%A3%BC%EB%A1%9C27%EB%B2%88%EA%B8%B8%2043%20(%EC%9A%B0%EB%A7%8C%EB%8F%99%2C%20%EB%93%9C%EB%A6%BC%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">
-          <span class="wrank wr1">1등 ×2</span>
-          <span class="wmain"><b class="wnm">드림로또아이스크림판매점</b><span class="wad">경기 수원시 팔달구  아주로27번길 43 (우만동, 드림타워)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%9A%A9%EC%9D%B8%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9A%A9%EC%9D%B8%EC%8B%9C%20%EC%B2%98%EC%9D%B8%EA%B5%AC%20%EB%AA%A8%ED%98%84%EC%9D%8D%20%EB%B0%B1%EC%98%A5%EB%8C%80%EB%A1%9C%202076-1%20(%EC%B4%88%EB%B6%80%EB%A6%AC)" target="_blank" rel="noopener">
-          <span class="wrank wr1">1등 ×2</span>
-          <span class="wmain"><b class="wnm">용인로또복권방</b><span class="wad">경기도 용인시 처인구 모현읍 백옥대로 2076-1 (초부리)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%EA%B8%88%EB%A7%88%EB%A9%B4%20%EA%B8%88%EB%A7%88%EA%B8%B8%2058-1%20(%EC%83%88%ED%95%9C%EC%B9%BC%EB%9D%BC%ED%98%84%EC%83%81%EC%86%8C)" target="_blank" rel="noopener">
-          <span class="wrank wr1">1등 ×2</span>
-          <span class="wmain"><b class="wnm">카카오복권방</b><span class="wad">전북 익산시 금마면 금마길 58-1 (새한칼라현상소)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/777%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%ED%8C%94%EB%8B%AC%EA%B5%AC%20%20%ED%9A%A8%EC%9B%90%EB%A1%9C%20269%20(%EC%9D%B8%EA%B3%84%EB%8F%99%2C%20%EC%97%90%EC%8A%A4%ED%8C%9D%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">777로또복권방</b><span class="wad">경기 수원시 팔달구  효원로 269 (인계동, 에스팝타워)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EA%B1%B8%EC%9E%91%EB%A1%9C%EB%98%90%20%EA%B2%BD%EA%B8%B0%20%EC%95%88%EC%96%91%EC%8B%9C%20%EB%8F%99%EC%95%88%EA%B5%AC%20%20%ED%8F%89%EC%B4%8C%EB%8C%80%EB%A1%9C223%EB%B2%88%EA%B8%B8%2065%20(%ED%98%B8%EA%B3%84%EB%8F%99%2C%20%EB%B2%94%EA%B3%84%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">걸작로또</b><span class="wad">경기 안양시 동안구  평촌대로223번길 65 (호계동, 범계빌딩)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%8C%80%EC%9A%B4%EB%A1%9C%EB%98%90(%EC%94%A8%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4)%20%EA%B2%BD%EA%B8%B0%20%ED%99%94%EC%84%B1%EC%8B%9C%20%EC%9E%A5%EC%95%88%EB%A9%B4%20%EC%82%AC%EB%9E%91%EA%B8%B8%2090" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">대운로또(씨스페이스)</b><span class="wad">경기 화성시 장안면 사랑길 90</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%A1%B0%EC%9D%B4%EB%B8%94%EB%9F%AD%20%EA%B2%BD%EA%B8%B0%20%ED%8F%89%ED%83%9D%EC%8B%9C%20%EC%95%88%ED%98%84%EB%A1%9C%EC%84%9C7%EA%B8%B8%202" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">조이블럭</b><span class="wad">경기 평택시 안현로서7길 2</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%8F%84%EC%98%A8%EB%8C%80%EB%B0%95%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EC%A7%84%ED%95%B4%EA%B5%AC%20%20%EB%8D%95%EC%82%B0%EB%A1%9C46%EB%B2%88%EA%B8%B8%202%20(%EC%9E%90%EC%9D%80%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">도온대박복권방</b><span class="wad">경남 창원시 진해구  덕산로46번길 2 (자은동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EB%82%A8%20%EC%96%91%EC%82%B0%EC%8B%9C%20%EB%AC%BC%EA%B8%88%EC%9D%8D%20%ED%99%A9%EC%82%B0%EB%A1%9C%20675" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">스포츠복권방</b><span class="wad">경남 양산시 물금읍 황산로 675</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%B2%9C%ED%95%98%EB%AA%85%EB%8B%B9%EB%B3%B5%EA%B6%8C%20%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%81%EA%B5%AC%20%EC%B9%A0%EA%B3%A1%EC%A4%91%EC%95%99%EB%8C%80%EB%A1%9C%20545%20(%EC%9D%8D%EB%82%B4%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">천하명당복권</b><span class="wad">대구광역시 북구 칠곡중앙대로 545 (읍내동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%A0%90%EC%9C%A0%EC%84%B1%EC%A0%90%20%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%9C%A0%EC%84%B1%EA%B5%AC%20%ED%95%99%ED%95%98%EB%8F%99%EB%A1%9C63%EB%B2%88%EA%B8%B8%2063%20(%ED%95%99%ED%95%98%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">복권판매점유성점</b><span class="wad">대전광역시 유성구 학하동로63번길 63 (학하동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%AA%85%EC%8B%A0%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EB%B6%80%EC%82%B0%20%EC%98%81%EB%8F%84%EA%B5%AC%20%20%EB%8F%99%EC%82%BC%EB%A1%9C%2057%20(%EB%8F%99%EC%82%BC%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">명신복권방</b><span class="wad">부산 영도구  동삼로 57 (동삼동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%ED%8C%AC%EB%A0%88%EC%BD%94%EB%93%9C%20%EB%B6%80%EC%82%B0%20%EB%82%A8%EA%B5%AC%20%20%EC%88%98%EC%98%81%EB%A1%9C%20253-1%20(%EB%8C%80%EC%97%B0%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">팬레코드</b><span class="wad">부산 남구  수영로 253-1 (대연동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%B2%84%EC%8A%A4%EB%A7%A4%ED%91%9C%EC%86%8C%2C%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%86%8C%20%EC%9D%B8%EC%B2%9C%20%EC%A4%91%EA%B5%AC%20%20%EC%9A%B0%ED%98%84%EB%A1%9C%2069%20(%EC%9D%B8%ED%98%84%EB%8F%99%2C%20%EC%A4%91%EC%95%99%EB%A1%9C%EC%A7%80%ED%95%98%EB%8F%84%EC%83%81%EA%B0%80)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">버스매표소,복권판매소</b><span class="wad">인천 중구  우현로 69 (인현동, 중앙로지하도상가)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%A4%91%EB%A7%88%EB%A1%9C%EB%98%90(%EA%B4%91%EC%96%91)%20%EC%A0%84%EB%82%A8%20%EA%B4%91%EC%96%91%EC%8B%9C%20%EC%A4%91%EB%A7%88%EB%A1%9C" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">중마로또(광양)</b><span class="wad">전남 광양시 중마로</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EB%B0%B1%EC%84%9D%EB%A1%9C%EB%98%90%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EB%82%A8%20%EC%B2%9C%EC%95%88%EC%8B%9C%20%EC%84%9C%EB%B6%81%EA%B5%AC%20%20%EB%B0%B1%EC%84%9D%EB%A1%9C%2036%20(%EB%B0%B1%EC%84%9D%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">백석로또명당</b><span class="wad">충남 천안시 서북구  백석로 36 (백석동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a><a class="wstore" href="https://map.naver.com/p/search/%EC%9B%94%EB%93%9C%EB%A7%88%ED%8A%B8%20%EC%B6%A9%EB%B6%81%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%ED%9D%A5%EB%8D%95%EA%B5%AC%20%20%EC%9E%A5%EA%B5%AC%EB%B4%89%EB%A1%9C129%EB%B2%88%EA%B8%B8%202%20(%EB%B3%B5%EB%8C%80%EB%8F%99)" target="_blank" rel="noopener">
-          <span class="wrank wr2">2등</span>
-          <span class="wmain"><b class="wnm">월드마트</b><span class="wad">충북 청주시 흥덕구  장구봉로129번길 2 (복대동)</span></span>
-          <span class="wgo">지도 →</span>
-        </a>
-    </div>
-    <p class="disc" style="margin-top:12px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도 링크는 네이버 지도 검색으로 연결됩니다. 같은 가게에서 여러 장 당첨 시 ×횟수로 표기.</p>
+    <div class="wtable-wrap"><table class="wtable"><thead><tr><th>등수</th><th>판매점</th><th>주소</th><th></th></tr></thead><tbody>
+      <tr><td class="wr wr1">1등 ×2</td><td class="wn">드림로또아이스크림판매점</td><td class="wa">경기 수원시 팔달구  아주로27번길 43 (우만동, 드림타워)</td><td><a href="https://map.naver.com/p/search/%EB%93%9C%EB%A6%BC%EB%A1%9C%EB%98%90%EC%95%84%EC%9D%B4%EC%8A%A4%ED%81%AC%EB%A6%BC%ED%8C%90%EB%A7%A4%EC%A0%90%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%ED%8C%94%EB%8B%AC%EA%B5%AC%20%20%EC%95%84%EC%A3%BC%EB%A1%9C27%EB%B2%88%EA%B8%B8%2043%20(%EC%9A%B0%EB%A7%8C%EB%8F%99%2C%20%EB%93%9C%EB%A6%BC%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr1">1등 ×2</td><td class="wn">용인로또복권방</td><td class="wa">경기도 용인시 처인구 모현읍 백옥대로 2076-1 (초부리)</td><td><a href="https://map.naver.com/p/search/%EC%9A%A9%EC%9D%B8%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9A%A9%EC%9D%B8%EC%8B%9C%20%EC%B2%98%EC%9D%B8%EA%B5%AC%20%EB%AA%A8%ED%98%84%EC%9D%8D%20%EB%B0%B1%EC%98%A5%EB%8C%80%EB%A1%9C%202076-1%20(%EC%B4%88%EB%B6%80%EB%A6%AC)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr1">1등 ×2</td><td class="wn">카카오복권방</td><td class="wa">전북 익산시 금마면 금마길 58-1 (새한칼라현상소)</td><td><a href="https://map.naver.com/p/search/%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%EA%B8%88%EB%A7%88%EB%A9%B4%20%EA%B8%88%EB%A7%88%EA%B8%B8%2058-1%20(%EC%83%88%ED%95%9C%EC%B9%BC%EB%9D%BC%ED%98%84%EC%83%81%EC%86%8C)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">777로또복권방</td><td class="wa">경기 수원시 팔달구  효원로 269 (인계동, 에스팝타워)</td><td><a href="https://map.naver.com/p/search/777%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%ED%8C%94%EB%8B%AC%EA%B5%AC%20%20%ED%9A%A8%EC%9B%90%EB%A1%9C%20269%20(%EC%9D%B8%EA%B3%84%EB%8F%99%2C%20%EC%97%90%EC%8A%A4%ED%8C%9D%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">걸작로또</td><td class="wa">경기 안양시 동안구  평촌대로223번길 65 (호계동, 범계빌딩)</td><td><a href="https://map.naver.com/p/search/%EA%B1%B8%EC%9E%91%EB%A1%9C%EB%98%90%20%EA%B2%BD%EA%B8%B0%20%EC%95%88%EC%96%91%EC%8B%9C%20%EB%8F%99%EC%95%88%EA%B5%AC%20%20%ED%8F%89%EC%B4%8C%EB%8C%80%EB%A1%9C223%EB%B2%88%EA%B8%B8%2065%20(%ED%98%B8%EA%B3%84%EB%8F%99%2C%20%EB%B2%94%EA%B3%84%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">대운로또(씨스페이스)</td><td class="wa">경기 화성시 장안면 사랑길 90</td><td><a href="https://map.naver.com/p/search/%EB%8C%80%EC%9A%B4%EB%A1%9C%EB%98%90(%EC%94%A8%EC%8A%A4%ED%8E%98%EC%9D%B4%EC%8A%A4)%20%EA%B2%BD%EA%B8%B0%20%ED%99%94%EC%84%B1%EC%8B%9C%20%EC%9E%A5%EC%95%88%EB%A9%B4%20%EC%82%AC%EB%9E%91%EA%B8%B8%2090" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">조이블럭</td><td class="wa">경기 평택시 안현로서7길 2</td><td><a href="https://map.naver.com/p/search/%EC%A1%B0%EC%9D%B4%EB%B8%94%EB%9F%AD%20%EA%B2%BD%EA%B8%B0%20%ED%8F%89%ED%83%9D%EC%8B%9C%20%EC%95%88%ED%98%84%EB%A1%9C%EC%84%9C7%EA%B8%B8%202" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">도온대박복권방</td><td class="wa">경남 창원시 진해구  덕산로46번길 2 (자은동)</td><td><a href="https://map.naver.com/p/search/%EB%8F%84%EC%98%A8%EB%8C%80%EB%B0%95%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EC%A7%84%ED%95%B4%EA%B5%AC%20%20%EB%8D%95%EC%82%B0%EB%A1%9C46%EB%B2%88%EA%B8%B8%202%20(%EC%9E%90%EC%9D%80%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">스포츠복권방</td><td class="wa">경남 양산시 물금읍 황산로 675</td><td><a href="https://map.naver.com/p/search/%EC%8A%A4%ED%8F%AC%EC%B8%A0%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EB%82%A8%20%EC%96%91%EC%82%B0%EC%8B%9C%20%EB%AC%BC%EA%B8%88%EC%9D%8D%20%ED%99%A9%EC%82%B0%EB%A1%9C%20675" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">천하명당복권</td><td class="wa">대구광역시 북구 칠곡중앙대로 545 (읍내동)</td><td><a href="https://map.naver.com/p/search/%EC%B2%9C%ED%95%98%EB%AA%85%EB%8B%B9%EB%B3%B5%EA%B6%8C%20%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%81%EA%B5%AC%20%EC%B9%A0%EA%B3%A1%EC%A4%91%EC%95%99%EB%8C%80%EB%A1%9C%20545%20(%EC%9D%8D%EB%82%B4%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">복권판매점유성점</td><td class="wa">대전광역시 유성구 학하동로63번길 63 (학하동)</td><td><a href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%A0%90%EC%9C%A0%EC%84%B1%EC%A0%90%20%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%9C%A0%EC%84%B1%EA%B5%AC%20%ED%95%99%ED%95%98%EB%8F%99%EB%A1%9C63%EB%B2%88%EA%B8%B8%2063%20(%ED%95%99%ED%95%98%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">명신복권방</td><td class="wa">부산 영도구  동삼로 57 (동삼동)</td><td><a href="https://map.naver.com/p/search/%EB%AA%85%EC%8B%A0%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EB%B6%80%EC%82%B0%20%EC%98%81%EB%8F%84%EA%B5%AC%20%20%EB%8F%99%EC%82%BC%EB%A1%9C%2057%20(%EB%8F%99%EC%82%BC%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">팬레코드</td><td class="wa">부산 남구  수영로 253-1 (대연동)</td><td><a href="https://map.naver.com/p/search/%ED%8C%AC%EB%A0%88%EC%BD%94%EB%93%9C%20%EB%B6%80%EC%82%B0%20%EB%82%A8%EA%B5%AC%20%20%EC%88%98%EC%98%81%EB%A1%9C%20253-1%20(%EB%8C%80%EC%97%B0%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">버스매표소,복권판매소</td><td class="wa">인천 중구  우현로 69 (인현동, 중앙로지하도상가)</td><td><a href="https://map.naver.com/p/search/%EB%B2%84%EC%8A%A4%EB%A7%A4%ED%91%9C%EC%86%8C%2C%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%86%8C%20%EC%9D%B8%EC%B2%9C%20%EC%A4%91%EA%B5%AC%20%20%EC%9A%B0%ED%98%84%EB%A1%9C%2069%20(%EC%9D%B8%ED%98%84%EB%8F%99%2C%20%EC%A4%91%EC%95%99%EB%A1%9C%EC%A7%80%ED%95%98%EB%8F%84%EC%83%81%EA%B0%80)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">중마로또(광양)</td><td class="wa">전남 광양시 중마로</td><td><a href="https://map.naver.com/p/search/%EC%A4%91%EB%A7%88%EB%A1%9C%EB%98%90(%EA%B4%91%EC%96%91)%20%EC%A0%84%EB%82%A8%20%EA%B4%91%EC%96%91%EC%8B%9C%20%EC%A4%91%EB%A7%88%EB%A1%9C" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">백석로또명당</td><td class="wa">충남 천안시 서북구  백석로 36 (백석동)</td><td><a href="https://map.naver.com/p/search/%EB%B0%B1%EC%84%9D%EB%A1%9C%EB%98%90%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EB%82%A8%20%EC%B2%9C%EC%95%88%EC%8B%9C%20%EC%84%9C%EB%B6%81%EA%B5%AC%20%20%EB%B0%B1%EC%84%9D%EB%A1%9C%2036%20(%EB%B0%B1%EC%84%9D%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr><tr><td class="wr wr2">2등</td><td class="wn">월드마트</td><td class="wa">충북 청주시 흥덕구  장구봉로129번길 2 (복대동)</td><td><a href="https://map.naver.com/p/search/%EC%9B%94%EB%93%9C%EB%A7%88%ED%8A%B8%20%EC%B6%A9%EB%B6%81%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%ED%9D%A5%EB%8D%95%EA%B5%AC%20%20%EC%9E%A5%EA%B5%AC%EB%B4%89%EB%A1%9C129%EB%B2%88%EA%B8%B8%202%20(%EB%B3%B5%EB%8C%80%EB%8F%99)" target="_blank" rel="noopener">지도↗</a></td></tr>
+    </tbody></table></div>
+    <p class="disc" style="margin-top:10px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도는 네이버 지도 검색 연결. 같은 가게 다중 당첨은 ×횟수.</p>
     </div>
 
     <div class="section-h"><h2>회차 이동 · 더 보기</h2></div>

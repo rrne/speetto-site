@@ -701,17 +701,13 @@ function storeSection(g) {
   });
   const rows = Object.values(map).sort((a, b) => a.rank - b.rank || b.count - a.count);
   return `<div class="section-h"><h2>🏆 1·2등 당첨 판매점</h2><span class="desc">이 회차에서 당첨이 나온 곳 · ${rows.length}곳</span></div>
-    <div class="wstores">
+    <div class="wtable-wrap"><table class="wtable"><thead><tr><th>등수</th><th>판매점</th><th>주소</th><th></th></tr></thead><tbody>
       ${rows.map((s) => {
         const q = encodeURIComponent(`${s.name} ${s.addr}`);
-        return `<a class="wstore" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">
-          <span class="wrank wr${s.rank}">${s.rank}등${s.count > 1 ? " ×" + s.count : ""}</span>
-          <span class="wmain"><b class="wnm">${s.name}</b><span class="wad">${s.addr || "주소 정보 없음"}</span></span>
-          <span class="wgo">지도 →</span>
-        </a>`;
+        return `<tr><td class="wr wr${s.rank}">${s.rank}등${s.count > 1 ? " ×" + s.count : ""}</td><td class="wn">${s.name}</td><td class="wa">${s.addr || "-"}</td><td><a href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">지도↗</a></td></tr>`;
       }).join("")}
-    </div>
-    <p class="disc" style="margin-top:12px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도 링크는 네이버 지도 검색으로 연결됩니다. 같은 가게에서 여러 장 당첨 시 ×횟수로 표기.</p>`;
+    </tbody></table></div>
+    <p class="disc" style="margin-top:10px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도는 네이버 지도 검색 연결. 같은 가게 다중 당첨은 ×횟수.</p>`;
 }
 function detailPage(g) {
   const name = g.typeName;
@@ -808,17 +804,17 @@ ${STYLE}
   .dana b{color:var(--ink);font-weight:700}
   .dwrap .itable{font-size:15.5px}
   .dwrap .itable td{padding:15px 16px}
-  /* 당첨 판매점 리스트 */
-  .wstores{display:grid;gap:10px}
-  .wstore{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;background:var(--surface);
-    border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px;text-decoration:none;transition:.15s}
-  .wstore:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-  .wrank{font-size:13px;font-weight:800;color:#fff;border-radius:9px;padding:7px 11px;white-space:nowrap}
-  .wrank.wr1{background:var(--amber)}.wrank.wr2{background:var(--slate)}
-  .wmain{min-width:0}
-  .wnm{display:block;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wad{display:block;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wgo{font-size:13.5px;font-weight:800;color:var(--brand-ink);white-space:nowrap;background:rgba(0,113,227,.08);padding:8px 13px;border-radius:999px}
+  /* 당첨 판매점 — 간단한 표 */
+  .wtable-wrap{overflow-x:auto;background:var(--surface);border-radius:14px;box-shadow:var(--shadow-sm)}
+  .wtable{width:100%;border-collapse:collapse;font-size:14.5px;min-width:460px}
+  .wtable th,.wtable td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .wtable thead th{font-size:12px;color:var(--muted);font-weight:700;background:var(--bg-soft);white-space:nowrap}
+  .wtable tbody tr:last-child td{border-bottom:0}
+  .wtable .wr{font-weight:800;white-space:nowrap}
+  .wtable .wr1{color:#b25500}.wtable .wr2{color:var(--slate)}
+  .wtable .wn{font-weight:700;color:var(--ink);white-space:nowrap}
+  .wtable .wa{color:var(--ink2);font-size:13.5px;line-height:1.5;min-width:200px}
+  .wtable a{color:var(--brand-ink);font-weight:700;text-decoration:none;white-space:nowrap}
   @media (max-width:520px){ .dstats{grid-template-columns:1fr;gap:10px} .dstat{display:flex;align-items:center;justify-content:space-between;text-align:left} .dstat .track{display:none} .dana{font-size:16px} }
 </style>
 </head>
