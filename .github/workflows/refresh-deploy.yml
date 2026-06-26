@@ -1,11 +1,12 @@
 name: Refresh data & deploy
 
-# 동행복권 데이터를 6시간마다 받아 Cloudflare Pages(ge-uk)로 자동 배포합니다.
-# 필요 시크릿: CLOUDFLARE_API_TOKEN(Pages:Edit), CLOUDFLARE_ACCOUNT_ID
+# 동행복권 데이터를 3시간마다 받아 Cloudflare Pages(ge-uk)로 자동 배포합니다.
+# (GitHub 예약작업은 지연/누락이 잦아 주기를 짧게 잡아 신선도를 확보)
+# 필요 시크릿: CLOUDFLARE_API_TOKEN(Pages:Edit + Cache Purge), CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_ZONE_ID
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */3 * * *"
   workflow_dispatch: {}
 
 permissions:
