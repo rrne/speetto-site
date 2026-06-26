@@ -379,3 +379,278 @@ Object.keys(TYPE_META).forEach((t) => {
   fs.writeFileSync(path.join(OUT_DIR, file), pageHtml, "utf8");
 });
 console.log(`종류별 페이지 생성: ${Object.values(TYPE_META).map((m) => "/" + m.path).join(", ")}`);
+
+// ============================================================
+//  가이드 글 (검색 유입 + 상업 키워드 → 광고 단가 유리)
+// ============================================================
+const GUIDES = [
+  {
+    slug: "guide-tax", cat: "세금", emoji: "🧾",
+    title: "복권 당첨금 세금 총정리 — 스피또 실수령액 계산 | 긁",
+    desc: "복권·스피또 당첨금 세금(제세금) 세율과 실수령액 계산법. 5만원 이하 비과세, 3억 이하 22%, 3억 초과 33%. 스피또2000·1000·500 1등 실수령액 예시까지.",
+    keywords: "복권 세금, 복권 당첨금 세금, 스피또 세금, 복권 실수령액, 당첨금 제세금, 복권 세율, 로또 세금",
+    h1: "복권 당첨금 세금, 얼마나 떼일까?",
+    lead: "스피또를 포함한 복권 당첨금에는 ‘기타소득세’가 붙습니다. 얼마를 떼고 실제로 얼마를 받는지, 구간별 세율과 스피또 1등 실수령액 예시로 정리했어요.",
+    body:
+      "<h2>복권 당첨금 세율 (제세금)</h2>" +
+      "<p>복권 당첨금은 당첨금액 구간에 따라 세율이 다릅니다. (소득세 + 지방소득세 합산 기준)</p>" +
+      "<div class=\"itable-wrap\"><table class=\"itable\"><thead><tr><th>당첨금 구간</th><th>세율</th><th>구성</th></tr></thead><tbody>" +
+      "<tr><td class=\"tg\">5만 원 이하</td><td class=\"tprize\">비과세</td><td>세금 없음</td></tr>" +
+      "<tr><td class=\"tg\">5만 원 초과 ~ 3억 원 이하</td><td class=\"tprize\">22%</td><td>소득세 20% + 지방세 2%</td></tr>" +
+      "<tr><td class=\"tg\">3억 원 초과분</td><td class=\"tprize\">33%</td><td>소득세 30% + 지방세 3%</td></tr>" +
+      "</tbody></table></div>" +
+      "<p>즉 3억 원까지는 22%, <b>3억 원을 넘는 부분</b>에만 33%가 적용됩니다.</p>" +
+      "<h2>스피또 1등 실수령액 예시</h2>" +
+      "<p>위 세율로 계산한 대략적인 실수령액입니다. (참고용 추정치)</p>" +
+      "<div class=\"itable-wrap\"><table class=\"itable\"><thead><tr><th>게임</th><th>1등 당첨금</th><th>세금(추정)</th><th>실수령(추정)</th></tr></thead><tbody>" +
+      "<tr><td class=\"tg\">스피또500</td><td>2억 원</td><td>약 4,400만 원</td><td class=\"tprize\">약 1억 5,600만 원</td></tr>" +
+      "<tr><td class=\"tg\">스피또1000</td><td>5억 원</td><td>약 1억 3,200만 원</td><td class=\"tprize\">약 3억 6,800만 원</td></tr>" +
+      "<tr><td class=\"tg\">스피또2000</td><td>10억 원</td><td>약 2억 9,700만 원</td><td class=\"tprize\">약 7억 300만 원</td></tr>" +
+      "</tbody></table></div>" +
+      "<p style=\"color:var(--muted);font-size:13.5px\">※ 위 금액은 구간별 세율을 단순 적용한 추정치이며, 실제 공제·지급 방식은 다를 수 있습니다. 정확한 세금·수령 절차는 <a href=\"https://www.dhlottery.co.kr\" target=\"_blank\" rel=\"noopener\">동행복권 공식 안내</a>를 확인하세요.</p>",
+    faq: [
+      ["복권 당첨금은 무조건 세금을 내나요?", "5만 원 이하 당첨금은 비과세로 세금이 없습니다. 5만 원을 초과하면 기타소득세가 부과됩니다."],
+      ["스피또 1등도 세금을 떼나요?", "네. 스피또 1등은 고액이라 3억 원까지 22%, 3억 원 초과분은 33%가 적용됩니다. 예를 들어 스피또2000 1등 10억 원의 실수령액은 약 7억 원 안팎입니다."],
+      ["세금은 어떻게 납부하나요?", "고액 당첨금은 수령 시 원천징수되어, 세금을 뗀 금액을 지급받습니다. 별도로 신고·납부할 필요는 없는 것이 일반적입니다."],
+    ],
+  },
+  {
+    slug: "guide-prize", cat: "수령", emoji: "🏦",
+    title: "복권 당첨금 수령 방법 — 어디서, 무엇을 챙길까 | 긁",
+    desc: "스피또·복권 당첨금 수령 방법 총정리. 소액은 판매점, 고액은 농협은행·동행복권 본사에서 신분증 지참 후 수령. 즉석복권 지급기한(1년)까지 꼭 확인하세요.",
+    keywords: "복권 당첨금 수령, 복권 당첨 수령방법, 스피또 당첨금, 복권 지급기한, 즉석복권 당첨, 복권 당첨 어디서",
+    h1: "복권 당첨금, 어디서 어떻게 받나?",
+    lead: "당첨금 액수에 따라 받는 곳이 다릅니다. 스피또(즉석복권) 기준으로 수령처와 준비물, 그리고 놓치면 안 되는 ‘지급기한’까지 정리했어요.",
+    body:
+      "<h2>금액별 수령처</h2>" +
+      "<ul class=\"glist\">" +
+      "<li><b>소액(보통 5만 원 이하)</b> — 복권을 산 판매점이나 가까운 복권 판매점에서 바로 수령</li>" +
+      "<li><b>중간 금액</b> — NH농협은행 영업점에서 수령 (지점에 따라 한도 상이)</li>" +
+      "<li><b>고액(1등 등)</b> — 동행복권 본사(서울) 또는 지정 지급기관에서 수령</li>" +
+      "</ul>" +
+      "<h2>수령 시 준비물</h2>" +
+      "<ul class=\"glist\"><li>당첨 복권 원본 (훼손·분실 주의)</li><li>신분증(주민등록증·운전면허증 등)</li><li>본인 명의 통장(고액 계좌 입금 시)</li></ul>" +
+      "<h2>⏰ 지급기한을 꼭 확인하세요</h2>" +
+      "<p>스피또(즉석복권)는 <b>지급기한이 정해져 있어</b>, 기한이 지나면 당첨금을 받을 수 없습니다. 보통 판매 종료(또는 발행) 시점 기준으로 <b>약 1년</b>입니다. ‘긁?’의 각 회차 카드에서 <b>지급기한</b>을 확인할 수 있어요.</p>" +
+      "<p style=\"color:var(--muted);font-size:13.5px\">※ 수령처·한도·절차는 변경될 수 있으니 <a href=\"https://www.dhlottery.co.kr\" target=\"_blank\" rel=\"noopener\">동행복권 공식 안내</a>를 확인하세요. 미성년자는 복권 구매·수령이 불가합니다.</p>",
+    faq: [
+      ["복권 1등은 어디서 받나요?", "고액 당첨금은 동행복권 본사 또는 지정 지급기관에서 신분증과 당첨 복권을 지참해 수령합니다. 소액은 판매점이나 농협은행에서 받을 수 있습니다."],
+      ["스피또 당첨금에도 기한이 있나요?", "네. 즉석복권은 지급기한(보통 약 1년)이 지나면 당첨금을 받을 수 없습니다. 회차별 지급기한을 꼭 확인하세요."],
+      ["당첨 복권을 잃어버리면 어떻게 되나요?", "복권은 무기명 유가증권이라 원본이 없으면 수령이 어렵습니다. 당첨이 확인되면 복권을 안전하게 보관하세요."],
+    ],
+  },
+  {
+    slug: "guide-how", cat: "입문", emoji: "🎫",
+    title: "스피또란? 종류·구매·당첨 확인 완전정복 | 긁",
+    desc: "스피또(즉석복권) 입문 가이드. 스피또2000·1000·500 종류와 가격·당첨금, 구매 방법, 당첨 확인법, 그리고 출고율로 똑똑하게 고르는 법까지.",
+    keywords: "스피또, 스피또란, 즉석복권, 스피또 종류, 스피또 사는법, 스피또 당첨 확인, 스피또 출고율",
+    h1: "스피또, 처음이라면 여기부터",
+    lead: "스피또는 긁어서 바로 당첨을 확인하는 동행복권의 즉석복권(스크래치)입니다. 종류와 사는 법, 똑똑하게 고르는 법까지 한 번에 정리했어요.",
+    body:
+      "<h2>스피또 종류</h2>" +
+      "<p>가격과 1등 당첨금에 따라 세 가지로 나뉩니다.</p>" +
+      "<div class=\"itable-wrap\"><table class=\"itable\"><thead><tr><th>종류</th><th>가격</th><th>1등 최고</th><th>자세히</th></tr></thead><tbody>" +
+      "<tr><td class=\"tg\">스피또2000</td><td>2,000원</td><td class=\"tprize\">10억 원</td><td><a href=\"/2000\">회차 보기 →</a></td></tr>" +
+      "<tr><td class=\"tg\">스피또1000</td><td>1,000원</td><td class=\"tprize\">5억 원</td><td><a href=\"/1000\">회차 보기 →</a></td></tr>" +
+      "<tr><td class=\"tg\">스피또500</td><td>500원</td><td class=\"tprize\">2억 원</td><td><a href=\"/500\">회차 보기 →</a></td></tr>" +
+      "</tbody></table></div>" +
+      "<h2>사는 법 &amp; 당첨 확인</h2>" +
+      "<ul class=\"glist\"><li>전국 복권 판매점에서 <b>즉석 구매</b></li><li>덮인 부분을 <b>긁어서 즉시</b> 당첨 확인</li><li>당첨 시 금액에 따라 판매점·농협·동행복권에서 수령 (<a href=\"/guide-prize\">수령 방법 보기</a>)</li></ul>" +
+      "<h2>출고율로 똑똑하게 고르기</h2>" +
+      "<p>즉석복권은 ‘어떤 회차를 긁느냐’가 중요합니다. <b>출고율</b>(시중에 풀린 비율)이 높은데도 <b>1등이 아직 많이 남은</b> 회차일수록, 안 나온 고액 당첨이 시중에 있을 가능성이 큽니다. ‘긁?’ 메인에서 회차별 출고율·잔여 당첨·추천 지수를 확인하세요.</p>" +
+      "<p><a class=\"idetail\" href=\"/\">회차별 출고율 한눈에 보기 →</a></p>",
+    faq: [
+      ["스피또는 어떻게 사나요?", "전국 동행복권 복권판매점에서 즉석으로 구매하고, 덮인 부분을 긁어 바로 당첨을 확인하는 즉석복권입니다."],
+      ["스피또 종류는 무엇이 있나요?", "스피또2000(2,000원·1등 10억), 스피또1000(1,000원·1등 5억), 스피또500(500원·1등 2억) 세 가지가 있습니다."],
+      ["출고율이 높으면 좋은 건가요?", "출고율은 시중에 풀린 비율입니다. 출고율이 높은데도 1등이 많이 남았다면 당첨 기회가 더 남아있다는 신호로 볼 수 있어요."],
+    ],
+  },
+  {
+    slug: "guide-lucky", cat: "명당", emoji: "📍",
+    title: "복권 명당, 진짜 효과 있을까? 데이터로 보는 합리적 선택 | 긁",
+    desc: "복권 명당의 의미와 통계적 진실. 1등 많이 나온 명당의 비밀과, 즉석복권에서는 명당보다 ‘회차 선택(출고율·잔여 당첨)’이 더 중요한 이유를 설명합니다.",
+    keywords: "복권 명당, 로또 명당, 복권 1등 명당, 스피또 명당, 복권 잘 나오는 곳, 명당 효과",
+    h1: "복권 명당, 정말 효과가 있을까?",
+    lead: "‘1등이 많이 나온 명당’ 이야기는 늘 화제죠. 명당의 통계적 의미와, 스피또(즉석복권)에서 더 중요한 합리적 선택 기준을 짚어봤어요.",
+    body:
+      "<h2>명당의 비밀 — 대부분은 ‘판매량’ 효과</h2>" +
+      "<p>1등이 자주 나오는 판매점은 대개 <b>판매량 자체가 많은 곳</b>입니다. 많이 팔수록 1등이 나올 확률도 비례해서 커지죠. 즉 명당이라서 잘 나온다기보다, 많이 팔려서 그만큼 1등도 자주 나오는 ‘표본 효과’인 경우가 많습니다.</p>" +
+      "<h2>즉석복권은 ‘어디’보다 ‘어떤 회차’</h2>" +
+      "<p>스피또 같은 즉석복권은 추첨식과 달리 <b>이미 당첨이 정해진 복권이 회차별로 발행</b>됩니다. 그래서 명당보다 중요한 건, <b>1등이 아직 많이 남은 회차를 고르는 것</b>이에요.</p>" +
+      "<ul class=\"glist\"><li><b>출고율</b>이 높은데 <b>1등 잔여</b>가 많다 → 안 나온 1등이 시중에 있을 가능성↑</li><li>반대로 출고율이 높고 1등이 다 빠졌다 → 굳이 그 회차를 살 이유가 적음</li></ul>" +
+      "<p>‘긁?’은 바로 이 정보를 회차별로 실시간 추적해, 합리적으로 고를 수 있게 도와줘요.</p>" +
+      "<p><a class=\"idetail\" href=\"/\">1등 많이 남은 회차 보기 →</a></p>" +
+      "<p style=\"color:var(--muted);font-size:13.5px\">※ 복권은 확률 게임이며, 어떤 방법도 당첨을 보장하지 않습니다. 과도한 구매는 삼가세요.</p>",
+    faq: [
+      ["복권 명당은 정말 효과가 있나요?", "1등이 자주 나오는 곳은 대부분 판매량이 많은 곳입니다. 많이 팔릴수록 1등도 비례해 자주 나오는 표본 효과인 경우가 많아, ‘명당이라 잘 나온다’고 보긴 어렵습니다."],
+      ["스피또도 명당이 중요한가요?", "즉석복권은 회차별로 당첨이 정해져 발행되므로, 어디서 사느냐보다 1등이 많이 남은 회차를 고르는 것이 더 합리적입니다."],
+      ["1등 많이 남은 회차는 어떻게 아나요?", "‘긁?’에서 회차별 출고율과 등위별 잔여 당첨매수를 실시간으로 확인할 수 있습니다."],
+    ],
+  },
+];
+
+function guidePage(g) {
+  const url = `https://ge-uk.com/${g.slug}`;
+  const faqLd = g.faq.map(([q, a]) => `{"@type":"Question","name":${JSON.stringify(q)},"acceptedAnswer":{"@type":"Answer","text":${JSON.stringify(a)}}}`).join(",");
+  const ld = `{"@context":"https://schema.org","@graph":[
+    {"@type":"BreadcrumbList","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"긁?","item":"https://ge-uk.com/"},
+      {"@type":"ListItem","position":2,"name":"가이드","item":"https://ge-uk.com/guide"},
+      {"@type":"ListItem","position":3,"name":${JSON.stringify(g.cat)},"item":${JSON.stringify(url)}}]},
+    {"@type":"Article","headline":${JSON.stringify(g.title)},"description":${JSON.stringify(g.desc)},"inLanguage":"ko-KR","mainEntityOfPage":${JSON.stringify(url)},"publisher":{"@type":"Organization","name":"긁?","url":"https://ge-uk.com/"}},
+    {"@type":"FAQPage","mainEntity":[${faqLd}]}]}`;
+  const related = GUIDES.filter((x) => x.slug !== g.slug)
+    .map((x) => `<a class="tbtn" href="/${x.slug}">${x.emoji} ${x.cat} 가이드 →</a>`).join("");
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${g.title}</title>
+<meta name="description" content="${g.desc}" />
+<meta name="keywords" content="${g.keywords}" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="theme-color" content="#0071e3" />
+<link rel="canonical" href="${url}" />
+<meta name="google-adsense-account" content="${ADSENSE}" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="긁?" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="${g.title}" />
+<meta property="og:description" content="${g.desc}" />
+<meta property="og:url" content="${url}" />
+<meta property="og:image" content="https://ge-uk.com/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${g.title}" />
+<meta name="twitter:description" content="${g.desc}" />
+<script type="application/ld+json">${ld}</script>
+${STYLE}
+<style>
+  .glist{display:grid;gap:10px;margin:14px 0;padding:0;list-style:none}
+  .glist li{position:relative;padding-left:26px;font-size:15px;color:var(--ink2);line-height:1.7}
+  .glist li::before{content:"✓";position:absolute;left:0;top:0;color:var(--brand);font-weight:800}
+  .article h2{font-size:clamp(20px,3vw,26px);font-weight:700;letter-spacing:-.02em;margin:34px 0 12px}
+  .article p{font-size:15.5px;color:var(--ink2);line-height:1.8;margin:10px 0}
+  .article b{color:var(--ink);font-weight:700}
+  .article a{color:var(--brand-ink);font-weight:600;text-decoration:none}
+  .crumb{font-size:13px;color:var(--muted);font-weight:600;margin:6px 2px 0}
+  .crumb a{color:var(--muted);text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="nav"><div class="wrap row">
+    <a class="brand" href="/" style="text-decoration:none">${NAV_LOGO}<span class="name">긁</span></a>
+    <div class="right"><a class="share" href="/guide" style="font-weight:700">가이드 전체</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <p class="crumb"><a href="/">홈</a> › <a href="/guide">가이드</a> › ${g.cat}</p>
+    <section class="hero" style="padding:36px 0 22px;text-align:left">
+      <span class="eyebrow">${g.emoji} 스피또·복권 가이드</span>
+      <h1 style="font-size:clamp(28px,5vw,46px);max-width:none;margin:16px 0 14px;text-align:left">${g.h1}</h1>
+      <p style="margin:0;max-width:60ch;text-align:left">${g.lead}</p>
+    </section>
+
+    ${adUnit()}
+
+    <article class="article ginfo">${g.body}</article>
+
+    ${adUnit()}
+
+    <section class="faq">
+      <div class="section-h"><h2>자주 묻는 질문</h2></div>
+      <div class="list">
+        ${g.faq.map(([q, a], i) => `<details${i === 0 ? " open" : ""}><summary>${q}<span class="chev">⌄</span></summary><div class="ans">${a}</div></details>`).join("")}
+      </div>
+    </section>
+
+    <div class="section-h"><h2>다른 가이드</h2></div>
+    <div class="toolbar">${related}<a class="tbtn" href="/">전체 회차 보기 →</a></div>
+  </div>
+
+  <footer><div class="wrap in">
+    <div>
+      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
+      <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p>
+    </div>
+    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 세금·수령 등 정보는 참고용이며 정확한 내용은 동행복권 공식 안내를 확인하세요. 과도한 구매는 삼가주세요.</p>
+  </div></footer>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
+  document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});
+</script>
+</body>
+</html>`;
+}
+
+function guideHub() {
+  const url = "https://ge-uk.com/guide";
+  const cards = GUIDES.map((g) =>
+    `<a class="gcard" href="/${g.slug}" style="text-decoration:none;display:block">
+      <div class="gi a" style="font-size:22px">${g.emoji}</div>
+      <h4>${g.cat} 가이드</h4>
+      <p>${g.lead}</p>
+      <span class="idetail" style="margin-top:12px">읽어보기 →</span>
+    </a>`).join("");
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>스피또·복권 가이드 — 세금·수령·명당·입문 | 긁</title>
+<meta name="description" content="스피또·복권을 더 잘 즐기는 가이드 모음. 당첨금 세금·실수령액, 당첨금 수령 방법, 복권 명당의 진실, 스피또 입문까지." />
+<meta name="keywords" content="복권 가이드, 스피또 가이드, 복권 세금, 복권 당첨금 수령, 복권 명당, 스피또란" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="theme-color" content="#0071e3" />
+<link rel="canonical" href="${url}" />
+<meta name="google-adsense-account" content="${ADSENSE}" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="긁?" />
+<meta property="og:title" content="스피또·복권 가이드 | 긁" />
+<meta property="og:description" content="당첨금 세금·수령·명당·입문까지, 스피또를 더 잘 즐기는 가이드 모음." />
+<meta property="og:url" content="${url}" />
+<meta property="og:image" content="https://ge-uk.com/og-image.png" />
+${STYLE}
+</head>
+<body>
+  <div class="nav"><div class="wrap row">
+    <a class="brand" href="/" style="text-decoration:none">${NAV_LOGO}<span class="name">긁</span></a>
+    <div class="right"><a class="share" href="/" style="font-weight:700">← 전체 보기</a></div>
+  </div></div>
+  <div class="wrap">
+    <section class="hero" style="padding:48px 0 24px">
+      <span class="eyebrow">📚 스피또·복권 가이드</span>
+      <h1 style="font-size:clamp(30px,5.4vw,50px)">알고 긁으면 더 똑똑하다</h1>
+      <p>세금·수령·명당·입문까지, 스피또를 더 잘 즐기는 데 필요한 정보만 모았어요.</p>
+    </section>
+    ${adUnit()}
+    <section class="guide"><div class="cards">${cards}</div></section>
+  </div>
+  <footer><div class="wrap in">
+    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
+    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
+    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 정보는 참고용입니다.</p>
+  </div></footer>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
+document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});</script>
+</body>
+</html>`;
+}
+
+fs.writeFileSync(path.join(__dirname, "guide.html"), guideHub(), "utf8");
+fs.writeFileSync(path.join(OUT_DIR, "guide.html"), guideHub(), "utf8");
+GUIDES.forEach((g) => {
+  const pg = guidePage(g);
+  fs.writeFileSync(path.join(__dirname, g.slug + ".html"), pg, "utf8");
+  fs.writeFileSync(path.join(OUT_DIR, g.slug + ".html"), pg, "utf8");
+});
+console.log(`가이드 생성: /guide + ${GUIDES.map((g) => "/" + g.slug).join(", ")}`);

@@ -37,10 +37,10 @@ jobs:
       # data.json + 사전렌더된 index.html + 종류별 페이지를 커밋·푸시 → Git 연동 Worker가 사전렌더본을 서빙
       - name: Commit data & prerendered pages if changed
         run: |
-          if [ -n "$(git status --porcelain data.json index.html 2000.html 1000.html 500.html)" ]; then
+          if [ -n "$(git status --porcelain data.json index.html 2000.html 1000.html 500.html guide.html guide-tax.html guide-prize.html guide-how.html guide-lucky.html)" ]; then
             git config user.name "ge-uk-bot"
             git config user.email "bot@users.noreply.github.com"
-            git add data.json index.html 2000.html 1000.html 500.html
+            git add data.json index.html 2000.html 1000.html 500.html guide.html guide-tax.html guide-prize.html guide-how.html guide-lucky.html
             git commit -m "chore: 데이터 자동 갱신 + 사전렌더 ($(date -u +%Y-%m-%dT%H:%MZ))"
             git push
           else
