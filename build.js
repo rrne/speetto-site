@@ -663,6 +663,52 @@ console.log(`가이드 생성: /guide + ${GUIDES.map((g) => "/" + g.slug).join("
 // ============================================================
 //  회차 상세 페이지 (회차마다 고유 URL — 롱테일 검색 + 광고 인벤토리)
 // ============================================================
+// 상세 페이지용 큰 가독성 레이아웃 (카드 대신)
+function detailPanelHTML(g) {
+  const ship = g.shipmentRate == null ? 0 : g.shipmentRate;
+  const r1 = g.rank1 || {}, r1pct = rateOf(r1).toFixed(0);
+  const sc = g.recommendScore;
+  return `<div class="dpanel ${TCLASS[g.typeCd] || ""}">
+    <div class="dstats">
+      <div class="dstat"><div class="dk">출고율</div><div class="dv">${ship}<small>%</small></div><div class="track"><i style="width:${ship}%"></i></div></div>
+      <div class="dstat"><div class="dk">1등 잔여</div><div class="dv">${fmt(r1.remain)}<small>/${fmt(r1.total)}매</small></div><div class="dsub">${r1pct}% 남음</div></div>
+      <div class="dstat"><div class="dk">추천 지수</div><div class="dv" style="color:${scoreColor(sc)}">${sc == null ? "-" : sc}</div><div class="dsub">참고 지표</div></div>
+    </div>
+    <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
+    <div class="ranks">
+      ${rankRow(1, g.rank1, "rk1")}
+      ${rankRow(2, g.rank2, "rk2")}
+      ${rankRow(3, g.rank3, "rk3")}
+    </div>
+  </div>`;
+}
+// 1·2등 당첨 판매점 섹션 (지도 링크)
+function storeSection(g) {
+  if (g.status !== "판매중") return "";
+  const stores = g.winStores || [];
+  if (!stores.length) {
+    return `<div class="section-h"><h2>🏆 1·2등 당첨 판매점</h2></div><p class="empty" style="text-align:left;padding:26px 2px">아직 등록된 1·2등 당첨 판매점이 없어요. 회차가 진행되면 업데이트됩니다.</p>`;
+  }
+  const map = {};
+  stores.forEach((s) => {
+    const key = s.rank + "|" + s.name + "|" + s.addr;
+    if (!map[key]) map[key] = { ...s, count: 0 };
+    map[key].count++;
+  });
+  const rows = Object.values(map).sort((a, b) => a.rank - b.rank || b.count - a.count);
+  return `<div class="section-h"><h2>🏆 1·2등 당첨 판매점</h2><span class="desc">이 회차에서 당첨이 나온 곳 · ${rows.length}곳</span></div>
+    <div class="wstores">
+      ${rows.map((s) => {
+        const q = encodeURIComponent(`${s.name} ${s.addr}`);
+        return `<a class="wstore" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">
+          <span class="wrank wr${s.rank}">${s.rank}등${s.count > 1 ? " ×" + s.count : ""}</span>
+          <span class="wmain"><b class="wnm">${s.name}</b><span class="wad">${s.addr || "주소 정보 없음"}</span></span>
+          <span class="wgo">지도 →</span>
+        </a>`;
+      }).join("")}
+    </div>
+    <p class="disc" style="margin-top:12px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도 링크는 네이버 지도 검색으로 연결됩니다. 같은 가게에서 여러 장 당첨 시 ×횟수로 표기.</p>`;
+}
 function detailPage(g) {
   const name = g.typeName;
   const slug = detailSlug(g);
@@ -729,7 +775,48 @@ function detailPage(g) {
 <meta name="twitter:description" content="${desc}" />
 <script type="application/ld+json">${ld}</script>
 ${STYLE}
-<style>.dwrap{max-width:560px;margin:0 auto}.dwrap .card{cursor:default}.dwrap .card:hover{transform:none}.dana{font-size:15px;color:var(--ink2);line-height:1.8;margin:18px 2px}.dana b{color:var(--ink)}.crumb{font-size:13px;color:var(--muted);font-weight:600;margin:6px 2px}.crumb a{color:var(--muted);text-decoration:none}</style>
+<style>
+  .dwrap{max-width:680px;margin:0 auto}
+  .crumb{font-size:13.5px;color:var(--muted);font-weight:600;margin:6px 2px}.crumb a{color:var(--muted);text-decoration:none}
+  /* 가독성 큰 레이아웃 */
+  .dpanel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 24px;margin-bottom:18px}
+  .dpanel.t2000{background:linear-gradient(180deg,#fff8ec,#fff 160px)}
+  .dpanel.t1000{background:linear-gradient(180deg,#edfaf3,#fff 160px)}
+  .dpanel.t500{background:linear-gradient(180deg,#fff0f3,#fff 160px)}
+  .dstats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+  .dstat{background:var(--bg);border-radius:16px;padding:16px 14px;text-align:center}
+  .dstat .dk{font-size:14px;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .dstat .dv{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .dstat .dv small{font-size:15px;font-weight:600;color:var(--muted);margin-left:2px}
+  .dstat .dsub{font-size:12.5px;color:var(--faint);font-weight:600;margin-top:6px}
+  .dstat .track{height:8px;border-radius:999px;background:#e3e3e8;overflow:hidden;margin-top:12px}
+  .dstat .track>i{display:block;height:100%;border-radius:999px;background:var(--sky)}
+  .dpanel.t2000 .track>i{background:var(--amber)}.dpanel.t1000 .track>i{background:var(--emerald)}.dpanel.t500 .track>i{background:var(--rose)}
+  /* 등위별 잔여 — 상세에선 더 크게 */
+  .dpanel .ranks-h .lbl{font-size:16px}
+  .dpanel .ranks{gap:16px}
+  .dpanel .rk{grid-template-columns:46px 1fr}
+  .dpanel .rk .badge{height:38px;font-size:14px}
+  .dpanel .rk .remain{font-size:21px}
+  .dpanel .rk .remain .of{font-size:14px}
+  .dpanel .rk .mini{height:8px}
+  .dana{font-size:17px;color:var(--ink2);line-height:1.85;margin:6px 2px 20px;font-weight:500}
+  .dana b{color:var(--ink);font-weight:700}
+  .dwrap .itable{font-size:15.5px}
+  .dwrap .itable td{padding:15px 16px}
+  /* 당첨 판매점 리스트 */
+  .wstores{display:grid;gap:10px}
+  .wstore{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;background:var(--surface);
+    border-radius:14px;box-shadow:var(--shadow-sm);padding:15px 17px;text-decoration:none;transition:.15s}
+  .wstore:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+  .wrank{font-size:13px;font-weight:800;color:#fff;border-radius:9px;padding:7px 11px;white-space:nowrap}
+  .wrank.wr1{background:var(--amber)}.wrank.wr2{background:var(--slate)}
+  .wmain{min-width:0}
+  .wnm{display:block;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wad{display:block;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wgo{font-size:13.5px;font-weight:800;color:var(--brand-ink);white-space:nowrap;background:rgba(0,113,227,.08);padding:8px 13px;border-radius:999px}
+  @media (max-width:520px){ .dstats{grid-template-columns:1fr;gap:10px} .dstat{display:flex;align-items:center;justify-content:space-between;text-align:left} .dstat .track{display:none} .dana{font-size:16px} }
+</style>
 </head>
 <body>
   <div class="nav"><div class="wrap row">
@@ -748,19 +835,19 @@ ${STYLE}
     ${adUnit()}
 
     <div class="dwrap">
-      ${cardHTML(g)}
       <p class="dana">${analysis}</p>
+      ${detailPanelHTML(g)}
       <div class="itable-wrap"><table class="itable"><tbody>
-        <tr><td class="tg">출고율</td><td>${ship}%</td></tr>
-        <tr><td class="tg">1등 잔여</td><td class="tprize">${fmt(r1.remain)} / ${fmt(r1.total)}매 (${r1pct}%)</td></tr>
-        <tr><td class="tg">1등 당첨금</td><td>${r1.prize || "-"}</td></tr>
-        <tr><td class="tg">추천 지수</td><td>${g.recommendScore == null ? "-" : g.recommendScore}</td></tr>
+        <tr><td class="tg">1등 당첨금</td><td class="tprize">${r1.prize || "-"}</td></tr>
+        <tr><td class="tg">한 장 가격</td><td>${fmt(g.price)}원</td></tr>
         <tr><td class="tg">판매기한</td><td>${g.saleEndDate || "-"}</td></tr>
-        <tr><td class="tg">지급기한</td><td>${g.giveEndDate || "-"}</td></tr>
+        <tr><td class="tg">지급기한(당첨금 수령)</td><td>${g.giveEndDate || "-"}</td></tr>
       </tbody></table></div>
-    </div>
 
-    ${adUnit()}
+      ${adUnit()}
+
+      ${storeSection(g)}
+    </div>
 
     <div class="section-h"><h2>회차 이동 · 더 보기</h2></div>
     <div class="toolbar">${navLinks}<a class="tbtn" href="/">전체 한눈에 →</a></div>

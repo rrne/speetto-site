@@ -124,6 +124,40 @@ const TYPE_PRICE = { SP2000: 2000, SP1000: 1000, SP500: 500 };
   // 회차 내림차순(최신 우선)
   games.sort((a, b) => b.episode - a.episode);
 
+  // ---- 판매중 회차의 1·2등 당첨판매점 수집 (지도 링크용 좌표 포함) ----
+  // 동행복권 당첨판매점 API: 상품코드(LP35/34/33) + 회차 + 등수
+  const STORE_GDS = { SP2000: "LP35", SP1000: "LP34", SP500: "LP33" };
+  async function fetchStores(g, rank) {
+    const gds = STORE_GDS[g.typeCd];
+    if (!gds) return [];
+    const url = "https://www.dhlottery.co.kr/wnprchsplcsrch/selectStWnShp.do" +
+      `?srchLtGdsCd=${gds}&srchLtEpsd=${g.episode}&srchWnShpRnk=${rank}`;
+    try {
+      const body = await getWithRetry(url, 3);
+      const j = JSON.parse(body);
+      const list = (j.data && j.data.list) || [];
+      return list.map((s) => ({
+        rank,
+        name: s.shpNm || "",
+        addr: (s.shpAddr || "").trim(),
+        tel: s.shpTelno || "",
+        lat: s.shpLat ?? null,
+        lng: s.shpLot ?? null,
+        region: s.region || "",
+      })).filter((s) => s.name);
+    } catch (e) {
+      console.error(`당첨판매점 수집 실패 ${g.typeCd} ${g.episode}회 ${rank}등: ${e.message}`);
+      return [];
+    }
+  }
+  const onSaleGames = games.filter((g) => g.status === "판매중");
+  for (const g of onSaleGames) {
+    const [r1, r2] = await Promise.all([fetchStores(g, 1), fetchStores(g, 2)]);
+    g.winStores = [...r1, ...r2];
+  }
+  const storeTotal = onSaleGames.reduce((a, g) => a + (g.winStores ? g.winStores.length : 0), 0);
+  console.log(`당첨판매점 수집: 판매중 ${onSaleGames.length}회차, 총 ${storeTotal}곳`);
+
   const out = {
     updatedAt: new Date().toISOString(),
     source: "동행복권 dhlottery.co.kr 발행내역",
