@@ -49,6 +49,8 @@ function rankRow(n, r, cls) {
     </div>
   </div>`;
 }
+const TPATH = { SP2000: "2000", SP1000: "1000", SP500: "500" };
+const detailSlug = (g) => `${TPATH[g.typeCd] || g.typeCd}-${g.episode}`;
 function cardHTML(g) {
   const ship = g.shipmentRate == null ? 0 : g.shipmentRate;
   const sc = g.recommendScore, scP = sc == null ? 0 : Math.min(100, sc);
@@ -80,6 +82,7 @@ function cardHTML(g) {
           <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc == null ? "-" : Math.round(scP)}</span></div>
         </div>
       </div>
+      <a class="cdetail" href="/${detailSlug(g)}">이 회차 자세히 보기 →</a>
     </div>
   </div>`;
 }
@@ -656,3 +659,143 @@ GUIDES.forEach((g) => {
   fs.writeFileSync(path.join(OUT_DIR, g.slug + ".html"), pg, "utf8");
 });
 console.log(`가이드 생성: /guide + ${GUIDES.map((g) => "/" + g.slug).join(", ")}`);
+
+// ============================================================
+//  회차 상세 페이지 (회차마다 고유 URL — 롱테일 검색 + 광고 인벤토리)
+// ============================================================
+function detailPage(g) {
+  const name = g.typeName;
+  const slug = detailSlug(g);
+  const url = `https://ge-uk.com/${slug}`;
+  const ship = g.shipmentRate == null ? 0 : g.shipmentRate;
+  const r1 = g.rank1 || {};
+  const r1pct = rateOf(r1).toFixed(0);
+  const onSale = g.status === "판매중";
+  const tpath = TPATH[g.typeCd];
+
+  const title = onSale
+    ? `${name} ${g.episode}회 출고율 ${ship}% · 1등 ${fmt(r1.remain)}매 남음 | 긁`
+    : `${name} ${g.episode}회 당첨 결과·출고율 ${ship}% | 긁`;
+  const desc = onSale
+    ? `${name} ${g.episode}회 출고율 ${ship}%, 1등이 ${fmt(r1.remain)}/${fmt(r1.total)}매(${r1pct}%) 남았습니다. 등위별 잔여 당첨·추천 지수·판매기한·지급기한을 실시간 확인하세요.`
+    : `${name} ${g.episode}회(판매종료) 최종 출고율 ${ship}%, 1등 잔여 ${fmt(r1.remain)}/${fmt(r1.total)}매. 등위별 잔여 당첨 기록을 확인하세요.`;
+  const keywords = `${name} ${g.episode}회, ${name} ${g.episode}회 출고율, ${name} ${g.episode}회 당첨, ${name} 출고율, ${name} 당첨율, 스피또`;
+
+  // 같은 종류 내 이전/다음 회차
+  const sameType = games.filter((x) => x.typeCd === g.typeCd).sort((a, b) => a.episode - b.episode);
+  const idx = sameType.findIndex((x) => x.episode === g.episode);
+  const prev = idx > 0 ? sameType[idx - 1] : null;
+  const next = idx >= 0 && idx < sameType.length - 1 ? sameType[idx + 1] : null;
+  const navLinks =
+    (prev ? `<a class="tbtn" href="/${detailSlug(prev)}">← ${prev.episode}회</a>` : "") +
+    `<a class="tbtn" href="/${tpath}">${name} 전체</a>` +
+    (next ? `<a class="tbtn" href="/${detailSlug(next)}">${next.episode}회 →</a>` : "");
+
+  const analysis = onSale
+    ? `출고율이 <b>${ship}%</b>까지 올라온 가운데, 1등이 아직 <b>${fmt(r1.remain)}매(${r1pct}%)</b> 남아 있습니다. 출고율 대비 고액 당첨이 많이 남을수록 유리하며, 이 회차의 추천 지수는 <b>${g.recommendScore == null ? "-" : g.recommendScore}점</b>입니다.`
+    : `이 회차는 판매가 종료되었습니다. 최종 출고율은 <b>${ship}%</b>, 1등 잔여는 <b>${fmt(r1.remain)}/${fmt(r1.total)}매</b>였습니다.`;
+
+  const ld = `{"@context":"https://schema.org","@graph":[
+    {"@type":"BreadcrumbList","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"긁?","item":"https://ge-uk.com/"},
+      {"@type":"ListItem","position":2,"name":${JSON.stringify(name)},"item":"https://ge-uk.com/${tpath}"},
+      {"@type":"ListItem","position":3,"name":${JSON.stringify(g.episode + "회")},"item":${JSON.stringify(url)}}]},
+    {"@type":"WebPage","url":${JSON.stringify(url)},"name":${JSON.stringify(title)},"description":${JSON.stringify(desc)},"inLanguage":"ko-KR"}]}`;
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${title}</title>
+<meta name="description" content="${desc}" />
+<meta name="keywords" content="${keywords}" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="theme-color" content="#0071e3" />
+<link rel="canonical" href="${url}" />
+<meta name="google-adsense-account" content="${ADSENSE}" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="긁?" />
+<meta property="og:locale" content="ko_KR" />
+<meta property="og:title" content="${title}" />
+<meta property="og:description" content="${desc}" />
+<meta property="og:url" content="${url}" />
+<meta property="og:image" content="https://ge-uk.com/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${title}" />
+<meta name="twitter:description" content="${desc}" />
+<script type="application/ld+json">${ld}</script>
+${STYLE}
+<style>.dwrap{max-width:560px;margin:0 auto}.dwrap .card{cursor:default}.dwrap .card:hover{transform:none}.dana{font-size:15px;color:var(--ink2);line-height:1.8;margin:18px 2px}.dana b{color:var(--ink)}.crumb{font-size:13px;color:var(--muted);font-weight:600;margin:6px 2px}.crumb a{color:var(--muted);text-decoration:none}</style>
+</head>
+<body>
+  <div class="nav"><div class="wrap row">
+    <a class="brand" href="/" style="text-decoration:none">${NAV_LOGO}<span class="name">긁</span></a>
+    <div class="right"><a class="share" href="/${tpath}" style="font-weight:700">${name} 전체</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <p class="crumb"><a href="/">홈</a> › <a href="/${tpath}">${name}</a> › ${g.episode}회</p>
+    <section class="hero" style="padding:30px 0 18px;text-align:left">
+      <span class="eyebrow">🎯 동행복권 공식 데이터 기반</span>
+      <h1 style="font-size:clamp(26px,5vw,42px);max-width:none;text-align:left;margin:14px 0 10px">${name} ${g.episode}회 출고율·당첨율</h1>
+      <p style="text-align:left;margin:0;max-width:none">${onSale ? "판매중" : "판매종료"} · 한 장 ${fmt(g.price)}원 · 1등 ${r1.prize || "-"}</p>
+    </section>
+
+    ${adUnit()}
+
+    <div class="dwrap">
+      ${cardHTML(g)}
+      <p class="dana">${analysis}</p>
+      <div class="itable-wrap"><table class="itable"><tbody>
+        <tr><td class="tg">출고율</td><td>${ship}%</td></tr>
+        <tr><td class="tg">1등 잔여</td><td class="tprize">${fmt(r1.remain)} / ${fmt(r1.total)}매 (${r1pct}%)</td></tr>
+        <tr><td class="tg">1등 당첨금</td><td>${r1.prize || "-"}</td></tr>
+        <tr><td class="tg">추천 지수</td><td>${g.recommendScore == null ? "-" : g.recommendScore}</td></tr>
+        <tr><td class="tg">판매기한</td><td>${g.saleEndDate || "-"}</td></tr>
+        <tr><td class="tg">지급기한</td><td>${g.giveEndDate || "-"}</td></tr>
+      </tbody></table></div>
+    </div>
+
+    ${adUnit()}
+
+    <div class="section-h"><h2>회차 이동 · 더 보기</h2></div>
+    <div class="toolbar">${navLinks}<a class="tbtn" href="/">전체 한눈에 →</a></div>
+  </div>
+
+  <footer><div class="wrap in">
+    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
+    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
+    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다.</p>
+  </div></footer>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
+document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});</script>
+</body>
+</html>`;
+}
+
+games.forEach((g) => {
+  const pg = detailPage(g);
+  const f = detailSlug(g) + ".html";
+  fs.writeFileSync(path.join(__dirname, f), pg, "utf8");
+  fs.writeFileSync(path.join(OUT_DIR, f), pg, "utf8");
+});
+console.log(`회차 상세 페이지 생성: ${games.length}개`);
+
+// ---- sitemap.xml 동적 생성 ----
+const TODAY = (data.updatedAt || "").slice(0, 10) || "2026-06-26";
+const urls = [];
+const u = (loc, freq, pri) => urls.push(`  <url><loc>https://ge-uk.com${loc}</loc><lastmod>${TODAY}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`);
+u("/", "hourly", "1.0");
+["2000", "1000", "500"].forEach((p) => u("/" + p, "daily", "0.9"));
+u("/guide", "weekly", "0.7");
+GUIDES.forEach((g) => u("/" + g.slug, "monthly", "0.7"));
+games.forEach((g) => u("/" + detailSlug(g), g.status === "판매중" ? "daily" : "monthly", g.status === "판매중" ? "0.7" : "0.5"));
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap, "utf8");
+fs.writeFileSync(path.join(OUT_DIR, "sitemap.xml"), sitemap, "utf8");
+console.log(`sitemap.xml 생성: ${urls.length} URL`);
