@@ -246,6 +246,25 @@ function adUnit() {
   return `<div class="ad"><div class="lbl">광고</div><ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE}" data-ad-slot="${AD_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
 }
 
+// 동행복권 공식 당첨 구조·확률 (스피또 게임소개 기준)
+const PRIZE = {
+  SP2000: { oddsAll: "1/2.8", issue: "500만 매", payout: "60.3%",
+    rows: [["1등", "10억 원", "1/5,000,000"], ["2등", "1억 원", "1/1,666,667"], ["3등", "1,000만 원", "1/200,000"], ["4등", "2만 원", "1/363.6"], ["5등", "4,000원", "1/14.3"], ["6등", "2,000원", "1/3.6"]] },
+  SP1000: { oddsAll: "1/3", issue: "500만 매", payout: "60.0%",
+    rows: [["1등", "5억 원", "1/5,000,000"], ["2등", "2,000만 원", "1/1,000,000"], ["3등", "1만 원", "1/181.8"], ["4등", "5,000원", "1/40"], ["5등", "1,000원", "1/3.3"]] },
+  SP500: { oddsAll: "1/3.2", issue: "400만 매", payout: "56.0%",
+    rows: [["1등", "2억 원", "1/4,000,000"], ["2등", "100만 원", "1/200,000"], ["3등", "5,000원", "1/66.7"], ["4등", "500원", "1/3.3"]] },
+};
+function prizeSection(typeCd, name) {
+  const p = PRIZE[typeCd];
+  if (!p) return "";
+  return `<div class="section-h"><h2>${name} 당첨 구조 &amp; 확률</h2><span class="desc">동행복권 공식 기준</span></div>
+    <div class="itable-wrap"><table class="itable"><thead><tr><th>등위</th><th>당첨금</th><th>당첨 확률</th></tr></thead><tbody>
+    ${p.rows.map((r) => `<tr><td class="tg">${r[0]}</td><td class="tprize">${r[1]}</td><td>${r[2]}</td></tr>`).join("")}
+    </tbody></table></div>
+    <p class="lead" style="margin-top:12px">${name}의 <b>전체 당첨 확률은 약 ${p.oddsAll}</b>(꽝 포함)이며, 한 세트 <b>${p.issue}</b>가 발행되고 당첨금 지급률은 판매액의 <b>${p.payout}</b>입니다.</p>`;
+}
+
 function gamePage(typeCd) {
   const m = TYPE_META[typeCd];
   const name = ({ SP2000: "스피또2000", SP1000: "스피또1000", SP500: "스피또500" })[typeCd];
@@ -351,6 +370,12 @@ ${STYLE}
         </tbody></table>
       </div>
     </section>
+
+    <section class="ginfo">
+      ${prizeSection(typeCd, name)}
+    </section>
+
+    ${adUnit()}
 
     <section class="faq">
       <div class="section-h"><h2>${name} 자주 묻는 질문</h2></div>
