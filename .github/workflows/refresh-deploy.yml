@@ -29,22 +29,23 @@ jobs:
       - name: Fetch latest 스피또 data
         run: node fetch-data.js
 
-      - name: Commit data.json if changed
+      - name: Build site (정적 사전 렌더 — index.html 베이크 + dist)
         run: |
-          if [ -n "$(git status --porcelain data.json)" ]; then
+          node build.js
+          cp data.json favicon.svg og-image.png robots.txt sitemap.xml site.webmanifest ads.txt _headers _redirects dist/
+
+      # data.json + 사전렌더된 index.html 을 커밋·푸시 → Git 연동 Worker가 사전렌더본을 서빙
+      - name: Commit data & prerendered index if changed
+        run: |
+          if [ -n "$(git status --porcelain data.json index.html)" ]; then
             git config user.name "ge-uk-bot"
             git config user.email "bot@users.noreply.github.com"
-            git add data.json
-            git commit -m "chore: 데이터 자동 갱신 ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git add data.json index.html
+            git commit -m "chore: 데이터 자동 갱신 + 사전렌더 ($(date -u +%Y-%m-%dT%H:%MZ))"
             git push
           else
             echo "변경 없음 — 커밋 생략"
           fi
-
-      - name: Build site (정적 사전 렌더)
-        run: |
-          node build.js
-          cp data.json favicon.svg og-image.png robots.txt sitemap.xml site.webmanifest ads.txt _headers _redirects dist/
 
       - name: Deploy to Cloudflare Pages
         env:

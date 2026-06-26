@@ -154,23 +154,30 @@ const soldOut = sold.length
        <div class="sold-list">${sold.map(soldDetailsHTML).join("")}</div>`
   : "";
 
-let out = html;
-// 1) PICK 주입
-out = out.replace('<section id="pick"></section>', `<section id="pick">${pickOut}</section>`);
-// 2) GRID(스켈레톤) → 실제 카드, 3) soldSection 주입 : 두 마커 사이를 통째로 교체
-const gridStart = out.indexOf('<div class="grid" id="grid">');
-const soldMarker = '<div id="soldSection"></div>';
-const soldIdx = out.indexOf(soldMarker);
-if (gridStart === -1 || soldIdx === -1) {
-  console.error("주입 마커를 찾지 못했습니다 (grid/soldSection)");
-  process.exit(1);
+// 주석 마커 사이를 교체(idempotent) — 이미 베이크된 index.html을 다시 빌드해도 안전
+function injectBetween(src, startMark, endMark, inner) {
+  const s = src.indexOf(startMark);
+  const e = src.indexOf(endMark);
+  if (s === -1 || e === -1) {
+    console.error("SSG 마커를 찾지 못했습니다:", startMark, endMark);
+    process.exit(1);
+  }
+  return src.slice(0, s + startMark.length) + "\n" + inner + "\n    " + src.slice(e);
 }
-const before = out.slice(0, gridStart);
-const after = out.slice(soldIdx + soldMarker.length);
-out = before +
-  `<div class="grid" id="grid">${gridOut}</div>\n\n    <!-- 판매 종료 -->\n    <div id="soldSection">${soldOut}</div>` +
-  after;
 
+const pickInner = `    <section id="pick">${pickOut}</section>`;
+const gridInner =
+  `    <div class="grid" id="grid">${gridOut}</div>\n\n` +
+  `    <!-- 판매 종료 (컴팩트) -->\n` +
+  `    <div id="soldSection">${soldOut}</div>`;
+
+let out = html;
+out = injectBetween(out, "<!--SSG:PICK-->", "<!--/SSG:PICK-->", pickInner);
+out = injectBetween(out, "<!--SSG:GRID-->", "<!--/SSG:GRID-->", gridInner);
+
+// (1) index.html 자체에 베이크(in-place) → Git 연동 Worker가 사전렌더본을 서빙
+fs.writeFileSync(SRC, out, "utf8");
+// (2) dist/ 에도 출력 → Pages(ge-uk) 배포용
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(path.join(OUT_DIR, "index.html"), out, "utf8");
-console.log(`사전 렌더 완료: dist/index.html (판매중 ${onSale.length} · 판매종료 ${sold.length} · PICK ${pick ? pick.typeName + " " + pick.episode + "회" : "없음"})`);
+console.log(`사전 렌더 완료: index.html(in-place) + dist/index.html (판매중 ${onSale.length} · 판매종료 ${sold.length} · PICK ${pick ? pick.typeName + " " + pick.episode + "회" : "없음"})`);
