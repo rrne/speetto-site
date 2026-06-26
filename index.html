@@ -114,6 +114,11 @@
   .hero h1{margin:20px auto 16px;font-size:clamp(34px,6.4vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.07;max-width:15ch}
   .hero h1 .hl{color:var(--brand)}
   .hero p{margin:0 auto;max-width:42ch;color:var(--muted);font-size:clamp(17px,2.4vw,21px);font-weight:500;line-height:1.45}
+  .visitors{display:none;margin:20px auto 0;font-size:14px;color:var(--ink2);font-weight:600;width:max-content;max-width:92%;
+    background:var(--surface);box-shadow:var(--shadow-sm);border-radius:999px;padding:9px 18px}
+  .visitors.show{display:block;animation:vfade .4s ease}
+  .visitors b{color:var(--brand-ink);font-weight:800}
+  @keyframes vfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
   /* ---------- stat strip ---------- */
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:44px 0 8px}
@@ -474,6 +479,7 @@
       <span class="eyebrow">🎯 동행복권 공식 데이터 기반</span>
       <h1>이왕 긁을 거,<br><span class="hl">1등 많이 남은</span> 걸로 긁자</h1>
       <p>스피또2000·1000·500의 출고율과 남은 당첨을 실시간으로 분석해, 1등이 가장 많이 남아있는 회차를 콕 집어 드립니다.</p>
+      <div class="visitors" id="visitors"></div>
     </section>
 
     <!-- AD: 상단 배너 -->
@@ -1180,9 +1186,32 @@ fetch("data.json?_="+Date.now())
     console.error(err);
   });
 
+/* ----- 방문자 카운터 (오늘 + 누적, 브라우저별 하루 1회 집계) ----- */
+function trackVisitors(){
+  const el = document.getElementById("visitors"); if(!el) return;
+  const NS = "ge-uk-speetto", API = "https://api.counterapi.dev/v1";
+  const d = new Date();
+  const dayKey = "v-" + d.getFullYear() + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0");
+  const flag = "geuk_visit_" + dayKey;
+  const fresh = !localStorage.getItem(flag);  // 오늘 첫 방문이면 카운트 증가
+  const dayURL = `${API}/${NS}/${dayKey}/${fresh ? "up" : ""}`;
+  const totURL = `${API}/${NS}/total/${fresh ? "up" : ""}`;
+  Promise.all([
+    fetch(dayURL).then(r=>r.json()),
+    fetch(totURL).then(r=>r.json())
+  ]).then(([day,tot])=>{
+    if(fresh){ try{ localStorage.setItem(flag,"1"); }catch(e){} }
+    const today = day && day.count!=null ? day.count : 0;
+    const total = tot && tot.count!=null ? tot.count : 0;
+    el.innerHTML = `👀 오늘 <b>${today.toLocaleString("ko-KR")}</b>명 · 누적 <b>${total.toLocaleString("ko-KR")}</b>명이 긁었어요`;
+    el.classList.add("show");
+  }).catch(()=>{ /* 카운터 API 실패 시 조용히 숨김 */ });
+}
+
 buildTabs();
 initAnalytics();
 initAds();
+trackVisitors();
 </script>
 </body>
 </html>
