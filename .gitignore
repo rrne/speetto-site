@@ -6,3 +6,6 @@ _site/
 !og-image.png
 .claude/
 dist/
+
+# 당첨판매점 수집 중간 산출물(빌드시 재생성)
+stores.json

@@ -133,7 +133,7 @@ const TYPE_PRICE = { SP2000: 2000, SP1000: 1000, SP500: 500 };
     const url = "https://www.dhlottery.co.kr/wnprchsplcsrch/selectStWnShp.do" +
       `?srchLtGdsCd=${gds}&srchLtEpsd=${g.episode}&srchWnShpRnk=${rank}`;
     try {
-      const body = await getWithRetry(url, 3);
+      const body = await getWithRetry(url, 2);
       const j = JSON.parse(body);
       const list = (j.data && j.data.list) || [];
       return list.map((s) => ({
@@ -150,13 +150,16 @@ const TYPE_PRICE = { SP2000: 2000, SP1000: 1000, SP500: 500 };
       return [];
     }
   }
-  const onSaleGames = games.filter((g) => g.status === "판매중");
-  for (const g of onSaleGames) {
+  // 전 회차의 1·2등 당첨판매점을 stores.json 으로 분리 저장 (명당 집계 + 상세페이지용, data.json 은 가볍게 유지)
+  const stores = {};
+  for (const g of games) {
     const [r1, r2] = await Promise.all([fetchStores(g, 1), fetchStores(g, 2)]);
-    g.winStores = [...r1, ...r2];
+    const list = [...r1, ...r2];
+    if (list.length) stores[`${g.typeCd}-${g.episode}`] = list;
   }
-  const storeTotal = onSaleGames.reduce((a, g) => a + (g.winStores ? g.winStores.length : 0), 0);
-  console.log(`당첨판매점 수집: 판매중 ${onSaleGames.length}회차, 총 ${storeTotal}곳`);
+  const storeTotal = Object.values(stores).reduce((a, l) => a + l.length, 0);
+  fs.writeFileSync(path.join(__dirname, "stores.json"), JSON.stringify(stores), "utf8");
+  console.log(`당첨판매점 수집: ${Object.keys(stores).length}회차, 총 ${storeTotal}곳 → stores.json`);
 
   const out = {
     updatedAt: new Date().toISOString(),
