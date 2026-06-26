@@ -168,6 +168,8 @@ function injectBetween(src, startMark, endMark, inner) {
 const pickInner = `    <section id="pick">${pickOut}</section>`;
 const gridInner =
   `    <div class="grid" id="grid">${gridOut}</div>\n\n` +
+  `    <!-- AD: 인피드(판매중 카드 바로 아래) — render()가 #grid/#soldSection 만 갱신하므로 이 광고는 보존됨 -->\n` +
+  `    <div class="ad" data-ad-slot-key="feed"><div class="lbl">광고</div><div class="slot"></div></div>\n\n` +
   `    <!-- 판매 종료 (컴팩트) -->\n` +
   `    <div id="soldSection">${soldOut}</div>`;
 
