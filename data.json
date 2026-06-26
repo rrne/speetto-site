@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-25T20:06:44.189Z",
+  "updatedAt": "2026-06-26T03:57:08.978Z",
   "source": "동행복권 dhlottery.co.kr 발행내역",
   "count": 29,
   "games": [
@@ -9,25 +9,25 @@
       "price": 1000,
       "episode": 107,
       "status": "판매중",
-      "shipmentRate": 40,
+      "shipmentRate": 59,
       "rank1": {
         "remain": 11,
         "total": 12,
         "prize": "5억원"
       },
       "rank2": {
-        "remain": 53,
+        "remain": 42,
         "total": 60
       },
       "rank3": {
-        "remain": 302059,
+        "remain": 264491,
         "total": 330000
       },
       "rank1RemainRate": 91.7,
-      "recommendScore": 36.3,
+      "recommendScore": 49.6,
       "saleEndDate": "2026-08-31",
       "giveEndDate": "2027-08-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -42,18 +42,18 @@
         "prize": "5억원"
       },
       "rank2": {
-        "remain": 5,
+        "remain": 1,
         "total": 60
       },
       "rank3": {
-        "remain": 57189,
+        "remain": 36234,
         "total": 330000
       },
       "rank1RemainRate": 16.7,
-      "recommendScore": 14.2,
+      "recommendScore": 11.6,
       "saleEndDate": "2026-07-31",
       "giveEndDate": "2027-07-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -72,14 +72,14 @@
         "total": 55
       },
       "rank3": {
-        "remain": 24807,
+        "remain": 23469,
         "total": 302500
       },
       "rank1RemainRate": 0,
-      "recommendScore": 1.9,
+      "recommendScore": 1.8,
       "saleEndDate": "2026-06-30",
       "giveEndDate": "2027-06-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -98,14 +98,14 @@
         "total": 55
       },
       "rank3": {
-        "remain": 11133,
+        "remain": 10583,
         "total": 302500
       },
       "rank1RemainRate": 9.1,
       "recommendScore": 6.9,
       "saleEndDate": "2026-05-31",
       "giveEndDate": "2027-05-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -124,14 +124,14 @@
         "total": 55
       },
       "rank3": {
-        "remain": 11334,
+        "remain": 11019,
         "total": 302500
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.4,
       "saleEndDate": "2026-04-30",
       "giveEndDate": "2027-04-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -150,14 +150,14 @@
         "total": 55
       },
       "rank3": {
-        "remain": 7765,
+        "remain": 7595,
         "total": 302500
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2026-03-31",
       "giveEndDate": "2027-03-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -176,14 +176,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 27601,
+        "remain": 27510,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 4.6,
       "saleEndDate": "2025-12-31",
       "giveEndDate": "2026-12-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -202,14 +202,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 7624,
+        "remain": 7541,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.3,
       "saleEndDate": "2025-12-31",
       "giveEndDate": "2026-12-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -228,14 +228,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 7974,
+        "remain": 7904,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.3,
       "saleEndDate": "2025-11-30",
       "giveEndDate": "2026-11-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -254,14 +254,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 4928,
+        "remain": 4860,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2025-11-30",
       "giveEndDate": "2026-11-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -280,14 +280,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 4746,
+        "remain": 4698,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2025-10-31",
       "giveEndDate": "2026-10-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -306,14 +306,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 4463,
+        "remain": 4431,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 1.4,
       "saleEndDate": "2025-10-31",
       "giveEndDate": "2026-10-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -332,14 +332,14 @@
         "total": 50
       },
       "rank3": {
-        "remain": 4895,
+        "remain": 4867,
         "total": 275000
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2025-09-30",
       "giveEndDate": "2026-09-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -358,14 +358,14 @@
         "total": 45
       },
       "rank3": {
-        "remain": 4339,
+        "remain": 4319,
         "total": 247500
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.2,
       "saleEndDate": "2025-09-30",
       "giveEndDate": "2026-09-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -384,14 +384,14 @@
         "total": 45
       },
       "rank3": {
-        "remain": 3519,
+        "remain": 3489,
         "total": 247500
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2025-08-31",
       "giveEndDate": "2026-08-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -410,14 +410,14 @@
         "total": 45
       },
       "rank3": {
-        "remain": 7425,
+        "remain": 7404,
         "total": 247500
       },
       "rank1RemainRate": 0,
       "recommendScore": 1,
       "saleEndDate": "2025-07-31",
       "giveEndDate": "2026-07-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP1000",
@@ -436,14 +436,14 @@
         "total": 45
       },
       "rank3": {
-        "remain": 3420,
+        "remain": 3377,
         "total": 247500
       },
       "rank1RemainRate": 0,
       "recommendScore": 0.8,
       "saleEndDate": "2025-06-30",
       "giveEndDate": "2026-06-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -451,25 +451,25 @@
       "price": 2000,
       "episode": 68,
       "status": "판매중",
-      "shipmentRate": 65,
+      "shipmentRate": 75,
       "rank1": {
         "remain": 7,
         "total": 8,
         "prize": "10억원"
       },
       "rank2": {
-        "remain": 15,
+        "remain": 11,
         "total": 24
       },
       "rank3": {
-        "remain": 120,
+        "remain": 106,
         "total": 200
       },
       "rank1RemainRate": 87.5,
-      "recommendScore": 50.2,
+      "recommendScore": 53.7,
       "saleEndDate": "2026-09-30",
       "giveEndDate": "2027-09-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -488,14 +488,14 @@
         "total": 18
       },
       "rank3": {
-        "remain": 43,
+        "remain": 42,
         "total": 150
       },
       "rank1RemainRate": 0,
-      "recommendScore": 9.1,
+      "recommendScore": 9,
       "saleEndDate": "2026-08-31",
       "giveEndDate": "2027-08-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -521,7 +521,7 @@
       "recommendScore": 7.3,
       "saleEndDate": "2026-06-30",
       "giveEndDate": "2027-06-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -547,7 +547,7 @@
       "recommendScore": 0.2,
       "saleEndDate": "2026-04-30",
       "giveEndDate": "2027-04-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -573,7 +573,7 @@
       "recommendScore": 32.3,
       "saleEndDate": "2025-12-31",
       "giveEndDate": "2026-12-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -599,7 +599,7 @@
       "recommendScore": 16,
       "saleEndDate": "2025-11-30",
       "giveEndDate": "2026-11-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -625,7 +625,7 @@
       "recommendScore": 2.3,
       "saleEndDate": "2025-10-31",
       "giveEndDate": "2026-10-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -651,7 +651,7 @@
       "recommendScore": 1.8,
       "saleEndDate": "2025-09-30",
       "giveEndDate": "2026-09-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -677,7 +677,7 @@
       "recommendScore": 1.7,
       "saleEndDate": "2025-09-30",
       "giveEndDate": "2026-09-30",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP2000",
@@ -703,7 +703,7 @@
       "recommendScore": 4.4,
       "saleEndDate": "2025-08-31",
       "giveEndDate": "2026-08-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP500",
@@ -711,7 +711,7 @@
       "price": 500,
       "episode": 48,
       "status": "판매중",
-      "shipmentRate": 38,
+      "shipmentRate": 39,
       "rank1": {
         "remain": 5,
         "total": 5,
@@ -722,14 +722,14 @@
         "total": 100
       },
       "rank3": {
-        "remain": 214850,
+        "remain": 211267,
         "total": 300000
       },
       "rank1RemainRate": 100,
-      "recommendScore": 33.6,
+      "recommendScore": 34.5,
       "saleEndDate": "2026-12-31",
       "giveEndDate": "2027-12-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     },
     {
       "typeCd": "SP500",
@@ -748,14 +748,14 @@
         "total": 40
       },
       "rank3": {
-        "remain": 46573,
+        "remain": 46535,
         "total": 120000
       },
       "rank1RemainRate": 100,
       "recommendScore": 54.7,
       "saleEndDate": "2025-12-31",
       "giveEndDate": "2026-12-31",
-      "dataChgDate": "26-06-19"
+      "dataChgDate": "26-06-26"
     }
   ]
 }
