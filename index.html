@@ -4,6 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<!-- ===== 서드파티 사전 연결 (DNS·TLS 핸드셰이크 선처리) ===== -->
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://api.counterapi.dev" />
+
 <!-- ===== Primary SEO ===== -->
 <title>스피또 출고율 실시간 조회 | 스피또2000·1000·500 당첨율 | 긁</title>
 <meta name="description" content="스피또 출고율을 실시간으로 조회하세요. 스피또2000·스피또1000·스피또500 회차별 출고율과 등위별 잔여 당첨, 1등이 많이 남은 추천 회차까지 한눈에. 동행복권 공식 데이터 기반 무료 즉석복권 분석." />
@@ -2720,7 +2726,9 @@ function syncSaleUI(){ const t=document.getElementById("saleToggle"); if(t){ t.c
 loadBookmarks();
 readHash();
 
-fetch("data.json?_="+Date.now())
+// 캐시는 _headers의 Cache-Control(max-age=60, s-maxage=300, stale-while-revalidate)에 위임.
+// 별도 캐시버스터를 붙이지 않아야 CDN/브라우저 캐시와 백그라운드 재검증이 동작한다.
+fetch("data.json")
   .then(r=>r.json())
   .then(d=>{ state.data=d; computeChanges(); setUpdated(d.updatedAt); buildTabs(); syncSortUI(); syncSaleUI(); renderPick(); render(); })
   .catch(err=>{
@@ -2752,9 +2760,10 @@ function trackVisitors(){
 }
 
 buildTabs();
-initAnalytics();
-initAds();
-trackVisitors();
+// 광고·애널리틱스·방문자 카운터는 콘텐츠 렌더보다 우선순위가 낮으므로
+// 메인 스레드가 한가해진 뒤(유휴 시점) 실행해 초기 표시 속도를 확보한다.
+const whenIdle = window.requestIdleCallback || (cb => setTimeout(cb, 200));
+whenIdle(() => { initAnalytics(); initAds(); trackVisitors(); });
 </script>
 </body>
 </html>

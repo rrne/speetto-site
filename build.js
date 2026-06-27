@@ -247,6 +247,21 @@ function adUnit() {
   return `<div class="ad"><div class="lbl">광고</div><ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE}" data-ad-slot="${AD_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
 }
 
+// 모든 생성 페이지가 공유하는 하단 푸터.
+// disclaimer(면책 문구)만 페이지별로 다르고, 종류별 페이지는 데이터 출처 링크(withSource)를 추가로 노출한다.
+function siteFooter(disclaimer, { withSource = false } = {}) {
+  const sourceLine = withSource
+    ? `\n      <p class="disc" style="margin-top:4px">데이터 출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></p>`
+    : "";
+  return `  <footer><div class="wrap in">
+    <div>
+      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
+      <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p>${sourceLine}
+    </div>
+    <p class="disc">${disclaimer}</p>
+  </div></footer>`;
+}
+
 // 동행복권 공식 당첨 구조·확률 (스피또 게임소개 기준)
 const PRIZE = {
   SP2000: { oddsAll: "1/2.8", issue: "500만 매", payout: "60.3%",
@@ -314,6 +329,8 @@ function gamePage(typeCd) {
 <meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="${url}" />
 <meta name="google-adsense-account" content="${ADSENSE}" />
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/favicon.svg" />
@@ -389,14 +406,7 @@ ${STYLE}
     <div class="toolbar">${others}<a class="tbtn" href="/">전체 한눈에 보기 →</a></div>
   </div>
 
-  <footer><div class="wrap in">
-    <div>
-      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-      <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p>
-      <p class="disc" style="margin-top:4px">데이터 출처: <a href="https://www.dhlottery.co.kr/st/pblcnDsctn" target="_blank" rel="noopener">동행복권 발행내역 ↗</a></p>
-    </div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 과도한 구매는 삼가주세요.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 과도한 구매는 삼가주세요.", { withSource: true })}
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>
@@ -586,6 +596,8 @@ function guidePage(g) {
 <meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="${url}" />
 <meta name="google-adsense-account" content="${ADSENSE}" />
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -644,13 +656,7 @@ ${STYLE}
     <div class="toolbar">${related}<a class="tbtn" href="/">전체 회차 보기 →</a></div>
   </div>
 
-  <footer><div class="wrap in">
-    <div>
-      <div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-      <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p>
-    </div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 세금·수령 등 정보는 참고용이며 정확한 내용은 동행복권 공식 안내를 확인하세요. 과도한 구매는 삼가주세요.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 세금·수령 등 정보는 참고용이며 정확한 내용은 동행복권 공식 안내를 확인하세요. 과도한 구매는 삼가주세요.")}
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>
@@ -682,6 +688,8 @@ function guideHub() {
 <meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="${url}" />
 <meta name="google-adsense-account" content="${ADSENSE}" />
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -707,11 +715,7 @@ ${STYLE}
     ${adUnit()}
     <section class="guide"><div class="cards">${cards}</div></section>
   </div>
-  <footer><div class="wrap in">
-    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 정보는 참고용입니다.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 정보는 참고용입니다.")}
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
 document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});</script>
@@ -824,6 +828,8 @@ function detailPage(g) {
 <meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="${url}" />
 <meta name="google-adsense-account" content="${ADSENSE}" />
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -917,11 +923,7 @@ ${STYLE}
     <div class="toolbar">${navLinks}<a class="tbtn" href="/">전체 한눈에 →</a></div>
   </div>
 
-  <footer><div class="wrap in">
-    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다.")}
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
 document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});</script>
@@ -996,6 +998,8 @@ function luckyPage() {
 <meta name="theme-color" content="#0071e3" />
 <link rel="canonical" href="${url}" />
 <meta name="google-adsense-account" content="${ADSENSE}" />
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/site.webmanifest" />
@@ -1057,11 +1061,7 @@ ${STYLE}
     <div class="section-h"><h2>더 보기</h2></div>
     <div class="toolbar"><a class="tbtn" href="/2000">스피또2000</a><a class="tbtn" href="/1000">스피또1000</a><a class="tbtn" href="/500">스피또500</a><a class="tbtn" href="/guide-lucky">📍 명당의 진실</a><a class="tbtn" href="/">전체 회차 →</a></div>
   </div>
-  <footer><div class="wrap in">
-    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 당첨판매점 정보는 참고용입니다.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 당첨판매점 정보는 참고용입니다.")}
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
 document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});
@@ -1160,11 +1160,7 @@ ${STYLE}
     <div class="section-h"><h2>관련 문서</h2></div>
     <div class="toolbar">${others}<a class="tbtn" href="/">홈으로 →</a></div>
   </div>
-  <footer><div class="wrap in">
-    <div><div class="brand" style="display:flex;align-items:center;gap:10px;font-weight:900">${NAV_LOGO} 긁</div>
-    <p class="disc" style="margin-top:12px;font-weight:600;color:var(--ink2)">긁기 전에 보는 스피또 출고율·당첨율</p></div>
-    <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다.</p>
-  </div></footer>
+${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다.")}
 <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');</script>
 </body>
