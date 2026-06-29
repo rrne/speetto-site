@@ -425,6 +425,19 @@
 <style>
   .dwrap{max-width:680px;margin:0 auto}
   .crumb{font-size:13.5px;color:var(--muted);font-weight:600;margin:6px 2px}.crumb a{color:var(--muted);text-decoration:none}
+  /* 추세(시계열) 블록 */
+  .trend{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px 22px 24px;margin-bottom:18px}
+  .trend .desc{font-size:12px;color:var(--faint);font-weight:600;margin-left:6px}
+  .tchips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+  .tchip{font-size:13.5px;font-weight:700;color:var(--ink2);background:var(--bg-soft);border:1px solid var(--line);padding:7px 13px;border-radius:999px}
+  .tchip.hot{color:#d92d20;background:#fff1f0;border-color:#ffd9d4}
+  .tchip.up{color:#0058b0;background:#eaf3ff;border-color:#cfe4ff}
+  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tcard{background:var(--bg-soft);border-radius:14px;padding:14px 16px}
+  .tk{font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .spark{width:100%;height:54px;display:block}
+  .tnow{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:8px}.tnow b{color:var(--ink);font-weight:800}
+  @media (max-width:520px){ .tgrid{grid-template-columns:1fr} }
   /* 가독성 큰 레이아웃 */
   .dpanel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 24px;margin-bottom:18px}
   .dpanel.t2000{background:linear-gradient(180deg,#fff8ec,#fff 160px)}
@@ -531,6 +544,7 @@
   </div>
     </div>
   </div>
+      
       <div class="itable-wrap"><table class="itable"><tbody>
         <tr><td class="tg">1등 당첨금</td><td class="tprize">5억원</td></tr>
         <tr><td class="tg">한 장 가격</td><td>1,000원</td></tr>

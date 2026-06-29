@@ -29,6 +29,10 @@ jobs:
       - name: Fetch latest 스피또 data
         run: node fetch-data.js
 
+      # 추세 차트·소진 속도용 시계열 누적. build 보다 먼저 실행해야 build.js가 최신 history를 읽는다.
+      - name: Record time-series snapshot
+        run: node record-history.js
+
       - name: Build site (정적 사전 렌더 — index.html 베이크 + dist)
         run: |
           node build.js
@@ -37,10 +41,10 @@ jobs:
       # data.json + 사전렌더된 index.html + 종류별 페이지를 커밋·푸시 → Git 연동 Worker가 사전렌더본을 서빙
       - name: Commit data & prerendered pages if changed
         run: |
-          if [ -n "$(git status --porcelain data.json sitemap.xml ./*.html)" ]; then
+          if [ -n "$(git status --porcelain data.json history.json sitemap.xml ./*.html)" ]; then
             git config user.name "ge-uk-bot"
             git config user.email "bot@users.noreply.github.com"
-            git add data.json sitemap.xml ./*.html
+            git add data.json history.json sitemap.xml ./*.html
             git commit -m "chore: 데이터 자동 갱신 + 사전렌더 ($(date -u +%Y-%m-%dT%H:%MZ))"
             git push
           else

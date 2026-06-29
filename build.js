@@ -196,6 +196,9 @@ let STORES_MAP = {};
 try { STORES_MAP = JSON.parse(fs.readFileSync(path.join(__dirname, "stores-archive.json"), "utf8")); } catch (e) {}
 try { Object.assign(STORES_MAP, JSON.parse(fs.readFileSync(path.join(__dirname, "stores.json"), "utf8"))); } catch (e) {}
 games.forEach((g) => { g.winStores = STORES_MAP[`${g.typeCd}-${g.episode}`] || []; });
+// 시계열 스냅샷(record-history.js 가 누적) — 추세 차트·소진 속도 렌더용
+let HISTORY = {};
+try { HISTORY = JSON.parse(fs.readFileSync(path.join(__dirname, "history.json"), "utf8")); } catch (e) {}
 const ADSENSE = "ca-pub-6037343600471239";
 const AD_SLOT = "5042804616";
 const GA_ID = "G-ZG2KZYHQBL";
@@ -777,6 +780,51 @@ function storeSection(g) {
     </tbody></table></div>
     <p class="disc" style="margin-top:10px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 지도는 네이버 지도 검색 연결. 같은 가게 다중 당첨은 ×횟수.</p>`;
 }
+// 미니 스파크라인 SVG — 값 배열을 폭 W×높이 H 박스에 정규화해 꺾은선으로 그린다(라이브러리 없음).
+function sparkline(vals, color, W = 300, H = 54) {
+  if (vals.length < 2) return "";
+  const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+  const X = (i) => (i / (vals.length - 1)) * (W - 10) + 5;
+  const Y = (v) => H - 6 - ((v - min) / span) * (H - 14);
+  const pts = vals.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  const lx = X(vals.length - 1).toFixed(1), ly = Y(vals[vals.length - 1]).toFixed(1);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="spark">
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lx}" cy="${ly}" r="3.4" fill="${color}"/>
+  </svg>`;
+}
+
+// 회차 추세 블록 — 출고율·1등 잔여의 시간 변화 + 최근 24시간 소진 속도.
+// 시계열은 경쟁사가 못 따라오는 차별화 자산. 데이터가 2포인트 미만이면 표시하지 않는다(쌓이면 자동 노출).
+function trendBlock(g) {
+  const arr = HISTORY[`${g.typeCd}-${g.episode}`] || [];
+  if (arr.length < 2) return "";
+  const first = arr[0], last = arr[arr.length - 1];
+  const shipVals = arr.map((p) => p.s).filter((v) => v != null);
+  const r1Vals = arr.map((p) => p.r).filter((v) => v != null);
+
+  // 최근 24시간 변화: 마지막 시점에서 24h 이전에 가장 가까운 스냅샷과 비교
+  const lastT = new Date(last.t).getTime();
+  const dayAgo = arr.filter((p) => lastT - new Date(p.t).getTime() >= 24 * 3600e3).pop() || first;
+  const dR1 = (last.r != null && dayAgo.r != null) ? dayAgo.r - last.r : 0; // 양수 = 빠진 매수
+  const dShip = (last.s != null && dayAgo.s != null) ? last.s - dayAgo.s : 0;
+
+  const since = `${first.t.slice(0, 10)}부터 ${arr.length}회 기록`;
+  const chips = [];
+  if (dR1 > 0) chips.push(`<span class="tchip hot">🔥 최근 24h 1등 ${dR1}매 소진</span>`);
+  if (dShip > 0) chips.push(`<span class="tchip up">📈 최근 24h 출고 +${dShip}%p</span>`);
+  if (!chips.length) chips.push(`<span class="tchip">최근 24h 큰 변동 없음</span>`);
+
+  return `<div class="trend">
+    <div class="section-h" style="margin:0 0 4px"><h2 style="font-size:18px">📊 이 회차 추세 <span class="desc">긁? 자체 수집 · ${since}</span></h2></div>
+    <div class="tchips">${chips.join("")}</div>
+    <div class="tgrid">
+      <div class="tcard"><div class="tk">출고율 추이</div>${sparkline(shipVals, "#0071e3")}<div class="tnow">${first.s}% → <b>${last.s}%</b></div></div>
+      <div class="tcard"><div class="tk">1등 잔여 추이</div>${sparkline(r1Vals, "#f43f5e")}<div class="tnow">${fmt(first.r)} → <b>${fmt(last.r)}매</b></div></div>
+    </div>
+  </div>`;
+}
+
 function detailPage(g) {
   const name = g.typeName;
   const slug = detailSlug(g);
@@ -848,6 +896,19 @@ ${STYLE}
 <style>
   .dwrap{max-width:680px;margin:0 auto}
   .crumb{font-size:13.5px;color:var(--muted);font-weight:600;margin:6px 2px}.crumb a{color:var(--muted);text-decoration:none}
+  /* 추세(시계열) 블록 */
+  .trend{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px 22px 24px;margin-bottom:18px}
+  .trend .desc{font-size:12px;color:var(--faint);font-weight:600;margin-left:6px}
+  .tchips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+  .tchip{font-size:13.5px;font-weight:700;color:var(--ink2);background:var(--bg-soft);border:1px solid var(--line);padding:7px 13px;border-radius:999px}
+  .tchip.hot{color:#d92d20;background:#fff1f0;border-color:#ffd9d4}
+  .tchip.up{color:#0058b0;background:#eaf3ff;border-color:#cfe4ff}
+  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tcard{background:var(--bg-soft);border-radius:14px;padding:14px 16px}
+  .tk{font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .spark{width:100%;height:54px;display:block}
+  .tnow{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:8px}.tnow b{color:var(--ink);font-weight:800}
+  @media (max-width:520px){ .tgrid{grid-template-columns:1fr} }
   /* 가독성 큰 레이아웃 */
   .dpanel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 24px;margin-bottom:18px}
   .dpanel.t2000{background:linear-gradient(180deg,#fff8ec,#fff 160px)}
@@ -907,6 +968,7 @@ ${STYLE}
     <div class="dwrap">
       <p class="dana">${analysis}</p>
       ${detailPanelHTML(g)}
+      ${trendBlock(g)}
       <div class="itable-wrap"><table class="itable"><tbody>
         <tr><td class="tg">1등 당첨금</td><td class="tprize">${r1.prize || "-"}</td></tr>
         <tr><td class="tg">한 장 가격</td><td>${fmt(g.price)}원</td></tr>
