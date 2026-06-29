@@ -34,6 +34,45 @@ function scoreColor(s) {
   if (s >= 20) return "#f59e0b";
   return "#f43f5e";
 }
+
+// "10억 원"·"1,000만 원"·"5,000원" → 숫자(원). PRIZE 표의 당첨금 문자열 파싱용.
+function wonOf(s) {
+  const t = String(s).replace(/[,\s원]/g, "");
+  let m;
+  if ((m = t.match(/^(\d+(?:\.\d+)?)억$/))) return +m[1] * 1e8;
+  if ((m = t.match(/^(\d+(?:\.\d+)?)만$/))) return +m[1] * 1e4;
+  if ((m = t.match(/^(\d+)$/))) return +m[1];
+  return NaN;
+}
+const oddsDenom = (s) => parseFloat(String(s).split("/")[1].replace(/,/g, ""));
+
+/**
+ * 기대 환급률(현재 시점 추정) — 차별화 분석 지표.
+ *  남은 티켓 R ≈ 3등 잔여 × 3등 배수  (당첨 소진율 ≈ 티켓 소진율 가정)
+ *  상위 3등은 '실제 잔여 매수'로, 하위 등위(4등~)는 이론 확률로 1장당 기대값 합산.
+ *  → 환급률 = 기대값 / 한 장 가격 × 100.  추정치이며 당첨을 보장하지 않는 참고 지표.
+ */
+function evReturn(g) {
+  const P = PRIZE[g.typeCd];
+  const r3 = g.rank3;
+  if (!P || !r3 || r3.remain == null || !r3.total || !g.price) return null;
+  const rows = P.rows; // [등위, 당첨금, 확률] · rows[0..2] = data rank1~3
+  const d3 = oddsDenom(rows[2][2]);
+  const R = r3.remain * d3; // 남은(미긁) 티켓 추정
+  if (!(R > 0)) return null;
+  const dataRanks = [g.rank1, g.rank2, g.rank3];
+  let topEV = 0; // 상위 3등 잔여 기대값 / 티켓
+  for (let i = 0; i < 3; i++) {
+    const rk = dataRanks[i];
+    if (rk && rk.remain != null) topEV += rk.remain * wonOf(rows[i][1]);
+  }
+  topEV /= R;
+  let lowEV = 0; // 하위 등위 이론 기대값 / 티켓 (잔여율 일정 가정)
+  for (let i = 3; i < rows.length; i++) lowEV += wonOf(rows[i][1]) / oddsDenom(rows[i][2]);
+  const ev = topEV + lowEV;
+  const baseline = parseFloat(P.payout); // 이론 환급률(%)
+  return { pct: ev / g.price * 100, ev, R, baseline };
+}
 function rankRow(n, r, cls) {
   const pct = rateOf(r);
   const rmn = r && r.remain != null ? r.remain : null;
@@ -825,6 +864,34 @@ function trendBlock(g) {
   </div>`;
 }
 
+// 기대 환급률 카드 — 현재 잔여 기준 추정치 + 투명한 산식 공개(신뢰 차별화).
+function evBlock(g) {
+  if (g.status !== "판매중") return "";
+  const e = evReturn(g);
+  if (!e) return "";
+  const pct = e.pct.toFixed(1), base = e.baseline.toFixed(1);
+  const diff = e.pct - e.baseline;
+  const verdict = diff >= 3 ? { c: "#10b981", t: "평균보다 유리" } : diff <= -3 ? { c: "#f43f5e", t: "평균보다 불리" } : { c: "#f59e0b", t: "평균 수준" };
+  return `<div class="ev">
+    <div class="section-h" style="margin:0 0 10px"><h2 style="font-size:18px">💸 지금 한 장의 기대 환급률 <span class="desc">현재 잔여 기준 추정</span></h2></div>
+    <div class="evtop">
+      <div class="evbig" style="color:${verdict.c}">${pct}<small>%</small></div>
+      <div class="evside">
+        <div class="evtag" style="background:${verdict.c}1a;color:${verdict.c}">${verdict.t}</div>
+        <div class="evbase">이론 환급률 <b>${base}%</b> 대비 ${diff >= 0 ? "+" : ""}${diff.toFixed(1)}%p</div>
+      </div>
+    </div>
+    <details class="evhow"><summary>이 숫자는 어떻게 계산하나요? (산식 공개)</summary>
+      <div class="evhow-b">
+        <p>① 남은 티켓 수 ≈ <b>3등 잔여 × 3등 당첨 배수</b> (당첨 소진율 ≈ 티켓 소진율로 가정)</p>
+        <p>② 상위 3등은 <b>실제 잔여 매수</b>, 4등 이하는 이론 확률로 한 장당 기대 당첨금을 합산</p>
+        <p>③ 기대 당첨금 ÷ 한 장 가격(${fmt(g.price)}원) × 100 = 기대 환급률</p>
+        <p class="evnote">⚠️ 추정치이며 당첨을 보장하지 않는 <b>참고용 지표</b>입니다. 출고율(입고 비율)과 실제 판매량 차이 등으로 실제와 다를 수 있어요. 과도한 구매는 삼가세요.</p>
+      </div>
+    </details>
+  </div>`;
+}
+
 function detailPage(g) {
   const name = g.typeName;
   const slug = detailSlug(g);
@@ -909,6 +976,20 @@ ${STYLE}
   .spark{width:100%;height:54px;display:block}
   .tnow{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:8px}.tnow b{color:var(--ink);font-weight:800}
   @media (max-width:520px){ .tgrid{grid-template-columns:1fr} }
+  /* 기대 환급률 카드 */
+  .ev{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px 22px 18px;margin-bottom:18px}
+  .ev .desc{font-size:12px;color:var(--faint);font-weight:600;margin-left:6px}
+  .evtop{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .evbig{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1}.evbig small{font-size:24px;font-weight:700;margin-left:2px}
+  .evside{display:flex;flex-direction:column;gap:7px}
+  .evtag{font-size:14px;font-weight:800;padding:6px 13px;border-radius:999px;width:max-content}
+  .evbase{font-size:13.5px;color:var(--muted);font-weight:600}.evbase b{color:var(--ink2);font-weight:800}
+  .evhow{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .evhow summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--brand-ink);list-style:none}
+  .evhow summary::-webkit-details-marker{display:none}
+  .evhow-b{margin-top:10px}
+  .evhow-b p{font-size:13.5px;color:var(--ink2);line-height:1.7;margin:5px 0}.evhow-b b{color:var(--ink)}
+  .evnote{color:var(--muted)!important;font-size:12.5px!important;margin-top:10px!important}
   /* 가독성 큰 레이아웃 */
   .dpanel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 24px;margin-bottom:18px}
   .dpanel.t2000{background:linear-gradient(180deg,#fff8ec,#fff 160px)}
@@ -968,6 +1049,7 @@ ${STYLE}
     <div class="dwrap">
       <p class="dana">${analysis}</p>
       ${detailPanelHTML(g)}
+      ${evBlock(g)}
       ${trendBlock(g)}
       <div class="itable-wrap"><table class="itable"><tbody>
         <tr><td class="tg">1등 당첨금</td><td class="tprize">${r1.prize || "-"}</td></tr>
@@ -1011,9 +1093,10 @@ function luckyPage() {
   Object.values(STORES_MAP).forEach((listArr) => {
     listArr.forEach((s) => {
       const key = s.name + "|" + s.addr;
-      if (!agg[key]) agg[key] = { name: s.name, addr: s.addr, region: normRegion(s.region), r1: 0, r2: 0, total: 0 };
+      if (!agg[key]) agg[key] = { name: s.name, addr: s.addr, region: normRegion(s.region), r1: 0, r2: 0, total: 0, lat: null, lng: null };
       const a = agg[key];
       if (a.region === "기타" && s.region) a.region = normRegion(s.region);
+      if (a.lat == null && s.lat != null) { a.lat = s.lat; a.lng = s.lng; } // 좌표 보존(내 주변순 정렬용)
       if (s.rank === 1) a.r1++; else if (s.rank === 2) a.r2++;
       a.total++;
     });
@@ -1041,10 +1124,11 @@ function luckyPage() {
     const noCls = i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : "";
     const q = encodeURIComponent(`${s.name} ${s.addr}`);
     const badges = `<span class="wcb cr">${s.region}</span>` + (s.r1 ? `<span class="wcb c1">1등 ${s.r1}</span>` : "") + (s.r2 ? `<span class="wcb c2">2등 ${s.r2}</span>` : "");
-    return `<a class="lrow" data-region="${s.region}" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">
+    const geo = (s.lat != null && s.lng != null) ? ` data-lat="${s.lat}" data-lng="${s.lng}"` : "";
+    return `<a class="lrow" data-region="${s.region}"${geo} data-rank="${i}" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">
       <span class="rank-no ${noCls}">${no}</span>
       <span class="lmain"><b class="wnm">${s.name}</b><span class="wad">${s.addr || "주소 정보 없음"}</span><span class="lbadges">${badges}</span></span>
-      <span class="wgo">지도 →</span>
+      <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
     </a>`;
   }).join("");
 
@@ -1096,6 +1180,13 @@ ${STYLE}
   .wnm{display:block;font-size:16px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
   .wad{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .wgo{font-size:13.5px;font-weight:800;color:var(--brand-ink);background:rgba(0,113,227,.08);padding:8px 13px;border-radius:999px;white-space:nowrap}
+  .lright{display:flex;align-items:center;gap:10px}
+  .ldist{font-size:13px;font-weight:800;color:var(--emerald);white-space:nowrap}
+  .lnear{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 0 14px}
+  .nearbtn{border:0;cursor:pointer;font-family:inherit;font-size:14px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#0071e3,#42a5ff);padding:11px 18px;border-radius:999px;box-shadow:var(--shadow-sm)}
+  .nearbtn:disabled{opacity:.6;cursor:default}
+  .nearmsg{font-size:13px;color:var(--muted);font-weight:600}
 </style>
 </head>
 <body>
@@ -1116,6 +1207,7 @@ ${STYLE}
     </div>
     ${adUnit()}
     <div class="section-h"><h2>당첨 횟수 TOP ${rows.length}</h2><span class="desc">1등 → 전체 당첨 순 · 지역 필터</span></div>
+    <div class="lnear"><button class="nearbtn" id="nearBtn">📍 내 주변 명당순으로 보기</button><span class="nearmsg" id="nearMsg"></span></div>
     <div class="rchips" id="rchips">${chips}</div>
     <div class="llist" id="llist">${list || '<p class="empty">집계된 당첨판매점이 아직 없어요.</p>'}</div>
     <p class="disc" style="margin-top:14px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 현재 수집된 회차 기준 집계이며, 회차가 갱신되면 함께 업데이트됩니다. 지도는 네이버 지도 검색으로 연결됩니다.</p>
@@ -1137,6 +1229,39 @@ document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsb
     var r=b.getAttribute('data-region');
     rows.forEach(function(row){ row.classList.toggle('hide', r && row.getAttribute('data-region')!==r); });
     if(window.gtag) gtag('event','lucky_region',{region:r||'all'});
+  });
+})();
+// 📍 내 주변 명당순 정렬 — geolocation + 하버사인 거리
+(function(){
+  var btn=document.getElementById('nearBtn'), msg=document.getElementById('nearMsg'), list=document.getElementById('llist');
+  if(!btn||!list) return;
+  if(!navigator.geolocation){ btn.style.display='none'; return; }
+  function dist(la1,lo1,la2,lo2){ // km
+    var R=6371, dLa=(la2-la1)*Math.PI/180, dLo=(lo2-lo1)*Math.PI/180;
+    var a=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);
+    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  }
+  btn.addEventListener('click',function(){
+    btn.disabled=true; msg.textContent='위치 확인 중…';
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var la=pos.coords.latitude, lo=pos.coords.longitude;
+      var rows=[].slice.call(list.querySelectorAll('.lrow')), located=0;
+      rows.forEach(function(row){
+        var rla=parseFloat(row.getAttribute('data-lat')), rlo=parseFloat(row.getAttribute('data-lng'));
+        var d=row.querySelector('.ldist');
+        if(!isNaN(rla)&&!isNaN(rlo)){
+          var km=dist(la,lo,rla,rlo); row._km=km; located++;
+          d.textContent = km<1 ? Math.round(km*1000)+'m' : km.toFixed(1)+'km';
+        } else { row._km=Infinity; d.textContent=''; }
+      });
+      rows.sort(function(a,b){ return a._km-b._km; });
+      rows.forEach(function(row){ list.appendChild(row); });
+      btn.disabled=false; btn.textContent='✅ 내 주변순 정렬됨';
+      msg.textContent = located ? '가까운 명당 순으로 정렬했어요 ('+located+'곳 좌표 보유)' : '좌표가 있는 판매점이 없어요';
+      if(window.gtag) gtag('event','lucky_near',{located:located});
+    }, function(err){
+      btn.disabled=false; msg.textContent = err.code===1 ? '위치 권한이 거부됐어요' : '위치를 가져오지 못했어요';
+    }, {enableHighAccuracy:false, timeout:8000, maximumAge:600000});
   });
 })();</script>
 </body>

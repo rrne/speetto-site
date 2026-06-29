@@ -438,6 +438,20 @@
   .spark{width:100%;height:54px;display:block}
   .tnow{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:8px}.tnow b{color:var(--ink);font-weight:800}
   @media (max-width:520px){ .tgrid{grid-template-columns:1fr} }
+  /* 기대 환급률 카드 */
+  .ev{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px 22px 18px;margin-bottom:18px}
+  .ev .desc{font-size:12px;color:var(--faint);font-weight:600;margin-left:6px}
+  .evtop{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .evbig{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1}.evbig small{font-size:24px;font-weight:700;margin-left:2px}
+  .evside{display:flex;flex-direction:column;gap:7px}
+  .evtag{font-size:14px;font-weight:800;padding:6px 13px;border-radius:999px;width:max-content}
+  .evbase{font-size:13.5px;color:var(--muted);font-weight:600}.evbase b{color:var(--ink2);font-weight:800}
+  .evhow{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .evhow summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--brand-ink);list-style:none}
+  .evhow summary::-webkit-details-marker{display:none}
+  .evhow-b{margin-top:10px}
+  .evhow-b p{font-size:13.5px;color:var(--ink2);line-height:1.7;margin:5px 0}.evhow-b b{color:var(--ink)}
+  .evnote{color:var(--muted)!important;font-size:12.5px!important;margin-top:10px!important}
   /* 가독성 큰 레이아웃 */
   .dpanel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 24px;margin-bottom:18px}
   .dpanel.t2000{background:linear-gradient(180deg,#fff8ec,#fff 160px)}
@@ -543,6 +557,24 @@
     </div>
   </div>
     </div>
+  </div>
+      <div class="ev">
+    <div class="section-h" style="margin:0 0 10px"><h2 style="font-size:18px">💸 지금 한 장의 기대 환급률 <span class="desc">현재 잔여 기준 추정</span></h2></div>
+    <div class="evtop">
+      <div class="evbig" style="color:#f59e0b">61.5<small>%</small></div>
+      <div class="evside">
+        <div class="evtag" style="background:#f59e0b1a;color:#f59e0b">평균 수준</div>
+        <div class="evbase">이론 환급률 <b>60.0%</b> 대비 +1.5%p</div>
+      </div>
+    </div>
+    <details class="evhow"><summary>이 숫자는 어떻게 계산하나요? (산식 공개)</summary>
+      <div class="evhow-b">
+        <p>① 남은 티켓 수 ≈ <b>3등 잔여 × 3등 당첨 배수</b> (당첨 소진율 ≈ 티켓 소진율로 가정)</p>
+        <p>② 상위 3등은 <b>실제 잔여 매수</b>, 4등 이하는 이론 확률로 한 장당 기대 당첨금을 합산</p>
+        <p>③ 기대 당첨금 ÷ 한 장 가격(1,000원) × 100 = 기대 환급률</p>
+        <p class="evnote">⚠️ 추정치이며 당첨을 보장하지 않는 <b>참고용 지표</b>입니다. 출고율(입고 비율)과 실제 판매량 차이 등으로 실제와 다를 수 있어요. 과도한 구매는 삼가세요.</p>
+      </div>
+    </details>
   </div>
       
       <div class="itable-wrap"><table class="itable"><tbody>
