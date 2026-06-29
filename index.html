@@ -89,7 +89,7 @@
     --r:22px;
   }
   *{box-sizing:border-box}
-  html,body{max-width:100%;overflow-x:hidden}
+  html,body{max-width:100%;overflow-x:clip}  /* clip: 가로 넘침 차단하되 스크롤 컨테이너를 만들지 않음(scrollIntoView·sticky 정상 동작) */
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0;background:var(--bg);color:var(--ink);
@@ -464,6 +464,50 @@
     .grid{grid-template-columns:1fr}
     .nav .brand .tag{display:none}
   }
+  /* === [MOBILE-LITE] 모바일 간결 보기 — 되돌리려면 이 블록과 index.html의 .m-lite-hide 클래스만 지우고 재빌드 === */
+  @media (max-width:600px){
+    /* 긴 설명/SEO 산문·섹션 숨김 (핵심 데이터·내비게이션은 유지) */
+    .faq, .guide, .m-lite-hide{display:none!important}
+    .ginfo .lead, .icard .idesc, .dana{display:none!important}
+    #pick{display:none!important}                 /* '오늘 긁는다면, 여기' 추천 카드 */
+    #bmkFilter, #ddlFilter{display:none!important} /* 관심·마감임박 필터 */
+    .searchbar .box{display:none!important}        /* 검색 입력 */
+    .dice .dlabel{display:none}                    /* 주사위 버튼: 아이콘만 */
+    #diceBtn{font-size:18px;padding:9px 14px}
+    /* 주사위 + 판매중만 토글을 한 줄에 (DOM 이동 없이 인접 형제를 inline 처리 → 데스크톱 영향 없음) */
+    #toolbar{display:inline-flex;width:auto;margin:0 8px 0 0;vertical-align:middle}
+    #toolbar + .controls{display:inline-block;width:auto;margin:0;vertical-align:middle}
+    #toolbar + .controls .searchbar{margin:0;gap:0}
+    #toolbar + .controls + .controls{margin-top:12px!important} /* 주사위/토글 줄과 탭 사이 여백 */
+    /* 부제·면책문구는 짧게 */
+    .hero p{font-size:16px;line-height:1.4}
+    footer .disc{font-size:11px;line-height:1.6}
+    /* A) 카드 관심/비교 버튼 숨김 (상세페이지에서 가능) */
+    .cactions{display:none!important}
+    /* B) 등위별 진행막대 숨기고 숫자만 */
+    .rk .mini{display:none}
+    .rk .body{gap:0}
+    .rk{grid-template-columns:32px 1fr}
+    .rk .badge{height:26px}
+    /* 여백 촘촘히 — 한 화면에 더 들어오도록 */
+    .hero{padding:34px 0 20px}
+    .hero h1{margin:12px auto 8px}
+    .grid{gap:10px}
+    .card{padding:14px}
+    .panel{margin-top:11px}
+    .ship{padding:10px 13px}
+    .ship .row{margin-bottom:5px}
+    .ship .v{font-size:22px}
+    .ranks-h{margin:11px 2px 7px}
+    .ranks{gap:6px}
+    .cfoot{margin-top:11px;padding-top:11px}
+    .cdetail{margin-top:9px;padding:9px 0}
+    section{margin-bottom:8px}
+    .section-h{margin:0 0 9px}
+    .stats{gap:8px}
+    .pick{padding:18px}
+  }
+  /* === [/MOBILE-LITE] === */
 </style>
 </head>
 <body>
@@ -500,7 +544,7 @@
     </section>
 
     <!-- FEATURED PICK -->
-    <div class="section-h"><h2>오늘 긁는다면, 여기</h2><span class="desc">판매중인 회차 중 추천 지수 1위</span></div>
+    <div class="section-h m-lite-hide"><h2>오늘 긁는다면, 여기</h2><span class="desc">판매중인 회차 중 추천 지수 1위</span></div>
     <!--SSG:PICK-->
     <section id="pick">
     <div class="pick">
@@ -537,7 +581,7 @@
     <!-- CONTROLS -->
     <div class="section-h" style="margin-bottom:8px"><h2>뭘 긁어볼까?</h2><span class="desc">검색·탭·정렬로 원하는 회차를 골라보세요</span></div>
     <div class="toolbar" id="toolbar">
-      <button class="tbtn dice" id="diceBtn">🎲 아무거나 긁어줘</button>
+      <button class="tbtn dice" id="diceBtn" aria-label="아무거나 긁어줘">🎲 <span class="dlabel">아무거나 긁어줘</span></button>
       <button class="tbtn" id="bmkFilter" aria-pressed="false">⭐ 관심만 <span class="cnt" id="bmkCnt">0</span></button>
       <button class="tbtn" id="ddlFilter" aria-pressed="false">⏱ 마감 임박</button>
     </div>
@@ -2056,7 +2100,7 @@
     </section>
 
     <!-- GAME INFO (SEO 콘텐츠) -->
-    <section class="ginfo">
+    <section class="ginfo m-lite-hide">
       <div class="section-h"><h2>스피또 종류별 완전 정리</h2><span class="desc">2000·1000·500, 뭐가 다를까?</span></div>
       <p class="lead">스피또(SPEETTO)는 동행복권에서 발행하는 즉석복권(스크래치 복권)으로, 현장에서 긁어 바로 당첨을 확인할 수 있습니다. 가격과 1등 당첨금에 따라 <b>스피또2000·스피또1000·스피또500</b> 세 종류로 나뉘며, '긁'은 각 회차의 <b>출고율</b>과 <b>등위별 잔여 당첨매수</b>를 실시간으로 추적해 1등이 가장 많이 남은 회차를 골라 드립니다.</p>
 
@@ -2117,7 +2161,7 @@
     </section>
 
     <!-- GUIDES (내부 링크 + SEO) -->
-    <section class="ginfo">
+    <section class="ginfo m-lite-hide">
       <div class="section-h"><h2>알고 긁으면 더 똑똑하다</h2><span class="desc">스피또·복권 가이드</span></div>
       <div class="toolbar" style="margin-bottom:0">
         <a class="tbtn" href="/guide-shipment">📦 스피또 출고율 보는 법</a>
@@ -2194,6 +2238,19 @@ function loadBookmarks(){
 }
 function saveBookmarks(){ try{ localStorage.setItem(BMK_LS, JSON.stringify([...state.bookmarks])); }catch(e){} }
 const gameByKey = k => (state.data?.games||[]).find(g=>gkey(g)===k);
+
+/* 카드로 부드럽게 스크롤(+중앙 정렬). 네이티브 scrollIntoView({behavior:'smooth'})는
+   일부 모바일 브라우저(구형 iOS Safari 등)에서 조용히 실패하므로, window.scrollTo 기반
+   requestAnimationFrame 애니메이션으로 어디서나 동작하도록 직접 구현. 상단 sticky 네비 높이만큼 보정. */
+function smoothCenterScroll(el){
+  const navH = 56;
+  const rect = el.getBoundingClientRect();
+  const targetY = Math.max(0, rect.top + window.pageYOffset - Math.max(navH + 12, window.innerHeight/2 - rect.height/2));
+  const startY = window.pageYOffset, dist = targetY - startY, dur = 480;
+  let t0 = null;
+  function step(t){ if(t0===null) t0=t; const p=Math.min(1,(t-t0)/dur); window.scrollTo(0, startY + dist*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
 
 /* ----- 재방문 변동 추적: 지난 방문 대비 출고율/1등 잔여 변화 ----- */
 const SEEN_LS = "geuk_seen_v1";
@@ -2604,7 +2661,7 @@ function diceRoll(){
   showToast(`🎲 ${pick.typeName} ${pick.episode}회 · ${quips[Math.floor(Math.random()*quips.length)]}`);
   setTimeout(()=>{
     const card=document.getElementById("card-"+gkey(pick));
-    if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+    if(card){ smoothCenterScroll(card); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
   },120);
   if(window.gtag) gtag("event","dice_roll",{pick:gkey(pick)});
 }
@@ -2709,7 +2766,7 @@ document.getElementById("viz").addEventListener("click",(e)=>{
   const k=row.dataset.go, g=gameByKey(k); if(!g) return;
   if(state.tab!=="ALL" && state.tab!==g.typeCd){ state.tab="ALL"; buildTabs(); render(); writeHash(); }
   const card=document.getElementById("card-"+k);
-  if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+  if(card){ smoothCenterScroll(card); card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
 });
 
 // 비교 바 / 모달
