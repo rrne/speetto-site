@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-28T22:05:21.151Z",
+  "updatedAt": "2026-07-01T00:49:47.954Z",
   "source": "동행복권 dhlottery.co.kr 발행내역",
   "count": 29,
   "games": [
@@ -11,7 +11,7 @@
       "status": "판매중",
       "shipmentRate": 59,
       "rank1": {
-        "remain": 11,
+        "remain": 9,
         "total": 12,
         "prize": "5억원"
       },
@@ -23,8 +23,8 @@
         "remain": 264491,
         "total": 330000
       },
-      "rank1RemainRate": 91.7,
-      "recommendScore": 49.6,
+      "rank1RemainRate": 75,
+      "recommendScore": 43.7,
       "saleEndDate": "2026-08-31",
       "giveEndDate": "2027-08-31",
       "dataChgDate": "26-06-26"
@@ -60,7 +60,7 @@
       "typeName": "스피또1000",
       "price": 1000,
       "episode": 105,
-      "status": "판매중",
+      "status": "판매종료",
       "shipmentRate": 99,
       "rank1": {
         "remain": 0,
@@ -502,7 +502,7 @@
       "typeName": "스피또2000",
       "price": 2000,
       "episode": 66,
-      "status": "판매중",
+      "status": "판매종료",
       "shipmentRate": 74,
       "rank1": {
         "remain": 0,

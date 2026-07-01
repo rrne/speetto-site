@@ -120,10 +120,16 @@
   .hero h1{margin:20px auto 16px;font-size:clamp(34px,6.4vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.16;max-width:15ch}
   .hero h1 .hl{color:var(--brand)}
   .hero p{margin:0 auto;max-width:42ch;color:var(--muted);font-size:clamp(17px,2.4vw,21px);font-weight:500;line-height:1.45}
-  .visitors{display:none;margin:20px auto 0;font-size:14px;color:var(--ink2);font-weight:600;width:max-content;max-width:92%;
-    background:var(--surface);box-shadow:var(--shadow-sm);border-radius:999px;padding:9px 18px}
+  /* 히어로 CTA — 당첨 명당 순위 바로가기 */
+  .herocta{display:inline-flex;align-items:center;gap:6px;margin:24px auto 0;font-size:14.5px;font-weight:700;
+    color:var(--brand-ink);text-decoration:none;background:rgba(0,113,227,.10);
+    padding:11px 20px;border-radius:999px;transition:background .15s ease}
+  .herocta b{font-weight:800}
+  .herocta:hover{background:rgba(0,113,227,.16)}
+  /* 방문자 카운터 — 페이지 최하단, 눈에 안 띄는 참고용 텍스트 */
+  .visitors{display:none;margin:0;font-size:11.5px;color:var(--faint);font-weight:500;text-align:center}
   .visitors.show{display:block;animation:vfade .4s ease}
-  .visitors b{color:var(--brand-ink);font-weight:800}
+  .visitors b{color:var(--muted);font-weight:700}
   @keyframes vfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
   /* ---------- stat strip ---------- */
@@ -182,6 +188,7 @@
   .card{position:relative;background:var(--surface);border-radius:var(--r);padding:22px;
     box-shadow:var(--shadow-sm);transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s;overflow:hidden}
   .card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+  .card.clickable{cursor:pointer}
   /* 종류별 미세한 상단 컬러 워시 — 화이트 카드 유지(애플풍) */
   .card.t2000{background:linear-gradient(180deg,#fff8ec,#fff 150px)}
   .card.t1000{background:linear-gradient(180deg,#edfaf3,#fff 150px)}
@@ -245,6 +252,20 @@
   .rk .mini>i{display:block;height:100%;border-radius:999px;background:var(--emerald)}
   .rk1 .mini>i{background:var(--amber)}
 
+  /* ── 회차 카드 가독성 강화 (공식 동행복권 표의 핵심 항목을 한눈에) ── */
+  /* 1) 출고율 헤드라인 — 종류 색으로 강조 */
+  .card.t2000 .ship .v{color:#b25500} .card.t1000 .ship .v{color:#0a8f63} .card.t500 .ship .v{color:#e11d48}
+  /* 2) 잔여 매수 숫자 키우기 — '남은 매수'가 선택의 핵심 지표 */
+  .card .rk .remain{font-size:18px}
+  /* 3) 1등 줄 = 돈이 되는 줄 → 카드 안에서 시선을 잡는 하이라이트 블록 */
+  .card .rk1{background:linear-gradient(90deg,rgba(245,158,11,.13),rgba(245,158,11,.02));
+    border-radius:12px;padding:9px 11px;margin:0 -3px}
+  .card .rk1 .badge{background:var(--amber);color:#fff}
+  .card .rk1 .remain{color:#b25500;font-size:19px;font-weight:800}
+  .card .rk1 .pct{color:#b25500;font-weight:700}
+  /* 4) 1등 당첨금 — 표의 '당첨금' 컬럼처럼 또렷하게 */
+  .card .cfoot .info b.pz{font-size:15.5px;color:var(--ink);font-weight:800}
+
   .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
   .cfoot .info{font-size:13px;color:var(--muted);line-height:1.75;font-weight:500}
   .cfoot .info b{color:var(--ink2);font-weight:600}
@@ -267,7 +288,10 @@
   .share:hover{color:var(--brand-ink)}
   .share svg{width:15px;height:15px}
   .nav .right{display:flex;align-items:center;gap:10px}
-  @media (max-width:520px){ .nav .live{display:none} }
+  @media (max-width:520px){
+    .nav .live{font-size:11.5px;padding:5px 9px;gap:5px}
+    .nav .live .dot{width:6px;height:6px;box-shadow:0 0 0 3px rgba(16,185,129,.16)}
+  }
 
   /* ---------- back to top ---------- */
   .toTop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:50%;z-index:60;
@@ -543,7 +567,7 @@
       <span class="eyebrow">🎯 스피또 출고율·당첨율 실시간 조회</span>
       <h1>이왕 긁을 거,<br><span class="hl">1등 많이 남은</span> 걸로 긁자</h1>
       <p>스피또2000·1000·500의 출고율과 남은 당첨을 실시간으로 분석해, 1등이 가장 많이 남아있는 회차를 콕 집어 드립니다.</p>
-      <div class="visitors" id="visitors"></div>
+      <a class="herocta" href="/lucky-stores">🏆 1·2등 많이 나온 <b>당첨 명당 순위</b> 보기 →</a>
     </section>
 
     <!-- FEATURED PICK -->
@@ -562,7 +586,7 @@
           <span class="sticker"><i>출고율</i><b>75%</b></span>
           <span class="sticker"><i>1등 잔여</i><b>7/8매</b></span>
           <span class="sticker"><i>1등 당첨금</i><b>10억원</b></span>
-          <span class="sticker"><i>판매</i><b>D-94</b></span>
+          <span class="sticker"><i>판매</i><b>D-92</b></span>
         </div>
       </div>
       <div class="pick-r">
@@ -611,7 +635,7 @@
     </div>
 
     <!--SSG:GRID-->
-    <div class="grid" id="grid"><div class="card t1000">
+    <div class="grid" id="grid"><div class="card t1000 clickable" data-href="/1000-107">
     <div class="chead">
       <div class="title">
         <span class="gname c1000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또1000</span>
@@ -631,10 +655,10 @@
     <div class="badge">1등</div>
     <div class="body">
       <div class="nums">
-        <div class="remain">11<span class="of">/ 12매</span></div>
-        <div class="pct">92%</div>
+        <div class="remain">9<span class="of">/ 12매</span></div>
+        <div class="pct">75%</div>
       </div>
-      <div class="mini"><i style="width:91.7%"></i></div>
+      <div class="mini"><i style="width:75.0%"></i></div>
     </div>
   </div>
         <div class="rk rk2">
@@ -659,15 +683,15 @@
   </div>
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>5억원</b><br>판매기한 <b>2026-08-31</b> · <b class="dday">D-64</b></div>
+        <div class="info">1등 <b class="pz">5억원</b><br>판매기한 <b>2026-08-31</b> · <b class="dday">D-62</b></div>
         <div class="rec">
-          <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#10b981">49.6</div></div>
-          <div class="gauge" style="--p:49.6;--g:#10b981"><span>50</span></div>
+          <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#10b981">43.7</div></div>
+          <div class="gauge" style="--p:43.7;--g:#10b981"><span>44</span></div>
         </div>
       </div>
       <a class="cdetail" href="/1000-107">이 회차 자세히 보기 →</a>
     </div>
-  </div><div class="card t1000">
+  </div><div class="card t1000 clickable" data-href="/1000-106">
     <div class="chead">
       <div class="title">
         <span class="gname c1000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또1000</span>
@@ -715,7 +739,7 @@
   </div>
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>5억원</b><br>판매기한 <b>2026-07-31</b> · <b class="dday">D-33</b></div>
+        <div class="info">1등 <b class="pz">5억원</b><br>판매기한 <b>2026-07-31</b> · <b class="dday">D-31</b></div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#f43f5e">11.6</div></div>
           <div class="gauge" style="--p:11.6;--g:#f43f5e"><span>12</span></div>
@@ -723,63 +747,7 @@
       </div>
       <a class="cdetail" href="/1000-106">이 회차 자세히 보기 →</a>
     </div>
-  </div><div class="card t1000">
-    <div class="chead">
-      <div class="title">
-        <span class="gname c1000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또1000</span>
-        <span class="epno">105회</span>
-        <span class="price">1,000원</span>
-      </div>
-      <span class="status st-sale">판매중</span>
-    </div>
-    <div class="panel">
-      <div class="ship">
-        <div class="row"><span class="k">출고율</span><span class="v">99<small>%</small></span></div>
-        <div class="track"><i style="width:99%"></i></div>
-      </div>
-      <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
-      <div class="ranks">
-        <div class="rk rk1">
-    <div class="badge">1등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">0<span class="of">/ 11매</span></div>
-        <div class="pct">0%</div>
-      </div>
-      <div class="mini"><i style="width:0.0%"></i></div>
-    </div>
-  </div>
-        <div class="rk rk2">
-    <div class="badge">2등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">2<span class="of">/ 55매</span></div>
-        <div class="pct">4%</div>
-      </div>
-      <div class="mini"><i style="width:3.6%"></i></div>
-    </div>
-  </div>
-        <div class="rk rk3">
-    <div class="badge">3등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">23,469<span class="of">/ 302,500매</span></div>
-        <div class="pct">8%</div>
-      </div>
-      <div class="mini"><i style="width:7.8%"></i></div>
-    </div>
-  </div>
-      </div>
-      <div class="cfoot">
-        <div class="info">1등 <b>5억원</b><br>판매기한 <b>2026-06-30</b> · <b class="dday soon">D-2</b></div>
-        <div class="rec">
-          <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#f43f5e">1.8</div></div>
-          <div class="gauge" style="--p:1.8;--g:#f43f5e"><span>2</span></div>
-        </div>
-      </div>
-      <a class="cdetail" href="/1000-105">이 회차 자세히 보기 →</a>
-    </div>
-  </div><div class="card t2000">
+  </div><div class="card t2000 clickable" data-href="/2000-68">
     <div class="chead">
       <div class="title">
         <span class="gname c2000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또2000</span>
@@ -827,7 +795,7 @@
   </div>
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>10억원</b><br>판매기한 <b>2026-09-30</b> · <b class="dday">D-94</b></div>
+        <div class="info">1등 <b class="pz">10억원</b><br>판매기한 <b>2026-09-30</b> · <b class="dday">D-92</b></div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#10b981">53.7</div></div>
           <div class="gauge" style="--p:53.7;--g:#10b981"><span>54</span></div>
@@ -835,7 +803,7 @@
       </div>
       <a class="cdetail" href="/2000-68">이 회차 자세히 보기 →</a>
     </div>
-  </div><div class="card t2000">
+  </div><div class="card t2000 clickable" data-href="/2000-67">
     <div class="chead">
       <div class="title">
         <span class="gname c2000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또2000</span>
@@ -883,7 +851,7 @@
   </div>
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>10억원</b><br>판매기한 <b>2026-08-31</b> · <b class="dday">D-64</b></div>
+        <div class="info">1등 <b class="pz">10억원</b><br>판매기한 <b>2026-08-31</b> · <b class="dday">D-62</b></div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#f43f5e">9</div></div>
           <div class="gauge" style="--p:9;--g:#f43f5e"><span>9</span></div>
@@ -891,63 +859,7 @@
       </div>
       <a class="cdetail" href="/2000-67">이 회차 자세히 보기 →</a>
     </div>
-  </div><div class="card t2000">
-    <div class="chead">
-      <div class="title">
-        <span class="gname c2000"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또2000</span>
-        <span class="epno">66회</span>
-        <span class="price">2,000원</span>
-      </div>
-      <span class="status st-sale">판매중</span>
-    </div>
-    <div class="panel">
-      <div class="ship">
-        <div class="row"><span class="k">출고율</span><span class="v">74<small>%</small></span></div>
-        <div class="track"><i style="width:74%"></i></div>
-      </div>
-      <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
-      <div class="ranks">
-        <div class="rk rk1">
-    <div class="badge">1등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">0<span class="of">/ 6매</span></div>
-        <div class="pct">0%</div>
-      </div>
-      <div class="mini"><i style="width:0.0%"></i></div>
-    </div>
-  </div>
-        <div class="rk rk2">
-    <div class="badge">2등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">4<span class="of">/ 18매</span></div>
-        <div class="pct">22%</div>
-      </div>
-      <div class="mini"><i style="width:22.2%"></i></div>
-    </div>
-  </div>
-        <div class="rk rk3">
-    <div class="badge">3등</div>
-    <div class="body">
-      <div class="nums">
-        <div class="remain">49<span class="of">/ 150매</span></div>
-        <div class="pct">33%</div>
-      </div>
-      <div class="mini"><i style="width:32.7%"></i></div>
-    </div>
-  </div>
-      </div>
-      <div class="cfoot">
-        <div class="info">1등 <b>10억원</b><br>판매기한 <b>2026-06-30</b> · <b class="dday soon">D-2</b></div>
-        <div class="rec">
-          <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#f43f5e">7.3</div></div>
-          <div class="gauge" style="--p:7.3;--g:#f43f5e"><span>7</span></div>
-        </div>
-      </div>
-      <a class="cdetail" href="/2000-66">이 회차 자세히 보기 →</a>
-    </div>
-  </div><div class="card t500">
+  </div><div class="card t500 clickable" data-href="/500-48">
     <div class="chead">
       <div class="title">
         <span class="gname c500"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="5.5" stroke="#fff" stroke-width="3.4"/><circle cx="20" cy="20" r="2.2" fill="#fff"/></svg>스피또500</span>
@@ -995,7 +907,7 @@
   </div>
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>2억원</b><br>판매기한 <b>2026-12-31</b> · <b class="dday">D-186</b></div>
+        <div class="info">1등 <b class="pz">2억원</b><br>판매기한 <b>2026-12-31</b> · <b class="dday">D-184</b></div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:#f59e0b">34.5</div></div>
           <div class="gauge" style="--p:34.5;--g:#f59e0b"><span>35</span></div>
@@ -1009,8 +921,56 @@
     <div class="ad" data-ad-slot-key="feed"><div class="lbl">광고</div><div class="slot"></div></div>
 
     <!-- 판매 종료 (컴팩트) -->
-    <div id="soldSection"><div class="divider">이미 다 긁힌 회차 <span class="n">22개</span></div>
+    <div id="soldSection"><div class="divider">이미 다 긁힌 회차 <span class="n">24개</span></div>
        <div class="sold-list"><details class="sd">
+    <summary>
+      <span class="sd-name">스피또1000 105회</span>
+      <span class="sd-mini">출고 99% · 1등 0/11</span>
+      <span class="chev">⌄</span>
+    </summary>
+    <div class="sd-body">
+      <div class="ship">
+        <div class="row"><span class="k">출고율</span><span class="v">99<small>%</small></span></div>
+        <div class="track"><i style="width:99%"></i></div>
+      </div>
+      <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
+      <div class="ranks">
+        <div class="rk rk1">
+    <div class="badge">1등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">0<span class="of">/ 11매</span></div>
+        <div class="pct">0%</div>
+      </div>
+      <div class="mini"><i style="width:0.0%"></i></div>
+    </div>
+  </div>
+        <div class="rk rk2">
+    <div class="badge">2등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">2<span class="of">/ 55매</span></div>
+        <div class="pct">4%</div>
+      </div>
+      <div class="mini"><i style="width:3.6%"></i></div>
+    </div>
+  </div>
+        <div class="rk rk3">
+    <div class="badge">3등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">23,469<span class="of">/ 302,500매</span></div>
+        <div class="pct">8%</div>
+      </div>
+      <div class="mini"><i style="width:7.8%"></i></div>
+    </div>
+  </div>
+      </div>
+      <div class="cfoot">
+        <div class="info">1등 <b>5억원</b> · 판매기한 <b>2026-06-30</b></div>
+      </div>
+    </div>
+  </details><details class="sd">
     <summary>
       <span class="sd-name">스피또1000 104회</span>
       <span class="sd-mini">출고 100% · 1등 1/11</span>
@@ -1684,6 +1644,54 @@
     </div>
   </details><details class="sd">
     <summary>
+      <span class="sd-name">스피또2000 66회</span>
+      <span class="sd-mini">출고 74% · 1등 0/6</span>
+      <span class="chev">⌄</span>
+    </summary>
+    <div class="sd-body">
+      <div class="ship">
+        <div class="row"><span class="k">출고율</span><span class="v">74<small>%</small></span></div>
+        <div class="track"><i style="width:74%"></i></div>
+      </div>
+      <div class="ranks-h"><span class="lbl">등위별 잔여 당첨</span><span class="hint">남은 / 전체</span></div>
+      <div class="ranks">
+        <div class="rk rk1">
+    <div class="badge">1등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">0<span class="of">/ 6매</span></div>
+        <div class="pct">0%</div>
+      </div>
+      <div class="mini"><i style="width:0.0%"></i></div>
+    </div>
+  </div>
+        <div class="rk rk2">
+    <div class="badge">2등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">4<span class="of">/ 18매</span></div>
+        <div class="pct">22%</div>
+      </div>
+      <div class="mini"><i style="width:22.2%"></i></div>
+    </div>
+  </div>
+        <div class="rk rk3">
+    <div class="badge">3등</div>
+    <div class="body">
+      <div class="nums">
+        <div class="remain">49<span class="of">/ 150매</span></div>
+        <div class="pct">33%</div>
+      </div>
+      <div class="mini"><i style="width:32.7%"></i></div>
+    </div>
+  </div>
+      </div>
+      <div class="cfoot">
+        <div class="info">1등 <b>10억원</b> · 판매기한 <b>2026-06-30</b></div>
+      </div>
+    </div>
+  </details><details class="sd">
+    <summary>
       <span class="sd-name">스피또2000 65회</span>
       <span class="sd-mini">출고 100% · 1등 0/6</span>
       <span class="chev">⌄</span>
@@ -2195,6 +2203,7 @@
     </div>
     <p class="disc">본 사이트는 동행복권과 무관한 비공식 정보 제공 페이지입니다. 데이터는 자동 수집되며 정확성을 보장하지 않습니다. 복권 구매는 본인의 판단과 책임하에 하시고, 과도한 구매는 삼가주세요. 추천 지수는 통계적 당첨 확률을 보장하지 않습니다.</p>
     <p class="disc" style="margin-top:10px"><a href="/lucky-stores">당첨 명당</a> · <a href="/guide">가이드</a> · <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="/about">소개·문의</a></p>
+    <div class="visitors" id="visitors" style="margin-top:14px"></div>
   </div></footer>
 
   <button class="toTop" id="toTop" aria-label="맨 위로">↑</button>
@@ -2457,7 +2466,8 @@ function cardHTML(g){
   const ddInfo = (()=>{const d=dday(g.saleEndDate);return (d&&!d.over)?` · <b class="dday${d.soon?' soon':''}">${d.txt}</b>`:"";})();
   const k = gkey(g);
   const isBmk = state.bookmarks.has(k), isCmp = state.compare.has(k);
-  return `<div class="card ${TCLASS[g.typeCd]||""}" id="card-${k}" data-key="${k}">
+  const detailHref = `/${({SP2000:'2000',SP1000:'1000',SP500:'500'})[g.typeCd]}-${g.episode}`;
+  return `<div class="card ${TCLASS[g.typeCd]||""} clickable" id="card-${k}" data-key="${k}" data-href="${detailHref}">
     <div class="chead">
       <div class="title">
         <span class="gname ${CCLASS[g.typeCd]||""}">${LOGO_MARK}${g.typeName}</span>
@@ -2478,7 +2488,7 @@ function cardHTML(g){
         ${rankRow(3, g.rank3, "rk3")}
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b>${ddInfo}</div>
+        <div class="info">1등 <b class="pz">${g.rank1&&g.rank1.prize?g.rank1.prize:"-"}</b><br>판매기한 <b>${g.saleEndDate||"-"}</b>${ddInfo}</div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc==null?"-":sc}</div></div>
           <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc==null?"-":Math.round(scP)}</span></div>
@@ -2756,7 +2766,12 @@ document.getElementById("grid").addEventListener("click",(e)=>{
     if(state.bookmarks.has(k)) state.bookmarks.delete(k); else state.bookmarks.add(k);
     saveBookmarks(); render();
     if(window.gtag) gtag("event","bookmark",{key:k,on:state.bookmarks.has(k)});
+    return;
   }
+  // 카드 아무 곳이나 클릭 → 상세 회차로 이동 (버튼·링크·비교 체크박스는 제외)
+  if(e.target.closest("button,a,label,input")) return;
+  const card = e.target.closest(".card[data-href]");
+  if(card){ location.href = card.dataset.href; }
 });
 document.getElementById("grid").addEventListener("change",(e)=>{
   const cmp = e.target.closest("[data-cmp]");

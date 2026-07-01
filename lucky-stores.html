@@ -72,13 +72,19 @@
   .hero{padding:72px 0 44px;text-align:center;position:relative}
   .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--brand-ink);
     background:rgba(0,113,227,.10);padding:7px 15px;border-radius:999px}
-  .hero h1{margin:20px auto 16px;font-size:clamp(34px,6.4vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.07;max-width:15ch}
+  .hero h1{margin:20px auto 16px;font-size:clamp(34px,6.4vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.16;max-width:15ch}
   .hero h1 .hl{color:var(--brand)}
   .hero p{margin:0 auto;max-width:42ch;color:var(--muted);font-size:clamp(17px,2.4vw,21px);font-weight:500;line-height:1.45}
-  .visitors{display:none;margin:20px auto 0;font-size:14px;color:var(--ink2);font-weight:600;width:max-content;max-width:92%;
-    background:var(--surface);box-shadow:var(--shadow-sm);border-radius:999px;padding:9px 18px}
+  /* 히어로 CTA — 당첨 명당 순위 바로가기 */
+  .herocta{display:inline-flex;align-items:center;gap:6px;margin:24px auto 0;font-size:14.5px;font-weight:700;
+    color:var(--brand-ink);text-decoration:none;background:rgba(0,113,227,.10);
+    padding:11px 20px;border-radius:999px;transition:background .15s ease}
+  .herocta b{font-weight:800}
+  .herocta:hover{background:rgba(0,113,227,.16)}
+  /* 방문자 카운터 — 페이지 최하단, 눈에 안 띄는 참고용 텍스트 */
+  .visitors{display:none;margin:0;font-size:11.5px;color:var(--faint);font-weight:500;text-align:center}
   .visitors.show{display:block;animation:vfade .4s ease}
-  .visitors b{color:var(--brand-ink);font-weight:800}
+  .visitors b{color:var(--muted);font-weight:700}
   @keyframes vfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
   /* ---------- stat strip ---------- */
@@ -137,6 +143,7 @@
   .card{position:relative;background:var(--surface);border-radius:var(--r);padding:22px;
     box-shadow:var(--shadow-sm);transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s;overflow:hidden}
   .card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+  .card.clickable{cursor:pointer}
   /* 종류별 미세한 상단 컬러 워시 — 화이트 카드 유지(애플풍) */
   .card.t2000{background:linear-gradient(180deg,#fff8ec,#fff 150px)}
   .card.t1000{background:linear-gradient(180deg,#edfaf3,#fff 150px)}
@@ -200,6 +207,20 @@
   .rk .mini>i{display:block;height:100%;border-radius:999px;background:var(--emerald)}
   .rk1 .mini>i{background:var(--amber)}
 
+  /* ── 회차 카드 가독성 강화 (공식 동행복권 표의 핵심 항목을 한눈에) ── */
+  /* 1) 출고율 헤드라인 — 종류 색으로 강조 */
+  .card.t2000 .ship .v{color:#b25500} .card.t1000 .ship .v{color:#0a8f63} .card.t500 .ship .v{color:#e11d48}
+  /* 2) 잔여 매수 숫자 키우기 — '남은 매수'가 선택의 핵심 지표 */
+  .card .rk .remain{font-size:18px}
+  /* 3) 1등 줄 = 돈이 되는 줄 → 카드 안에서 시선을 잡는 하이라이트 블록 */
+  .card .rk1{background:linear-gradient(90deg,rgba(245,158,11,.13),rgba(245,158,11,.02));
+    border-radius:12px;padding:9px 11px;margin:0 -3px}
+  .card .rk1 .badge{background:var(--amber);color:#fff}
+  .card .rk1 .remain{color:#b25500;font-size:19px;font-weight:800}
+  .card .rk1 .pct{color:#b25500;font-weight:700}
+  /* 4) 1등 당첨금 — 표의 '당첨금' 컬럼처럼 또렷하게 */
+  .card .cfoot .info b.pz{font-size:15.5px;color:var(--ink);font-weight:800}
+
   .cfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
   .cfoot .info{font-size:13px;color:var(--muted);line-height:1.75;font-weight:500}
   .cfoot .info b{color:var(--ink2);font-weight:600}
@@ -222,7 +243,10 @@
   .share:hover{color:var(--brand-ink)}
   .share svg{width:15px;height:15px}
   .nav .right{display:flex;align-items:center;gap:10px}
-  @media (max-width:520px){ .nav .live{display:none} }
+  @media (max-width:520px){
+    .nav .live{font-size:11.5px;padding:5px 9px;gap:5px}
+    .nav .live .dot{width:6px;height:6px;box-shadow:0 0 0 3px rgba(16,185,129,.16)}
+  }
 
   /* ---------- back to top ---------- */
   .toTop{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border-radius:50%;z-index:60;
@@ -425,15 +449,18 @@
     .faq, .guide, .m-lite-hide{display:none!important}
     .ginfo .lead, .icard .idesc, .dana{display:none!important}
     #pick{display:none!important}                 /* '오늘 긁는다면, 여기' 추천 카드 */
-    #bmkFilter, #ddlFilter{display:none!important} /* 관심·마감임박 필터 */
+    #bmkFilter, #ddlFilter{display:none!important} /* 관심·마감임박 필터 (평소 숨김) */
+    /* 단, 필터가 켜진 채 진입(예: #ddl=1 딥링크)하면 버튼을 보이게 — 활성 표시 + 탭하면 해제 */
+    #bmkFilter.on, #ddlFilter.on{display:inline-flex!important;align-items:center}
+    #bmkFilter.on::after, #ddlFilter.on::after{content:" ✕";margin-left:5px;opacity:.75;font-weight:700}
     .searchbar .box{display:none!important}        /* 검색 입력 */
     .dice .dlabel{display:none}                    /* 주사위 버튼: 아이콘만 */
     #diceBtn{font-size:18px;padding:9px 14px}
     /* 주사위 + 판매중만 토글을 한 줄에 (DOM 이동 없이 인접 형제를 inline 처리 → 데스크톱 영향 없음) */
-    #toolbar{display:inline-flex;width:auto;margin:0 8px 0 0;vertical-align:middle}
-    #toolbar + .controls{display:inline-block;width:auto;margin:0;vertical-align:middle}
+    #toolbar{display:inline-flex;width:auto;margin:0 8px 8px 0;vertical-align:middle}
+    #toolbar + .controls{display:inline-block;width:auto;margin:0 0 8px 0;vertical-align:middle}
     #toolbar + .controls .searchbar{margin:0;gap:0}
-    #toolbar + .controls + .controls{margin-top:12px!important} /* 주사위/토글 줄과 탭 사이 여백 */
+    #toolbar + .controls + .controls{margin-top:18px!important} /* 주사위/토글 줄과 탭 사이 여백 — 필터 버튼 줄바꿈 대비 넉넉히 */
     /* 부제·면책문구는 짧게 */
     .hero p{font-size:16px;line-height:1.4}
     footer .disc{font-size:11px;line-height:1.6}
@@ -513,14 +540,14 @@
       <p>스피또2000·1000·500 역대 회차에서 1·2등이 많이 나온 판매점을 모았어요. 지역으로 필터하고, 가게를 누르면 지도로 연결됩니다.</p>
     </section>
     <div class="lstats">
-      <div class="lstat"><div class="v">1,457</div><div class="k">집계된 당첨 판매점</div></div>
-      <div class="lstat"><div class="v">915</div><div class="k">1등 당첨 건수</div></div>
-      <div class="lstat"><div class="v">1,391</div><div class="k">2등 당첨 건수</div></div>
+      <div class="lstat"><div class="v">1,459</div><div class="k">집계된 당첨 판매점</div></div>
+      <div class="lstat"><div class="v">917</div><div class="k">1등 당첨 건수</div></div>
+      <div class="lstat"><div class="v">1,393</div><div class="k">2등 당첨 건수</div></div>
     </div>
     <div class="ad"><div class="lbl">광고</div><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6037343600471239" data-ad-slot="5042804616" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
     <div class="section-h"><h2>당첨 횟수 TOP 200</h2><span class="desc">1등 → 전체 당첨 순 · 지역 필터</span></div>
     <div class="lnear"><button class="nearbtn" id="nearBtn">📍 내 주변 명당순으로 보기</button><span class="nearmsg" id="nearMsg"></span></div>
-    <div class="rchips" id="rchips"><button class="rchip on" data-region="">전체 (200)</button><button class="rchip" data-region="경기">경기 (53)</button><button class="rchip" data-region="서울">서울 (36)</button><button class="rchip" data-region="부산">부산 (16)</button><button class="rchip" data-region="인천">인천 (15)</button><button class="rchip" data-region="경남">경남 (12)</button><button class="rchip" data-region="충남">충남 (10)</button><button class="rchip" data-region="대구">대구 (9)</button><button class="rchip" data-region="전북">전북 (9)</button><button class="rchip" data-region="경북">경북 (8)</button><button class="rchip" data-region="전남">전남 (7)</button><button class="rchip" data-region="강원">강원 (5)</button><button class="rchip" data-region="충북">충북 (5)</button><button class="rchip" data-region="광주">광주 (4)</button><button class="rchip" data-region="울산">울산 (3)</button><button class="rchip" data-region="대전">대전 (3)</button><button class="rchip" data-region="세종">세종 (2)</button><button class="rchip" data-region="제주">제주 (2)</button><button class="rchip" data-region="기타">기타 (1)</button></div>
+    <div class="rchips" id="rchips"><button class="rchip on" data-region="">전체 (200)</button><button class="rchip" data-region="경기">경기 (51)</button><button class="rchip" data-region="서울">서울 (36)</button><button class="rchip" data-region="부산">부산 (16)</button><button class="rchip" data-region="인천">인천 (15)</button><button class="rchip" data-region="경남">경남 (12)</button><button class="rchip" data-region="충남">충남 (10)</button><button class="rchip" data-region="대구">대구 (9)</button><button class="rchip" data-region="전북">전북 (9)</button><button class="rchip" data-region="경북">경북 (8)</button><button class="rchip" data-region="전남">전남 (7)</button><button class="rchip" data-region="충북">충북 (6)</button><button class="rchip" data-region="강원">강원 (5)</button><button class="rchip" data-region="광주">광주 (4)</button><button class="rchip" data-region="울산">울산 (3)</button><button class="rchip" data-region="대전">대전 (3)</button><button class="rchip" data-region="세종">세종 (3)</button><button class="rchip" data-region="제주">제주 (2)</button><button class="rchip" data-region="기타">기타 (1)</button></div>
     <div class="llist" id="llist"><a class="lrow" data-region="충남" data-lat="36.827863" data-lng="127.133507" data-rank="0" href="https://map.naver.com/p/search/%EC%88%98%EB%A0%88%ED%81%AC%EB%A0%88%EC%9D%B4%EC%85%98%EC%9D%B4%EB%B2%A4%ED%8A%B8%EA%B8%B0%ED%9A%8D%20%EC%B6%A9%EB%82%A8%20%EC%B2%9C%EC%95%88%EC%8B%9C%20%EC%84%9C%EB%B6%81%EA%B5%AC%20%EC%84%B1%EC%A0%95%EC%A4%914%EA%B8%B8%203%20%EC%B2%9C%EC%95%88%EC%9D%BC%EB%93%B1%EC%8B%9D%EC%9E%90%EC%9E%AC%EB%A7%88%ED%8A%B8" target="_blank" rel="noopener">
       <span class="rank-no r1">🥇</span>
       <span class="lmain"><b class="wnm">수레크레이션이벤트기획</b><span class="wad">충남 천안시 서북구 성정중4길 3 천안일등식자재마트</span><span class="lbadges"><span class="wcb cr">충남</span><span class="wcb c1">1등 4</span><span class="wcb c2">2등 3</span></span></span>
@@ -1089,237 +1116,237 @@
       <span class="rank-no ">142</span>
       <span class="lmain"><b class="wnm">영등포역 지하상가 1등 복권방</b><span class="wad">서울 영등포구 경인로 지하 843 영등포역 지하도상가 13호</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="36.99421" data-lng="127.089272" data-rank="142" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%20%ED%8F%89%ED%83%9D%EC%8B%9C%20%ED%8F%89%ED%83%9D1%EB%A1%9C20%EB%B2%88%EA%B8%B8%2039" target="_blank" rel="noopener">
+    </a><a class="lrow" data-region="세종" data-lat="36.601037" data-lng="127.29792" data-rank="142" href="https://map.naver.com/p/search/%EC%A1%B0%EC%B9%98%EC%9B%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%84%B8%EC%A2%85%20%20%20%EC%A1%B0%EC%B9%98%EC%9B%90%EB%A1%9C%209-1" target="_blank" rel="noopener">
       <span class="rank-no ">143</span>
+      <span class="lmain"><b class="wnm">조치원복권방</b><span class="wad">세종   조치원로 9-1</span><span class="lbadges"><span class="wcb cr">세종</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
+      <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
+    </a><a class="lrow" data-region="충북" data-lat="37.144243" data-lng="128.20309" data-rank="143" href="https://map.naver.com/p/search/%EA%B3%A8%EB%93%9C%EB%A1%9C%EB%98%90%20%EC%B6%A9%EB%B6%81%20%EC%A0%9C%EC%B2%9C%EC%8B%9C%20%EB%AA%85%EB%A5%9C%EB%A1%9C3%EA%B8%B8%202%201%EC%B8%B5" target="_blank" rel="noopener">
+      <span class="rank-no ">144</span>
+      <span class="lmain"><b class="wnm">골드로또</b><span class="wad">충북 제천시 명륜로3길 2 1층</span><span class="lbadges"><span class="wcb cr">충북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
+      <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
+    </a><a class="lrow" data-region="경기" data-lat="36.99421" data-lng="127.089272" data-rank="144" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%20%ED%8F%89%ED%83%9D%EC%8B%9C%20%ED%8F%89%ED%83%9D1%EB%A1%9C20%EB%B2%88%EA%B8%B8%2039" target="_blank" rel="noopener">
+      <span class="rank-no ">145</span>
       <span class="lmain"><b class="wnm">희망복권</b><span class="wad">경기 평택시 평택1로20번길 39</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.23453" data-lng="127.28051" data-rank="143" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EC%9D%84%EC%A3%BC%EB%8A%94%EC%82%AC%EB%9E%8C%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9A%A9%EC%9D%B8%EC%8B%9C%20%EC%B2%98%EC%9D%B8%EA%B5%AC%20%EC%96%91%EC%A7%80%EB%A9%B4%20%EC%96%91%EC%A7%80%EB%A1%9C%20111%20(%EC%96%91%EC%A7%80%EB%A6%AC%2C%20%EC%96%91%EC%A7%80%ED%95%99%EC%9B%90)" target="_blank" rel="noopener">
-      <span class="rank-no ">144</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.23453" data-lng="127.28051" data-rank="145" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EC%9D%84%EC%A3%BC%EB%8A%94%EC%82%AC%EB%9E%8C%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%9A%A9%EC%9D%B8%EC%8B%9C%20%EC%B2%98%EC%9D%B8%EA%B5%AC%20%EC%96%91%EC%A7%80%EB%A9%B4%20%EC%96%91%EC%A7%80%EB%A1%9C%20111%20(%EC%96%91%EC%A7%80%EB%A6%AC%2C%20%EC%96%91%EC%A7%80%ED%95%99%EC%9B%90)" target="_blank" rel="noopener">
+      <span class="rank-no ">146</span>
       <span class="lmain"><b class="wnm">희망을주는사람</b><span class="wad">경기도 용인시 처인구 양지면 양지로 111 (양지리, 양지학원)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="대전" data-lat="36.324688" data-lng="127.378512" data-rank="144" href="https://map.naver.com/p/search/%EA%B7%B8%EB%A6%B0%ED%8E%B8%EC%9D%98%EC%A0%90%20%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%84%9C%EA%B5%AC%20%EB%8F%84%EC%82%B0%EB%A1%9C181%EB%B2%88%EA%B8%B8%202%20(%EB%B3%80%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">145</span>
+    </a><a class="lrow" data-region="대전" data-lat="36.324688" data-lng="127.378512" data-rank="146" href="https://map.naver.com/p/search/%EA%B7%B8%EB%A6%B0%ED%8E%B8%EC%9D%98%EC%A0%90%20%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%84%9C%EA%B5%AC%20%EB%8F%84%EC%82%B0%EB%A1%9C181%EB%B2%88%EA%B8%B8%202%20(%EB%B3%80%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">147</span>
       <span class="lmain"><b class="wnm">그린편의점</b><span class="wad">대전광역시 서구 도산로181번길 2 (변동)</span><span class="lbadges"><span class="wcb cr">대전</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="부산" data-lat="35.221592" data-lng="129.0838" data-rank="145" href="https://map.naver.com/p/search/%EC%9A%B0%EB%A6%AC%EB%93%A4%EB%A7%88%ED%8A%B8%20%EB%B6%80%EC%82%B0%20%EB%8F%99%EB%9E%98%EA%B5%AC%20%20%EC%98%A8%EC%B2%9C%EC%9E%A5%EB%A1%9C119%EB%B2%88%EA%B8%B8%2020%20(%EC%98%A8%EC%B2%9C%EB%8F%99%2C%20%EC%98%A8%EC%B2%9C%EC%95%84%ED%8C%8C%ED%8A%B8)" target="_blank" rel="noopener">
-      <span class="rank-no ">146</span>
+    </a><a class="lrow" data-region="부산" data-lat="35.221592" data-lng="129.0838" data-rank="147" href="https://map.naver.com/p/search/%EC%9A%B0%EB%A6%AC%EB%93%A4%EB%A7%88%ED%8A%B8%20%EB%B6%80%EC%82%B0%20%EB%8F%99%EB%9E%98%EA%B5%AC%20%20%EC%98%A8%EC%B2%9C%EC%9E%A5%EB%A1%9C119%EB%B2%88%EA%B8%B8%2020%20(%EC%98%A8%EC%B2%9C%EB%8F%99%2C%20%EC%98%A8%EC%B2%9C%EC%95%84%ED%8C%8C%ED%8A%B8)" target="_blank" rel="noopener">
+      <span class="rank-no ">148</span>
       <span class="lmain"><b class="wnm">우리들마트</b><span class="wad">부산 동래구  온천장로119번길 20 (온천동, 온천아파트)</span><span class="lbadges"><span class="wcb cr">부산</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.491277" data-lng="127.029284" data-rank="146" href="https://map.naver.com/p/search/%EA%B0%95%EB%82%A8%EC%97%AD%EB%A1%9C%EB%98%90%20%EC%84%9C%EC%9A%B8%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C51%EA%B8%B8%2010%20(%EC%84%9C%EC%B4%88%EB%8F%99%2C%20%EA%B0%95%EB%82%A8%ED%9A%A8%EC%84%B1%ED%95%B4%EB%A7%81%ED%84%B4%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">
-      <span class="rank-no ">147</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.491277" data-lng="127.029284" data-rank="148" href="https://map.naver.com/p/search/%EA%B0%95%EB%82%A8%EC%97%AD%EB%A1%9C%EB%98%90%20%EC%84%9C%EC%9A%B8%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C51%EA%B8%B8%2010%20(%EC%84%9C%EC%B4%88%EB%8F%99%2C%20%EA%B0%95%EB%82%A8%ED%9A%A8%EC%84%B1%ED%95%B4%EB%A7%81%ED%84%B4%ED%83%80%EC%9B%8C)" target="_blank" rel="noopener">
+      <span class="rank-no ">149</span>
       <span class="lmain"><b class="wnm">강남역로또</b><span class="wad">서울 서초구  강남대로51길 10 (서초동, 강남효성해링턴타워)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="인천" data-lat="37.406785" data-lng="126.694538" data-rank="147" href="https://map.naver.com/p/search/%EB%93%9C%EB%A6%BC%EB%B3%B5%EA%B6%8C%20%EC%9D%B8%EC%B2%9C%20%EB%82%A8%EB%8F%99%EA%B5%AC%20%20%EC%9D%80%EC%B2%AD%EB%A1%9C%2016%20(%EA%B3%A0%EC%9E%94%EB%8F%99%2C%20%EB%8F%99%EC%95%84%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">
-      <span class="rank-no ">148</span>
+    </a><a class="lrow" data-region="인천" data-lat="37.406785" data-lng="126.694538" data-rank="149" href="https://map.naver.com/p/search/%EB%93%9C%EB%A6%BC%EB%B3%B5%EA%B6%8C%20%EC%9D%B8%EC%B2%9C%20%EB%82%A8%EB%8F%99%EA%B5%AC%20%20%EC%9D%80%EC%B2%AD%EB%A1%9C%2016%20(%EA%B3%A0%EC%9E%94%EB%8F%99%2C%20%EB%8F%99%EC%95%84%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">
+      <span class="rank-no ">150</span>
       <span class="lmain"><b class="wnm">드림복권</b><span class="wad">인천 남동구  은청로 16 (고잔동, 동아빌딩)</span><span class="lbadges"><span class="wcb cr">인천</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="인천" data-lat="37.49181" data-lng="126.704471" data-rank="148" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EB%A1%9C%EB%98%90%20%ED%8C%90%EB%A7%A4%EC%A0%90%20%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%80%ED%8F%89%EA%B5%AC%20%ED%99%94%EB%9E%91%EB%A1%9C%2094%20(%EC%82%B0%EA%B3%A1%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">149</span>
+    </a><a class="lrow" data-region="인천" data-lat="37.49181" data-lng="126.704471" data-rank="150" href="https://map.naver.com/p/search/%ED%9D%AC%EB%A7%9D%EB%A1%9C%EB%98%90%20%ED%8C%90%EB%A7%A4%EC%A0%90%20%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%B6%80%ED%8F%89%EA%B5%AC%20%ED%99%94%EB%9E%91%EB%A1%9C%2094%20(%EC%82%B0%EA%B3%A1%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">151</span>
       <span class="lmain"><b class="wnm">희망로또 판매점</b><span class="wad">인천광역시 부평구 화랑로 94 (산곡동)</span><span class="lbadges"><span class="wcb cr">인천</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전북" data-lat="35.840494" data-lng="127.142289" data-rank="149" href="https://map.naver.com/p/search/%ED%94%84%EB%9E%9C%EB%93%9C%EB%A7%88%ED%8A%B8%EB%91%90%EC%82%B0%EC%A0%90%20%EC%A0%84%EB%B6%81%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%20%EB%A7%A4%EB%B4%899%EA%B8%B8%2010%20(%EA%B8%88%EC%95%94%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">150</span>
+    </a><a class="lrow" data-region="전북" data-lat="35.840494" data-lng="127.142289" data-rank="151" href="https://map.naver.com/p/search/%ED%94%84%EB%9E%9C%EB%93%9C%EB%A7%88%ED%8A%B8%EB%91%90%EC%82%B0%EC%A0%90%20%EC%A0%84%EB%B6%81%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%20%EB%A7%A4%EB%B4%899%EA%B8%B8%2010%20(%EA%B8%88%EC%95%94%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">152</span>
       <span class="lmain"><b class="wnm">프랜드마트두산점</b><span class="wad">전북 전주시 덕진구  매봉9길 10 (금암동)</span><span class="lbadges"><span class="wcb cr">전북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="충남" data-lat="36.471857" data-lng="127.133097" data-rank="150" href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EB%82%A8%20%EA%B3%B5%EC%A3%BC%EC%8B%9C%20%EB%B2%88%EC%98%811%EB%A1%9C%2041" target="_blank" rel="noopener">
-      <span class="rank-no ">151</span>
+    </a><a class="lrow" data-region="충남" data-lat="36.471857" data-lng="127.133097" data-rank="152" href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EB%82%A8%20%EA%B3%B5%EC%A3%BC%EC%8B%9C%20%EB%B2%88%EC%98%811%EB%A1%9C%2041" target="_blank" rel="noopener">
+      <span class="rank-no ">153</span>
       <span class="lmain"><b class="wnm">복권명당</b><span class="wad">충남 공주시 번영1로 41</span><span class="lbadges"><span class="wcb cr">충남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="35.239987" data-lng="128.653829" data-rank="151" href="https://map.naver.com/p/search/%EB%A1%9C%EB%98%90%ED%94%8C%EB%A0%89%EC%8A%A4%20%EC%8B%9C%ED%8B%B0%EC%84%B8%EB%B8%90%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EC%84%B1%EC%82%B0%EA%B5%AC%20%20%EC%9B%90%EC%9D%B4%EB%8C%80%EB%A1%9C%20320%20(%EB%8C%80%EC%9B%90%EB%8F%99%2C%20%EB%8D%94%EC%8B%9C%ED%8B%B0%EC%84%B8%EB%B8%90)" target="_blank" rel="noopener">
-      <span class="rank-no ">152</span>
+    </a><a class="lrow" data-region="경남" data-lat="35.239987" data-lng="128.653829" data-rank="153" href="https://map.naver.com/p/search/%EB%A1%9C%EB%98%90%ED%94%8C%EB%A0%89%EC%8A%A4%20%EC%8B%9C%ED%8B%B0%EC%84%B8%EB%B8%90%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EC%84%B1%EC%82%B0%EA%B5%AC%20%20%EC%9B%90%EC%9D%B4%EB%8C%80%EB%A1%9C%20320%20(%EB%8C%80%EC%9B%90%EB%8F%99%2C%20%EB%8D%94%EC%8B%9C%ED%8B%B0%EC%84%B8%EB%B8%90)" target="_blank" rel="noopener">
+      <span class="rank-no ">154</span>
       <span class="lmain"><b class="wnm">로또플렉스 시티세븐점</b><span class="wad">경남 창원시 성산구  원이대로 320 (대원동, 더시티세븐)</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="35.228012" data-lng="128.88493" data-rank="152" href="https://map.naver.com/p/search/%EB%B8%94%EB%A3%A825%EB%B6%80%EC%9B%90%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EA%B9%80%ED%95%B4%EC%8B%9C%20%ED%98%B8%EA%B3%84%EB%A1%9C%20421" target="_blank" rel="noopener">
-      <span class="rank-no ">153</span>
+    </a><a class="lrow" data-region="경남" data-lat="35.228012" data-lng="128.88493" data-rank="154" href="https://map.naver.com/p/search/%EB%B8%94%EB%A3%A825%EB%B6%80%EC%9B%90%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EA%B9%80%ED%95%B4%EC%8B%9C%20%ED%98%B8%EA%B3%84%EB%A1%9C%20421" target="_blank" rel="noopener">
+      <span class="rank-no ">155</span>
       <span class="lmain"><b class="wnm">블루25부원점</b><span class="wad">경남 김해시 호계로 421</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="광주" data-lat="35.101965" data-lng="126.894345" data-rank="153" href="https://map.naver.com/p/search/%EB%A1%9C%EB%98%90%EC%9D%BC%EB%B2%88%EC%A7%80%20%EA%B4%91%EC%A3%BC%20%EB%82%A8%EA%B5%AC%20%20%ED%9A%A8%EC%9A%B0%EB%A1%9C%20200%20(%ED%96%89%EC%95%94%EB%8F%99%2C%20%ED%9A%A8%EB%8D%95%EB%8F%99%ED%96%89%EC%A0%95%EB%B3%B5%EC%A7%80%EC%84%BC%ED%84%B0)" target="_blank" rel="noopener">
-      <span class="rank-no ">154</span>
+    </a><a class="lrow" data-region="광주" data-lat="35.101965" data-lng="126.894345" data-rank="155" href="https://map.naver.com/p/search/%EB%A1%9C%EB%98%90%EC%9D%BC%EB%B2%88%EC%A7%80%20%EA%B4%91%EC%A3%BC%20%EB%82%A8%EA%B5%AC%20%20%ED%9A%A8%EC%9A%B0%EB%A1%9C%20200%20(%ED%96%89%EC%95%94%EB%8F%99%2C%20%ED%9A%A8%EB%8D%95%EB%8F%99%ED%96%89%EC%A0%95%EB%B3%B5%EC%A7%80%EC%84%BC%ED%84%B0)" target="_blank" rel="noopener">
+      <span class="rank-no ">156</span>
       <span class="lmain"><b class="wnm">로또일번지</b><span class="wad">광주 남구  효우로 200 (행암동, 효덕동행정복지센터)</span><span class="lbadges"><span class="wcb cr">광주</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.545095" data-lng="127.08748" data-rank="154" href="https://map.naver.com/p/search/%EB%89%B4%EA%B3%A8%EB%93%9C%EB%82%98%EB%9D%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EA%B4%91%EB%82%98%EB%A3%A8%EB%A1%9C%20521%20(%EA%B5%AC%EC%9D%98%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">155</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.545095" data-lng="127.08748" data-rank="156" href="https://map.naver.com/p/search/%EB%89%B4%EA%B3%A8%EB%93%9C%EB%82%98%EB%9D%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EA%B4%91%EB%82%98%EB%A3%A8%EB%A1%9C%20521%20(%EA%B5%AC%EC%9D%98%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">157</span>
       <span class="lmain"><b class="wnm">뉴골드나라</b><span class="wad">서울특별시 광진구 광나루로 521 (구의동)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.513867" data-lng="127.101348" data-rank="155" href="https://map.naver.com/p/search/%EC%9E%A0%EC%8B%A4%EB%A7%A4%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%98%AC%EB%A6%BC%ED%94%BD%EB%A1%9C%20275-2%20(%EC%8B%A0%EC%B2%9C%EB%8F%99%2C%20%EA%B0%80%EB%A1%9C%ED%8C%90%EB%A7%A4%EB%8C%80)" target="_blank" rel="noopener">
-      <span class="rank-no ">156</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.513867" data-lng="127.101348" data-rank="157" href="https://map.naver.com/p/search/%EC%9E%A0%EC%8B%A4%EB%A7%A4%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%98%AC%EB%A6%BC%ED%94%BD%EB%A1%9C%20275-2%20(%EC%8B%A0%EC%B2%9C%EB%8F%99%2C%20%EA%B0%80%EB%A1%9C%ED%8C%90%EB%A7%A4%EB%8C%80)" target="_blank" rel="noopener">
+      <span class="rank-no ">158</span>
       <span class="lmain"><b class="wnm">잠실매점</b><span class="wad">서울특별시 송파구 올림픽로 275-2 (신천동, 가로판매대)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.481444" data-lng="126.98225" data-rank="156" href="https://map.naver.com/p/search/%ED%98%84%ED%81%B4%EB%A1%9C%EB%B0%94%20%EC%84%9C%EC%9A%B8%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%20%EB%8F%99%EC%9E%91%EB%8C%80%EB%A1%9C%2054-1%20(%EB%B0%A9%EB%B0%B0%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">157</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.481444" data-lng="126.98225" data-rank="158" href="https://map.naver.com/p/search/%ED%98%84%ED%81%B4%EB%A1%9C%EB%B0%94%20%EC%84%9C%EC%9A%B8%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%20%EB%8F%99%EC%9E%91%EB%8C%80%EB%A1%9C%2054-1%20(%EB%B0%A9%EB%B0%B0%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">159</span>
       <span class="lmain"><b class="wnm">현클로바</b><span class="wad">서울 서초구  동작대로 54-1 (방배동)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전북" data-lat="36.078966" data-lng="126.958526" data-rank="157" href="https://map.naver.com/p/search/%ED%98%9C%EC%84%B1%ED%94%84%EB%9D%BC%EC%9E%90%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%ED%95%A8%EC%97%B4%EC%9D%8D%20%ED%95%A8%EC%97%B4%EC%A4%91%EC%95%99%EB%A1%9C%2010" target="_blank" rel="noopener">
-      <span class="rank-no ">158</span>
+    </a><a class="lrow" data-region="전북" data-lat="36.078966" data-lng="126.958526" data-rank="159" href="https://map.naver.com/p/search/%ED%98%9C%EC%84%B1%ED%94%84%EB%9D%BC%EC%9E%90%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%ED%95%A8%EC%97%B4%EC%9D%8D%20%ED%95%A8%EC%97%B4%EC%A4%91%EC%95%99%EB%A1%9C%2010" target="_blank" rel="noopener">
+      <span class="rank-no ">160</span>
       <span class="lmain"><b class="wnm">혜성프라자</b><span class="wad">전북 익산시 함열읍 함열중앙로 10</span><span class="lbadges"><span class="wcb cr">전북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="충북" data-lat="36.710322" data-lng="127.415627" data-rank="158" href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%EC%B2%AD%EC%9B%90%EA%B5%AC%20%EC%98%A4%EC%B0%BD%EC%9D%8D%20%EA%B5%AC%EB%A3%A1%ED%83%9D%EC%A7%80%EB%A1%9C%208-21%20(%EA%B5%AC%EB%A3%A1%EB%A6%AC)" target="_blank" rel="noopener">
-      <span class="rank-no ">159</span>
+    </a><a class="lrow" data-region="충북" data-lat="36.710322" data-lng="127.415627" data-rank="160" href="https://map.naver.com/p/search/%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%EC%B2%AD%EC%9B%90%EA%B5%AC%20%EC%98%A4%EC%B0%BD%EC%9D%8D%20%EA%B5%AC%EB%A3%A1%ED%83%9D%EC%A7%80%EB%A1%9C%208-21%20(%EA%B5%AC%EB%A3%A1%EB%A6%AC)" target="_blank" rel="noopener">
+      <span class="rank-no ">161</span>
       <span class="lmain"><b class="wnm">복권명당</b><span class="wad">충청북도 청주시 청원구 오창읍 구룡택지로 8-21 (구룡리)</span><span class="lbadges"><span class="wcb cr">충북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.565408" data-lng="127.191408" data-rank="159" href="https://map.naver.com/p/search/%EB%AF%B8%EC%82%AC%20%EA%B2%BD%EA%B8%B0%20%ED%95%98%EB%82%A8%EC%8B%9C%20%20%EB%AF%B8%EC%82%AC%EA%B0%95%EB%B3%80%EB%8F%99%EB%A1%9C%20121%20(%EB%A7%9D%EC%9B%94%EB%8F%99%2C%20%EB%8D%94%EB%9E%9C%EB%93%9C%EC%8B%9C%ED%8B%B0)" target="_blank" rel="noopener">
-      <span class="rank-no ">160</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.565408" data-lng="127.191408" data-rank="161" href="https://map.naver.com/p/search/%EB%AF%B8%EC%82%AC%20%EA%B2%BD%EA%B8%B0%20%ED%95%98%EB%82%A8%EC%8B%9C%20%20%EB%AF%B8%EC%82%AC%EA%B0%95%EB%B3%80%EB%8F%99%EB%A1%9C%20121%20(%EB%A7%9D%EC%9B%94%EB%8F%99%2C%20%EB%8D%94%EB%9E%9C%EB%93%9C%EC%8B%9C%ED%8B%B0)" target="_blank" rel="noopener">
+      <span class="rank-no ">162</span>
       <span class="lmain"><b class="wnm">미사</b><span class="wad">경기 하남시  미사강변동로 121 (망월동, 더랜드시티)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.407453" data-lng="126.897958" data-rank="160" href="https://map.naver.com/p/search/%EC%B6%A9%ED%9B%88%ED%96%89%EC%9A%B4%EB%82%98%EB%9D%BC%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%95%88%EC%96%91%EC%8B%9C%20%EB%A7%8C%EC%95%88%EA%B5%AC%20%EC%B6%A9%ED%9B%88%EB%A1%9C%2095%20(%EC%84%9D%EC%88%98%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">161</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.407453" data-lng="126.897958" data-rank="162" href="https://map.naver.com/p/search/%EC%B6%A9%ED%9B%88%ED%96%89%EC%9A%B4%EB%82%98%EB%9D%BC%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%95%88%EC%96%91%EC%8B%9C%20%EB%A7%8C%EC%95%88%EA%B5%AC%20%EC%B6%A9%ED%9B%88%EB%A1%9C%2095%20(%EC%84%9D%EC%88%98%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">163</span>
       <span class="lmain"><b class="wnm">충훈행운나라복권방</b><span class="wad">경기도 안양시 만안구 충훈로 95 (석수동)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.648675" data-lng="126.91496" data-rank="161" href="https://map.naver.com/p/search/%ED%96%89%EB%B3%B5%EC%A0%90%EB%B9%B5%20%EA%B2%BD%EA%B8%B0%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%20%EC%A7%80%EC%B6%951%EB%A1%9C%2041%20(%EC%A7%80%EC%B6%95%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">162</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.648675" data-lng="126.91496" data-rank="163" href="https://map.naver.com/p/search/%ED%96%89%EB%B3%B5%EC%A0%90%EB%B9%B5%20%EA%B2%BD%EA%B8%B0%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%20%EC%A7%80%EC%B6%951%EB%A1%9C%2041%20(%EC%A7%80%EC%B6%95%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">164</span>
       <span class="lmain"><b class="wnm">행복점빵</b><span class="wad">경기 고양시 덕양구  지축1로 41 (지축동)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.562185" data-lng="126.914239" data-rank="162" href="https://map.naver.com/p/search/%EB%8F%99%EC%95%84%EC%A4%84%20%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%A0%90%20%20%EC%84%9C%EC%9A%B8%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%20%EC%9B%94%EB%93%9C%EC%BB%B5%EB%B6%81%EB%A1%9C%2099%20(%EC%84%B1%EC%82%B0%EB%8F%99%2C%20%EC%84%B1%EC%82%B0%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">
-      <span class="rank-no ">163</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.562185" data-lng="126.914239" data-rank="164" href="https://map.naver.com/p/search/%EB%8F%99%EC%95%84%EC%A4%84%20%EB%B3%B5%EA%B6%8C%ED%8C%90%EB%A7%A4%EC%A0%90%20%20%EC%84%9C%EC%9A%B8%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%20%EC%9B%94%EB%93%9C%EC%BB%B5%EB%B6%81%EB%A1%9C%2099%20(%EC%84%B1%EC%82%B0%EB%8F%99%2C%20%EC%84%B1%EC%82%B0%EB%B9%8C%EB%94%A9)" target="_blank" rel="noopener">
+      <span class="rank-no ">165</span>
       <span class="lmain"><b class="wnm">동아줄 복권판매점 </b><span class="wad">서울 마포구  월드컵북로 99 (성산동, 성산빌딩)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.499654" data-lng="127.15171" data-rank="163" href="https://map.naver.com/p/search/%EB%9F%AD%ED%82%A4%EB%B3%B5%EA%B6%8C%EC%83%B5%20%EC%84%9C%EC%9A%B8%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%84%B1%EB%82%B4%EC%B2%9C%EB%A1%9C%20218" target="_blank" rel="noopener">
-      <span class="rank-no ">164</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.499654" data-lng="127.15171" data-rank="165" href="https://map.naver.com/p/search/%EB%9F%AD%ED%82%A4%EB%B3%B5%EA%B6%8C%EC%83%B5%20%EC%84%9C%EC%9A%B8%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%84%B1%EB%82%B4%EC%B2%9C%EB%A1%9C%20218" target="_blank" rel="noopener">
+      <span class="rank-no ">166</span>
       <span class="lmain"><b class="wnm">럭키복권샵</b><span class="wad">서울 송파구 성내천로 218</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.500164" data-lng="126.852356" data-rank="164" href="https://map.naver.com/p/search/%EC%86%8C%EB%A7%9D%EB%B3%B5%EA%B6%8C%20%EC%84%9C%EC%9A%B8%20%EA%B5%AC%EB%A1%9C%EA%B5%AC%20%20%EA%B2%BD%EC%9D%B8%EB%A1%9C35%EA%B8%B8%2083%20(%EA%B3%A0%EC%B2%99%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">165</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.500164" data-lng="126.852356" data-rank="166" href="https://map.naver.com/p/search/%EC%86%8C%EB%A7%9D%EB%B3%B5%EA%B6%8C%20%EC%84%9C%EC%9A%B8%20%EA%B5%AC%EB%A1%9C%EA%B5%AC%20%20%EA%B2%BD%EC%9D%B8%EB%A1%9C35%EA%B8%B8%2083%20(%EA%B3%A0%EC%B2%99%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">167</span>
       <span class="lmain"><b class="wnm">소망복권</b><span class="wad">서울 구로구  경인로35길 83 (고척동)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.461897" data-lng="126.907929" data-rank="165" href="https://map.naver.com/p/search/%ED%96%89%EC%9A%B4%EB%AF%B8%EB%8B%88%EC%8A%88%ED%8D%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B8%88%EC%B2%9C%EA%B5%AC%20%EB%8F%85%EC%82%B0%EB%A1%9C44%EA%B8%B8%2061%20(%EC%8B%9C%ED%9D%A5%EB%8F%99%2C%20%ED%95%98%EC%9D%B4%EB%B9%8C)" target="_blank" rel="noopener">
-      <span class="rank-no ">166</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.461897" data-lng="126.907929" data-rank="167" href="https://map.naver.com/p/search/%ED%96%89%EC%9A%B4%EB%AF%B8%EB%8B%88%EC%8A%88%ED%8D%BC%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B8%88%EC%B2%9C%EA%B5%AC%20%EB%8F%85%EC%82%B0%EB%A1%9C44%EA%B8%B8%2061%20(%EC%8B%9C%ED%9D%A5%EB%8F%99%2C%20%ED%95%98%EC%9D%B4%EB%B9%8C)" target="_blank" rel="noopener">
+      <span class="rank-no ">168</span>
       <span class="lmain"><b class="wnm">행운미니슈퍼</b><span class="wad">서울특별시 금천구 독산로44길 61 (시흥동, 하이빌)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="세종" data-lat="36.508307" data-lng="127.262445" data-rank="166" href="https://map.naver.com/p/search/%EC%84%B8%EC%A2%85%EC%B2%AD%EC%82%AC%EC%9C%A0%ED%86%B5%20%EC%84%B8%EC%A2%85%20%20%EC%A0%88%EC%9E%AC%EB%A1%9C%20194" target="_blank" rel="noopener">
-      <span class="rank-no ">167</span>
+    </a><a class="lrow" data-region="세종" data-lat="36.508307" data-lng="127.262445" data-rank="168" href="https://map.naver.com/p/search/%EC%84%B8%EC%A2%85%EC%B2%AD%EC%82%AC%EC%9C%A0%ED%86%B5%20%EC%84%B8%EC%A2%85%20%20%EC%A0%88%EC%9E%AC%EB%A1%9C%20194" target="_blank" rel="noopener">
+      <span class="rank-no ">169</span>
       <span class="lmain"><b class="wnm">세종청사유통</b><span class="wad">세종  절재로 194</span><span class="lbadges"><span class="wcb cr">세종</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전남" data-lat="34.773867" data-lng="127.639754" data-rank="167" href="https://map.naver.com/p/search/%EC%9D%BC%EB%A0%88%EB%B8%90%EB%A7%88%ED%8A%B8%20%EC%A0%84%EB%82%A8%20%EC%97%AC%EC%88%98%EC%8B%9C%20%20%EC%84%B1%EC%82%B0%EB%A1%9C%2019%20(%ED%99%94%EC%9E%A5%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">168</span>
+    </a><a class="lrow" data-region="전남" data-lat="34.773867" data-lng="127.639754" data-rank="169" href="https://map.naver.com/p/search/%EC%9D%BC%EB%A0%88%EB%B8%90%EB%A7%88%ED%8A%B8%20%EC%A0%84%EB%82%A8%20%EC%97%AC%EC%88%98%EC%8B%9C%20%20%EC%84%B1%EC%82%B0%EB%A1%9C%2019%20(%ED%99%94%EC%9E%A5%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">170</span>
       <span class="lmain"><b class="wnm">일레븐마트</b><span class="wad">전남 여수시  성산로 19 (화장동)</span><span class="lbadges"><span class="wcb cr">전남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.371084" data-lng="126.933974" data-rank="168" href="https://map.naver.com/p/search/%EB%8C%80%EA%B4%91%EC%8A%88%ED%8D%BC%20%EA%B2%BD%EA%B8%B0%20%EA%B5%B0%ED%8F%AC%EC%8B%9C%20%EA%B3%A0%EC%82%B0%EB%A1%9C%20679" target="_blank" rel="noopener">
-      <span class="rank-no ">169</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.371084" data-lng="126.933974" data-rank="170" href="https://map.naver.com/p/search/%EB%8C%80%EA%B4%91%EC%8A%88%ED%8D%BC%20%EA%B2%BD%EA%B8%B0%20%EA%B5%B0%ED%8F%AC%EC%8B%9C%20%EA%B3%A0%EC%82%B0%EB%A1%9C%20679" target="_blank" rel="noopener">
+      <span class="rank-no ">171</span>
       <span class="lmain"><b class="wnm">대광슈퍼</b><span class="wad">경기 군포시 고산로 679</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.638813" data-lng="126.673098" data-rank="169" href="https://map.naver.com/p/search/%EB%B9%B5%ED%84%B0%EC%A7%80%EB%8A%94%20%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EA%B9%80%ED%8F%AC%EC%8B%9C%20%EA%B9%80%ED%8F%AC%ED%95%9C%EA%B0%952%EB%A1%9C%2092%20%EB%A9%94%EC%9D%B4%ED%94%8C%ED%94%8C%EB%9D%BC%EC%9E%90%20101%ED%98%B8" target="_blank" rel="noopener">
-      <span class="rank-no ">170</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.638813" data-lng="126.673098" data-rank="171" href="https://map.naver.com/p/search/%EB%B9%B5%ED%84%B0%EC%A7%80%EB%8A%94%20%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EA%B9%80%ED%8F%AC%EC%8B%9C%20%EA%B9%80%ED%8F%AC%ED%95%9C%EA%B0%952%EB%A1%9C%2092%20%EB%A9%94%EC%9D%B4%ED%94%8C%ED%94%8C%EB%9D%BC%EC%9E%90%20101%ED%98%B8" target="_blank" rel="noopener">
+      <span class="rank-no ">172</span>
       <span class="lmain"><b class="wnm">빵터지는 복권방</b><span class="wad">경기 김포시 김포한강2로 92 메이플플라자 101호</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="35.215878" data-lng="128.570781" data-rank="170" href="https://map.naver.com/p/search/%EB%B6%81%EB%A7%88%EC%82%B0%EB%B3%B5%EA%B6%8C%EC%A0%84%EB%AC%B8%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EB%A7%88%EC%82%B0%ED%95%A9%ED%8F%AC%EA%B5%AC%20%EB%B6%81%EC%84%B1%EB%A1%9C%2098" target="_blank" rel="noopener">
-      <span class="rank-no ">171</span>
+    </a><a class="lrow" data-region="경남" data-lat="35.215878" data-lng="128.570781" data-rank="172" href="https://map.naver.com/p/search/%EB%B6%81%EB%A7%88%EC%82%B0%EB%B3%B5%EA%B6%8C%EC%A0%84%EB%AC%B8%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EC%B0%BD%EC%9B%90%EC%8B%9C%20%EB%A7%88%EC%82%B0%ED%95%A9%ED%8F%AC%EA%B5%AC%20%EB%B6%81%EC%84%B1%EB%A1%9C%2098" target="_blank" rel="noopener">
+      <span class="rank-no ">173</span>
       <span class="lmain"><b class="wnm">북마산복권전문점</b><span class="wad">경남 창원시 마산합포구 북성로 98</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="34.910634" data-lng="128.54363" data-rank="171" href="https://map.naver.com/p/search/%EC%94%A8%EC%9C%A0%EA%B1%B0%EC%A0%9C%EC%82%AC%EB%93%B1%EC%83%88%EC%95%84%EC%B9%A8%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EA%B1%B0%EC%A0%9C%EC%8B%9C%20%EA%B1%B0%EC%A0%9C%EB%8C%80%EB%A1%9C%205501%20%EC%A3%BC2%EB%8F%99%20103%ED%98%B8%2C104%ED%98%B8" target="_blank" rel="noopener">
-      <span class="rank-no ">172</span>
+    </a><a class="lrow" data-region="경남" data-lat="34.910634" data-lng="128.54363" data-rank="173" href="https://map.naver.com/p/search/%EC%94%A8%EC%9C%A0%EA%B1%B0%EC%A0%9C%EC%82%AC%EB%93%B1%EC%83%88%EC%95%84%EC%B9%A8%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%EA%B1%B0%EC%A0%9C%EC%8B%9C%20%EA%B1%B0%EC%A0%9C%EB%8C%80%EB%A1%9C%205501%20%EC%A3%BC2%EB%8F%99%20103%ED%98%B8%2C104%ED%98%B8" target="_blank" rel="noopener">
+      <span class="rank-no ">174</span>
       <span class="lmain"><b class="wnm">씨유거제사등새아침점</b><span class="wad">경남 거제시 거제대로 5501 주2동 103호,104호</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="대전" data-lat="36.34622" data-lng="127.447969" data-rank="172" href="https://map.naver.com/p/search/CU%EB%8C%80%EC%A0%84%EA%B0%80%EC%96%91%EC%82%AC%EB%9E%91%EC%A0%90%20%EB%8C%80%EC%A0%84%20%EB%8F%99%EA%B5%AC%20%EC%9A%B0%EC%95%94%EB%A1%9C%20292%201%EC%B8%B5" target="_blank" rel="noopener">
-      <span class="rank-no ">173</span>
+    </a><a class="lrow" data-region="대전" data-lat="36.34622" data-lng="127.447969" data-rank="174" href="https://map.naver.com/p/search/CU%EB%8C%80%EC%A0%84%EA%B0%80%EC%96%91%EC%82%AC%EB%9E%91%EC%A0%90%20%EB%8C%80%EC%A0%84%20%EB%8F%99%EA%B5%AC%20%EC%9A%B0%EC%95%94%EB%A1%9C%20292%201%EC%B8%B5" target="_blank" rel="noopener">
+      <span class="rank-no ">175</span>
       <span class="lmain"><b class="wnm">CU대전가양사랑점</b><span class="wad">대전 동구 우암로 292 1층</span><span class="lbadges"><span class="wcb cr">대전</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="부산" data-lat="35.168776" data-lng="129.120623" data-rank="173" href="https://map.naver.com/p/search/%EC%97%94%EC%A0%A4%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%EC%88%98%EC%98%81%EB%A1%9C741%EB%B2%88%EA%B8%B8%209" target="_blank" rel="noopener">
-      <span class="rank-no ">174</span>
+    </a><a class="lrow" data-region="부산" data-lat="35.168776" data-lng="129.120623" data-rank="175" href="https://map.naver.com/p/search/%EC%97%94%EC%A0%A4%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%AA%85%EB%8B%B9%20%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%EC%88%98%EC%98%81%EB%A1%9C741%EB%B2%88%EA%B8%B8%209" target="_blank" rel="noopener">
+      <span class="rank-no ">176</span>
       <span class="lmain"><b class="wnm">엔젤로또복권명당</b><span class="wad">부산 수영구 수영로741번길 9</span><span class="lbadges"><span class="wcb cr">부산</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.552887" data-lng="126.83674" data-rank="174" href="https://map.naver.com/p/search/%EC%86%8C%EB%A6%AC%EC%B0%BD%EA%B3%A0%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B0%95%EC%84%9C%EB%A1%9C%20306" target="_blank" rel="noopener">
-      <span class="rank-no ">175</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.552887" data-lng="126.83674" data-rank="176" href="https://map.naver.com/p/search/%EC%86%8C%EB%A6%AC%EC%B0%BD%EA%B3%A0%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B0%95%EC%84%9C%EB%A1%9C%20306" target="_blank" rel="noopener">
+      <span class="rank-no ">177</span>
       <span class="lmain"><b class="wnm">소리창고</b><span class="wad">서울 강서구 강서로 306</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.507636" data-lng="127.02409" data-rank="175" href="https://map.naver.com/p/search/%EC%9D%BC%ED%99%95%EC%B2%9C%EA%B8%88%20%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C122%EA%B8%B8%2010%201%EC%B8%B5" target="_blank" rel="noopener">
-      <span class="rank-no ">176</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.507636" data-lng="127.02409" data-rank="177" href="https://map.naver.com/p/search/%EC%9D%BC%ED%99%95%EC%B2%9C%EA%B8%88%20%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8%EA%B5%AC%20%EA%B0%95%EB%82%A8%EB%8C%80%EB%A1%9C122%EA%B8%B8%2010%201%EC%B8%B5" target="_blank" rel="noopener">
+      <span class="rank-no ">178</span>
       <span class="lmain"><b class="wnm">일확천금 복권방</b><span class="wad">서울 강남구 강남대로122길 10 1층</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="인천" data-lat="37.424755" data-lng="126.655458" data-rank="176" href="https://map.naver.com/p/search/%EB%8F%84%EA%B9%A8%EB%B9%84%20%EB%B3%B5%EA%B6%8C%EC%A0%90%20%EC%9D%B8%EC%B2%9C%20%EC%97%B0%EC%88%98%EA%B5%AC%20%ED%95%9C%EB%82%98%EB%A3%A8%EB%A1%9C%20171%201-2%ED%98%B8(%EC%98%A5%EB%A0%A8%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">177</span>
+    </a><a class="lrow" data-region="인천" data-lat="37.424755" data-lng="126.655458" data-rank="178" href="https://map.naver.com/p/search/%EB%8F%84%EA%B9%A8%EB%B9%84%20%EB%B3%B5%EA%B6%8C%EC%A0%90%20%EC%9D%B8%EC%B2%9C%20%EC%97%B0%EC%88%98%EA%B5%AC%20%ED%95%9C%EB%82%98%EB%A3%A8%EB%A1%9C%20171%201-2%ED%98%B8(%EC%98%A5%EB%A0%A8%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">179</span>
       <span class="lmain"><b class="wnm">도깨비 복권점</b><span class="wad">인천 연수구 한나루로 171 1-2호(옥련동)</span><span class="lbadges"><span class="wcb cr">인천</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="충남" data-lat="36.807687" data-lng="126.768231" data-rank="177" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EB%8B%B9%EC%A7%84%ED%95%A9%EB%8D%95%EC%9B%90%EB%A3%B8%EC%A0%90%20%EC%B6%A9%EB%82%A8%20%EB%8B%B9%EC%A7%84%EC%8B%9C%20%ED%95%A9%EB%8D%95%EC%9D%8D%20%EB%AF%B8%EB%9D%BD5%EA%B8%B8%2027-3%20(%EC%82%BC%EC%84%B1%EA%B3%A8%EB%93%9C%EB%B9%8C)" target="_blank" rel="noopener">
-      <span class="rank-no ">178</span>
+    </a><a class="lrow" data-region="충남" data-lat="36.807687" data-lng="126.768231" data-rank="179" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EB%8B%B9%EC%A7%84%ED%95%A9%EB%8D%95%EC%9B%90%EB%A3%B8%EC%A0%90%20%EC%B6%A9%EB%82%A8%20%EB%8B%B9%EC%A7%84%EC%8B%9C%20%ED%95%A9%EB%8D%95%EC%9D%8D%20%EB%AF%B8%EB%9D%BD5%EA%B8%B8%2027-3%20(%EC%82%BC%EC%84%B1%EA%B3%A8%EB%93%9C%EB%B9%8C)" target="_blank" rel="noopener">
+      <span class="rank-no ">180</span>
       <span class="lmain"><b class="wnm">이마트24당진합덕원룸점</b><span class="wad">충남 당진시 합덕읍 미락5길 27-3 (삼성골드빌)</span><span class="lbadges"><span class="wcb cr">충남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.301047" data-lng="127.654" data-rank="178" href="https://map.naver.com/p/search/%EC%97%AC%EC%A3%BC%EC%8B%A0%EB%A5%B5%EB%A1%9C%EB%98%90%20%EA%B2%BD%EA%B8%B0%20%EC%97%AC%EC%A3%BC%EC%8B%9C%20%EC%8B%A0%EB%A5%B5%EB%A1%9C%2037%201%EC%B8%B5" target="_blank" rel="noopener">
-      <span class="rank-no ">179</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.301047" data-lng="127.654" data-rank="180" href="https://map.naver.com/p/search/%EC%97%AC%EC%A3%BC%EC%8B%A0%EB%A5%B5%EB%A1%9C%EB%98%90%20%EA%B2%BD%EA%B8%B0%20%EC%97%AC%EC%A3%BC%EC%8B%9C%20%EC%8B%A0%EB%A5%B5%EB%A1%9C%2037%201%EC%B8%B5" target="_blank" rel="noopener">
+      <span class="rank-no ">181</span>
       <span class="lmain"><b class="wnm">여주신륵로또</b><span class="wad">경기 여주시 신륵로 37 1층</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="36.997057" data-lng="127.166916" data-rank="179" href="https://map.naver.com/p/search/%ED%96%89%EC%9A%B4%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%20%EC%95%88%EC%84%B1%EC%8B%9C%20%EA%B3%B5%EB%8F%84%EC%9D%8D%20%EC%8A%B9%EB%91%901%EA%B8%B8%2016" target="_blank" rel="noopener">
-      <span class="rank-no ">180</span>
+    </a><a class="lrow" data-region="경기" data-lat="36.997057" data-lng="127.166916" data-rank="181" href="https://map.naver.com/p/search/%ED%96%89%EC%9A%B4%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%20%EC%95%88%EC%84%B1%EC%8B%9C%20%EA%B3%B5%EB%8F%84%EC%9D%8D%20%EC%8A%B9%EB%91%901%EA%B8%B8%2016" target="_blank" rel="noopener">
+      <span class="rank-no ">182</span>
       <span class="lmain"><b class="wnm">행운복권</b><span class="wad">경기 안성시 공도읍 승두1길 16</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="35.278317" data-lng="128.770318" data-rank="180" href="https://map.naver.com/p/search/%EC%A7%84%EB%A1%80%EB%A1%9C%EB%98%90%EB%AA%85%EB%8B%B9%20%EA%B2%BD%EB%82%A8%20%EA%B9%80%ED%95%B4%EC%8B%9C%20%EC%A7%84%EB%A1%80%EB%A9%B4%20%ED%85%8C%ED%81%AC%EB%85%B8%EB%B0%B8%EB%A6%AC1%EB%A1%9C%20196-43" target="_blank" rel="noopener">
-      <span class="rank-no ">181</span>
+    </a><a class="lrow" data-region="경남" data-lat="35.278317" data-lng="128.770318" data-rank="182" href="https://map.naver.com/p/search/%EC%A7%84%EB%A1%80%EB%A1%9C%EB%98%90%EB%AA%85%EB%8B%B9%20%EA%B2%BD%EB%82%A8%20%EA%B9%80%ED%95%B4%EC%8B%9C%20%EC%A7%84%EB%A1%80%EB%A9%B4%20%ED%85%8C%ED%81%AC%EB%85%B8%EB%B0%B8%EB%A6%AC1%EB%A1%9C%20196-43" target="_blank" rel="noopener">
+      <span class="rank-no ">183</span>
       <span class="lmain"><b class="wnm">진례로또명당</b><span class="wad">경남 김해시 진례면 테크노밸리1로 196-43</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="대구" data-lat="35.868417" data-lng="128.637491" data-rank="181" href="https://map.naver.com/p/search/%EA%B5%BF%EB%9F%AD%EB%B3%B5%EA%B6%8C%20%EB%8C%80%EA%B5%AC%20%EC%88%98%EC%84%B1%EA%B5%AC%20%20%EB%8F%99%EC%9B%90%EB%A1%9C%20109%20(%EB%A7%8C%EC%B4%8C%EB%8F%99%2C%20%EB%A9%94%ED%8A%B8%EB%A1%9C%ED%8C%94%EB%A0%88%EC%8A%A42%EB%8B%A8%EC%A7%80)" target="_blank" rel="noopener">
-      <span class="rank-no ">182</span>
+    </a><a class="lrow" data-region="대구" data-lat="35.868417" data-lng="128.637491" data-rank="183" href="https://map.naver.com/p/search/%EA%B5%BF%EB%9F%AD%EB%B3%B5%EA%B6%8C%20%EB%8C%80%EA%B5%AC%20%EC%88%98%EC%84%B1%EA%B5%AC%20%20%EB%8F%99%EC%9B%90%EB%A1%9C%20109%20(%EB%A7%8C%EC%B4%8C%EB%8F%99%2C%20%EB%A9%94%ED%8A%B8%EB%A1%9C%ED%8C%94%EB%A0%88%EC%8A%A42%EB%8B%A8%EC%A7%80)" target="_blank" rel="noopener">
+      <span class="rank-no ">184</span>
       <span class="lmain"><b class="wnm">굿럭복권</b><span class="wad">대구 수성구  동원로 109 (만촌동, 메트로팔레스2단지)</span><span class="lbadges"><span class="wcb cr">대구</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="대구" data-lat="35.941509" data-lng="128.630924" data-rank="182" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EC%97%B0%EA%B2%BD%EB%89%B4%EC%9B%B0%EC%8B%9C%ED%8B%B0%EC%A0%90%20%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%8F%99%EA%B5%AC%20%EB%8F%99%ED%99%94%EC%B2%9C%EB%A1%9C%20405%20(%EC%A7%80%EB%AC%98%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">183</span>
+    </a><a class="lrow" data-region="대구" data-lat="35.941509" data-lng="128.630924" data-rank="184" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EC%97%B0%EA%B2%BD%EB%89%B4%EC%9B%B0%EC%8B%9C%ED%8B%B0%EC%A0%90%20%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C%20%EB%8F%99%EA%B5%AC%20%EB%8F%99%ED%99%94%EC%B2%9C%EB%A1%9C%20405%20(%EC%A7%80%EB%AC%98%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">185</span>
       <span class="lmain"><b class="wnm">이마트24연경뉴웰시티점</b><span class="wad">대구광역시 동구 동화천로 405 (지묘동)</span><span class="lbadges"><span class="wcb cr">대구</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.492587" data-lng="126.99027" data-rank="183" href="https://map.naver.com/p/search/%EC%97%90%EC%9D%B4%EC%9B%90%ED%85%94%EB%A0%88%EC%BD%A4%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%EB%8F%99%EA%B4%91%EB%A1%9C%2070%20(%EB%B0%A9%EB%B0%B0%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">184</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.492587" data-lng="126.99027" data-rank="185" href="https://map.naver.com/p/search/%EC%97%90%EC%9D%B4%EC%9B%90%ED%85%94%EB%A0%88%EC%BD%A4%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%9C%EC%B4%88%EA%B5%AC%20%EB%8F%99%EA%B4%91%EB%A1%9C%2070%20(%EB%B0%A9%EB%B0%B0%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">186</span>
       <span class="lmain"><b class="wnm">에이원텔레콤</b><span class="wad">서울특별시 서초구 동광로 70 (방배동)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="인천" data-lat="37.528104" data-lng="126.724034" data-rank="184" href="https://map.naver.com/p/search/%EC%97%AC%EC%9D%98%EC%A3%BC%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%20%EC%9D%B8%EC%B2%9C%20%EA%B3%84%EC%96%91%EA%B5%AC%20%20%ED%9A%A8%EC%84%9C%EB%A1%9C%20251%20(%EC%9E%91%EC%A0%84%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">185</span>
+    </a><a class="lrow" data-region="인천" data-lat="37.528104" data-lng="126.724034" data-rank="186" href="https://map.naver.com/p/search/%EC%97%AC%EC%9D%98%EC%A3%BC%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%20%EC%9D%B8%EC%B2%9C%20%EA%B3%84%EC%96%91%EA%B5%AC%20%20%ED%9A%A8%EC%84%9C%EB%A1%9C%20251%20(%EC%9E%91%EC%A0%84%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">187</span>
       <span class="lmain"><b class="wnm">여의주로또복권</b><span class="wad">인천 계양구  효서로 251 (작전동)</span><span class="lbadges"><span class="wcb cr">인천</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전남" data-lat="34.570812" data-lng="126.610855" data-rank="185" href="https://map.naver.com/p/search/%EC%A2%85%ED%95%A9%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%A0%84%EB%9D%BC%EB%82%A8%EB%8F%84%20%ED%95%B4%EB%82%A8%EA%B5%B0%20%ED%95%B4%EB%82%A8%EC%9D%8D%20%ED%95%B4%EB%82%A8%EB%A1%9C%2034%20(%ED%95%B4%EB%A6%AC%2C%20%EC%A2%85%ED%95%A9%EB%B3%B5%EA%B6%8C%EB%B0%A9%ED%8E%B8%EC%9D%98%EC%A0%90)" target="_blank" rel="noopener">
-      <span class="rank-no ">186</span>
+    </a><a class="lrow" data-region="전남" data-lat="34.570812" data-lng="126.610855" data-rank="187" href="https://map.naver.com/p/search/%EC%A2%85%ED%95%A9%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EC%A0%84%EB%9D%BC%EB%82%A8%EB%8F%84%20%ED%95%B4%EB%82%A8%EA%B5%B0%20%ED%95%B4%EB%82%A8%EC%9D%8D%20%ED%95%B4%EB%82%A8%EB%A1%9C%2034%20(%ED%95%B4%EB%A6%AC%2C%20%EC%A2%85%ED%95%A9%EB%B3%B5%EA%B6%8C%EB%B0%A9%ED%8E%B8%EC%9D%98%EC%A0%90)" target="_blank" rel="noopener">
+      <span class="rank-no ">188</span>
       <span class="lmain"><b class="wnm">종합복권방</b><span class="wad">전라남도 해남군 해남읍 해남로 34 (해리, 종합복권방편의점)</span><span class="lbadges"><span class="wcb cr">전남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전북" data-lat="35.955091" data-lng="126.980191" data-rank="186" href="https://map.naver.com/p/search/%ED%98%84%EB%8C%80%EC%9E%A5%EB%AF%B8%EC%8A%88%ED%8D%BC%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%20%EB%8F%99%EC%84%9C%EB%A1%9C61%EA%B8%B8%2041%20(%EC%96%B4%EC%96%91%EB%8F%99%2C%20%ED%98%84%EB%8C%80%EC%95%84%ED%8C%8C%ED%8A%B8)" target="_blank" rel="noopener">
-      <span class="rank-no ">187</span>
+    </a><a class="lrow" data-region="전북" data-lat="35.955091" data-lng="126.980191" data-rank="188" href="https://map.naver.com/p/search/%ED%98%84%EB%8C%80%EC%9E%A5%EB%AF%B8%EC%8A%88%ED%8D%BC%20%EC%A0%84%EB%B6%81%20%EC%9D%B5%EC%82%B0%EC%8B%9C%20%20%EB%8F%99%EC%84%9C%EB%A1%9C61%EA%B8%B8%2041%20(%EC%96%B4%EC%96%91%EB%8F%99%2C%20%ED%98%84%EB%8C%80%EC%95%84%ED%8C%8C%ED%8A%B8)" target="_blank" rel="noopener">
+      <span class="rank-no ">189</span>
       <span class="lmain"><b class="wnm">현대장미슈퍼</b><span class="wad">전북 익산시  동서로61길 41 (어양동, 현대아파트)</span><span class="lbadges"><span class="wcb cr">전북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.70108" data-lng="126.90182" data-rank="187" href="https://map.naver.com/p/search/%EA%B3%A0%EC%96%91%EC%9B%94%EB%93%9C%EC%8B%9D%ED%92%88%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%9C%EC%9D%8C%EB%A1%9C%208%20(%EA%B3%A0%EC%96%91%EB%8F%99%2C%20%EC%82%BC%EB%9D%BC%EB%A7%88%EC%9D%B4%EB%8B%A4%EC%8A%A4%ED%94%84%EB%9D%BC%EC%9E%90)" target="_blank" rel="noopener">
-      <span class="rank-no ">188</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.70108" data-lng="126.90182" data-rank="189" href="https://map.naver.com/p/search/%EA%B3%A0%EC%96%91%EC%9B%94%EB%93%9C%EC%8B%9D%ED%92%88%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%9C%EC%9D%8C%EB%A1%9C%208%20(%EA%B3%A0%EC%96%91%EB%8F%99%2C%20%EC%82%BC%EB%9D%BC%EB%A7%88%EC%9D%B4%EB%8B%A4%EC%8A%A4%ED%94%84%EB%9D%BC%EC%9E%90)" target="_blank" rel="noopener">
+      <span class="rank-no ">190</span>
       <span class="lmain"><b class="wnm">고양월드식품복권</b><span class="wad">경기도 고양시 덕양구 혜음로 8 (고양동, 삼라마이다스프라자)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.245167" data-lng="127.052479" data-rank="188" href="https://map.naver.com/p/search/%EB%A7%9D%ED%8F%AC%EC%97%AD%20%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%EC%98%81%ED%86%B5%EA%B5%AC%20%20%EB%8D%95%EC%98%81%EB%8C%80%EB%A1%9C%201478%20(%EB%A7%9D%ED%8F%AC%EB%8F%99%2C%20%EB%A7%9D%ED%8F%AC%EC%97%AD%20%ED%8F%AC%EB%A0%88%20%EC%8A%A4%ED%80%98%EC%96%B4)" target="_blank" rel="noopener">
-      <span class="rank-no ">189</span>
+    </a><a class="lrow" data-region="경기" data-lat="37.245167" data-lng="127.052479" data-rank="190" href="https://map.naver.com/p/search/%EB%A7%9D%ED%8F%AC%EC%97%AD%20%EB%A1%9C%EB%98%90%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EA%B2%BD%EA%B8%B0%20%EC%88%98%EC%9B%90%EC%8B%9C%20%EC%98%81%ED%86%B5%EA%B5%AC%20%20%EB%8D%95%EC%98%81%EB%8C%80%EB%A1%9C%201478%20(%EB%A7%9D%ED%8F%AC%EB%8F%99%2C%20%EB%A7%9D%ED%8F%AC%EC%97%AD%20%ED%8F%AC%EB%A0%88%20%EC%8A%A4%ED%80%98%EC%96%B4)" target="_blank" rel="noopener">
+      <span class="rank-no ">191</span>
       <span class="lmain"><b class="wnm">망포역 로또복권방</b><span class="wad">경기 수원시 영통구  덕영대로 1478 (망포동, 망포역 포레 스퀘어)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경남" data-lat="35.566676" data-lng="128.16281" data-rank="189" href="https://map.naver.com/p/search/GS25%ED%95%A9%EC%B2%9C%EC%84%BC%ED%84%B0%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%ED%95%A9%EC%B2%9C%EA%B5%B0%20%ED%95%A9%EC%B2%9C%EC%9D%8D%20%EB%8F%99%EC%84%9C%EB%A1%9C%2095" target="_blank" rel="noopener">
-      <span class="rank-no ">190</span>
+    </a><a class="lrow" data-region="경남" data-lat="35.566676" data-lng="128.16281" data-rank="191" href="https://map.naver.com/p/search/GS25%ED%95%A9%EC%B2%9C%EC%84%BC%ED%84%B0%EC%A0%90%20%EA%B2%BD%EB%82%A8%20%ED%95%A9%EC%B2%9C%EA%B5%B0%20%ED%95%A9%EC%B2%9C%EC%9D%8D%20%EB%8F%99%EC%84%9C%EB%A1%9C%2095" target="_blank" rel="noopener">
+      <span class="rank-no ">192</span>
       <span class="lmain"><b class="wnm">GS25합천센터점</b><span class="wad">경남 합천군 합천읍 동서로 95</span><span class="lbadges"><span class="wcb cr">경남</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경북" data-lat="36.415232" data-lng="128.155862" data-rank="190" href="https://map.naver.com/p/search/CU%EC%83%81%EC%A3%BC%EC%A0%81%EC%8B%AD%EC%9E%90%EB%B3%91%EC%9B%90%EC%95%9E%EC%A0%90%20%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%83%81%EC%A3%BC%EC%8B%9C%20%EC%83%81%EC%84%9C%EB%AC%B8%EB%A1%9C%2059%20(%EB%82%A8%EC%84%B1%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">191</span>
+    </a><a class="lrow" data-region="경북" data-lat="36.415232" data-lng="128.155862" data-rank="192" href="https://map.naver.com/p/search/CU%EC%83%81%EC%A3%BC%EC%A0%81%EC%8B%AD%EC%9E%90%EB%B3%91%EC%9B%90%EC%95%9E%EC%A0%90%20%EA%B2%BD%EC%83%81%EB%B6%81%EB%8F%84%20%EC%83%81%EC%A3%BC%EC%8B%9C%20%EC%83%81%EC%84%9C%EB%AC%B8%EB%A1%9C%2059%20(%EB%82%A8%EC%84%B1%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">193</span>
       <span class="lmain"><b class="wnm">CU상주적십자병원앞점</b><span class="wad">경상북도 상주시 상서문로 59 (남성동)</span><span class="lbadges"><span class="wcb cr">경북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="부산" data-lat="35.156694" data-lng="129.057545" data-rank="191" href="https://map.naver.com/p/search/%EC%8B%9C%EC%9E%A5%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EB%B6%80%EC%82%B0%20%EB%B6%80%EC%82%B0%EC%A7%84%EA%B5%AC%20%20%EC%84%9C%EB%A9%B4%EB%A1%9C%2065%20(%EB%B6%80%EC%A0%84%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">192</span>
+    </a><a class="lrow" data-region="부산" data-lat="35.156694" data-lng="129.057545" data-rank="193" href="https://map.naver.com/p/search/%EC%8B%9C%EC%9E%A5%EB%B3%B5%EA%B6%8C%EB%B0%A9%20%EB%B6%80%EC%82%B0%20%EB%B6%80%EC%82%B0%EC%A7%84%EA%B5%AC%20%20%EC%84%9C%EB%A9%B4%EB%A1%9C%2065%20(%EB%B6%80%EC%A0%84%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">194</span>
       <span class="lmain"><b class="wnm">시장복권방</b><span class="wad">부산 부산진구  서면로 65 (부전동)</span><span class="lbadges"><span class="wcb cr">부산</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="부산" data-lat="35.155287" data-lng="129.11766" data-rank="192" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EA%B4%91%EC%95%88%EB%A6%AC%EA%B5%BF-7%20%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%20%EA%B4%91%EC%95%88%EB%A1%9C%2049%20(%EA%B4%91%EC%95%88%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">193</span>
+    </a><a class="lrow" data-region="부산" data-lat="35.155287" data-lng="129.11766" data-rank="194" href="https://map.naver.com/p/search/%EC%9D%B4%EB%A7%88%ED%8A%B824%EA%B4%91%EC%95%88%EB%A6%AC%EA%B5%BF-7%20%EB%B6%80%EC%82%B0%20%EC%88%98%EC%98%81%EA%B5%AC%20%20%EA%B4%91%EC%95%88%EB%A1%9C%2049%20(%EA%B4%91%EC%95%88%EB%8F%99)" target="_blank" rel="noopener">
+      <span class="rank-no ">195</span>
       <span class="lmain"><b class="wnm">이마트24광안리굿-7</b><span class="wad">부산 수영구  광안로 49 (광안동)</span><span class="lbadges"><span class="wcb cr">부산</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.554994" data-lng="126.935998" data-rank="193" href="https://map.naver.com/p/search/%EA%B7%B8%EB%9E%9C%EB%93%9C%EB%A7%88%ED%8A%B8%EC%95%9E%EA%B0%80%ED%8C%90%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%8B%A0%EC%B4%8C%EB%A1%9C%2094%20(%EB%85%B8%EA%B3%A0%EC%82%B0%EB%8F%99%2C%20%EA%B7%B8%EB%9E%9C%EB%93%9C%ED%94%8C%EB%9D%BC%EC%9E%90)" target="_blank" rel="noopener">
-      <span class="rank-no ">194</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.554994" data-lng="126.935998" data-rank="195" href="https://map.naver.com/p/search/%EA%B7%B8%EB%9E%9C%EB%93%9C%EB%A7%88%ED%8A%B8%EC%95%9E%EA%B0%80%ED%8C%90%EC%A0%90%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%8B%A0%EC%B4%8C%EB%A1%9C%2094%20(%EB%85%B8%EA%B3%A0%EC%82%B0%EB%8F%99%2C%20%EA%B7%B8%EB%9E%9C%EB%93%9C%ED%94%8C%EB%9D%BC%EC%9E%90)" target="_blank" rel="noopener">
+      <span class="rank-no ">196</span>
       <span class="lmain"><b class="wnm">그랜드마트앞가판점</b><span class="wad">서울특별시 마포구 신촌로 94 (노고산동, 그랜드플라자)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.582344" data-lng="127.02048" data-rank="194" href="https://map.naver.com/p/search/%ED%95%9C%EC%96%91%EC%8A%88%ED%8D%BC%EB%B3%B5%EA%B6%8C%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%20%EC%A7%80%EB%B4%89%EB%A1%9C24%EA%B8%B8%2065%20(%EB%B3%B4%EB%AC%B8%EB%8F%995%EA%B0%80)" target="_blank" rel="noopener">
-      <span class="rank-no ">195</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.582344" data-lng="127.02048" data-rank="196" href="https://map.naver.com/p/search/%ED%95%9C%EC%96%91%EC%8A%88%ED%8D%BC%EB%B3%B5%EA%B6%8C%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%20%EC%A7%80%EB%B4%89%EB%A1%9C24%EA%B8%B8%2065%20(%EB%B3%B4%EB%AC%B8%EB%8F%995%EA%B0%80)" target="_blank" rel="noopener">
+      <span class="rank-no ">197</span>
       <span class="lmain"><b class="wnm">한양슈퍼복권</b><span class="wad">서울특별시 성북구  지봉로24길 65 (보문동5가)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="서울" data-lat="37.591021" data-lng="127.01114" data-rank="195" href="https://map.naver.com/p/search/%ED%96%89%EB%B3%B5%EC%8A%88%ED%8D%BC(%EB%94%94%EC%A7%80%ED%84%B8%ED%94%84%EB%9D%BC%EC%9E%90)%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%EB%8F%99%EC%86%8C%EB%AC%B8%EB%A1%9C%2049%20(%EB%8F%99%EC%86%8C%EB%AC%B8%EB%8F%994%EA%B0%80)" target="_blank" rel="noopener">
-      <span class="rank-no ">196</span>
+    </a><a class="lrow" data-region="서울" data-lat="37.591021" data-lng="127.01114" data-rank="197" href="https://map.naver.com/p/search/%ED%96%89%EB%B3%B5%EC%8A%88%ED%8D%BC(%EB%94%94%EC%A7%80%ED%84%B8%ED%94%84%EB%9D%BC%EC%9E%90)%20%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%EB%8F%99%EC%86%8C%EB%AC%B8%EB%A1%9C%2049%20(%EB%8F%99%EC%86%8C%EB%AC%B8%EB%8F%994%EA%B0%80)" target="_blank" rel="noopener">
+      <span class="rank-no ">198</span>
       <span class="lmain"><b class="wnm">행복슈퍼(디지털프라자)</b><span class="wad">서울특별시 성북구 동소문로 49 (동소문동4가)</span><span class="lbadges"><span class="wcb cr">서울</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="전북" data-lat="35.852907" data-lng="127.105804" data-rank="196" href="https://map.naver.com/p/search/%EB%8F%99%EC%95%84%EC%A0%84%EC%97%85%EC%82%AC%20%EC%A0%84%EB%9D%BC%EB%B6%81%EB%8F%84%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%20%EA%B8%B0%EB%A6%B0%EB%8C%80%EB%A1%9C%20691-2%20(%ED%8C%94%EB%B3%B5%EB%8F%992%EA%B0%80)" target="_blank" rel="noopener">
-      <span class="rank-no ">197</span>
+    </a><a class="lrow" data-region="전북" data-lat="35.852907" data-lng="127.105804" data-rank="198" href="https://map.naver.com/p/search/%EB%8F%99%EC%95%84%EC%A0%84%EC%97%85%EC%82%AC%20%EC%A0%84%EB%9D%BC%EB%B6%81%EB%8F%84%20%EC%A0%84%EC%A3%BC%EC%8B%9C%20%EB%8D%95%EC%A7%84%EA%B5%AC%20%20%EA%B8%B0%EB%A6%B0%EB%8C%80%EB%A1%9C%20691-2%20(%ED%8C%94%EB%B3%B5%EB%8F%992%EA%B0%80)" target="_blank" rel="noopener">
+      <span class="rank-no ">199</span>
       <span class="lmain"><b class="wnm">동아전업사</b><span class="wad">전라북도 전주시 덕진구  기린대로 691-2 (팔복동2가)</span><span class="lbadges"><span class="wcb cr">전북</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="강원" data-lat="37.319632" data-lng="127.96207" data-rank="197" href="https://map.naver.com/p/search/%EB%8C%80%EB%B3%B5%EB%A1%9C%EB%98%90%20%EA%B0%95%EC%9B%90%20%EC%9B%90%EC%A3%BC%EC%8B%9C%20%20%EB%82%98%EB%B9%84%ED%97%88%EB%A6%AC%EA%B8%B8%20120-19%20(%EA%B4%80%EC%84%A4%EB%8F%99)" target="_blank" rel="noopener">
-      <span class="rank-no ">198</span>
-      <span class="lmain"><b class="wnm">대복로또</b><span class="wad">강원 원주시  나비허리길 120-19 (관설동)</span><span class="lbadges"><span class="wcb cr">강원</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
-      <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.108306" data-lng="126.871242" data-rank="198" href="https://map.naver.com/p/search/GS25%ED%8C%94%ED%83%84%ED%95%B4%EC%B0%BD%EB%A6%AC%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%ED%99%94%EC%84%B1%EC%8B%9C%20%ED%8C%94%ED%83%84%EB%A9%B4%203.1%EB%A7%8C%EC%84%B8%EB%A1%9C%20655%20(%ED%95%B4%EC%B0%BD%EB%A6%AC)" target="_blank" rel="noopener">
-      <span class="rank-no ">199</span>
-      <span class="lmain"><b class="wnm">GS25팔탄해창리점</b><span class="wad">경기도 화성시 팔탄면 3.1만세로 655 (해창리)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
-      <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
-    </a><a class="lrow" data-region="경기" data-lat="37.210533" data-lng="127.068209" data-rank="199" href="https://map.naver.com/p/search/%EB%8F%99%ED%83%84%EB%B0%98%EC%86%A1%EB%B3%B5%EA%B6%8C%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%ED%99%94%EC%84%B1%EC%8B%9C%20%EB%8F%99%ED%83%84%EB%B0%98%EC%86%A13%EA%B8%B8%2068%20(%EB%B0%98%EC%86%A1%EB%8F%99)" target="_blank" rel="noopener">
+    </a><a class="lrow" data-region="강원" data-lat="37.319632" data-lng="127.96207" data-rank="199" href="https://map.naver.com/p/search/%EB%8C%80%EB%B3%B5%EB%A1%9C%EB%98%90%20%EA%B0%95%EC%9B%90%20%EC%9B%90%EC%A3%BC%EC%8B%9C%20%20%EB%82%98%EB%B9%84%ED%97%88%EB%A6%AC%EA%B8%B8%20120-19%20(%EA%B4%80%EC%84%A4%EB%8F%99)" target="_blank" rel="noopener">
       <span class="rank-no ">200</span>
-      <span class="lmain"><b class="wnm">동탄반송복권</b><span class="wad">경기도 화성시 동탄반송3길 68 (반송동)</span><span class="lbadges"><span class="wcb cr">경기</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
+      <span class="lmain"><b class="wnm">대복로또</b><span class="wad">강원 원주시  나비허리길 120-19 (관설동)</span><span class="lbadges"><span class="wcb cr">강원</span><span class="wcb c1">1등 1</span><span class="wcb c2">2등 1</span></span></span>
       <span class="lright"><span class="ldist"></span><span class="wgo">지도 →</span></span>
     </a></div>
     <p class="disc" style="margin-top:14px;color:var(--faint);font-size:12px">출처: 동행복권 당첨판매점. 현재 수집된 회차 기준 집계이며, 회차가 갱신되면 함께 업데이트됩니다. 지도는 네이버 지도 검색으로 연결됩니다.</p>

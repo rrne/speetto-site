@@ -94,7 +94,7 @@ function cardHTML(g) {
   const ship = g.shipmentRate == null ? 0 : g.shipmentRate;
   const sc = g.recommendScore, scP = sc == null ? 0 : Math.min(100, sc);
   const ddInfo = (() => { const d = dday(g.saleEndDate); return d && !d.over ? ` · <b class="dday${d.soon ? " soon" : ""}">${d.txt}</b>` : ""; })();
-  return `<div class="card ${TCLASS[g.typeCd] || ""}">
+  return `<div class="card ${TCLASS[g.typeCd] || ""} clickable" data-href="/${detailSlug(g)}">
     <div class="chead">
       <div class="title">
         <span class="gname ${CCLASS[g.typeCd] || ""}">${LOGO_MARK}${g.typeName}</span>
@@ -115,7 +115,7 @@ function cardHTML(g) {
         ${rankRow(3, g.rank3, "rk3")}
       </div>
       <div class="cfoot">
-        <div class="info">1등 <b>${g.rank1 && g.rank1.prize ? g.rank1.prize : "-"}</b><br>판매기한 <b>${g.saleEndDate || "-"}</b>${ddInfo}</div>
+        <div class="info">1등 <b class="pz">${g.rank1 && g.rank1.prize ? g.rank1.prize : "-"}</b><br>판매기한 <b>${g.saleEndDate || "-"}</b>${ddInfo}</div>
         <div class="rec">
           <div class="meta2"><div class="t">추천 지수</div><div class="s" style="color:${scoreColor(sc)}">${sc == null ? "-" : sc}</div></div>
           <div class="gauge" style="--p:${scP};--g:${scoreColor(sc)}"><span>${sc == null ? "-" : Math.round(scP)}</span></div>
@@ -323,6 +323,40 @@ function prizeSection(typeCd, name) {
     <p class="lead" style="margin-top:12px">${name}의 <b>전체 당첨 확률은 약 ${p.oddsAll}</b>(꽝 포함)이며, 한 세트 <b>${p.issue}</b>가 발행되고 당첨금 지급률은 판매액의 <b>${p.payout}</b>입니다.</p>`;
 }
 
+// 복권 당첨금 기타소득세(추정): 5만 원 이하 비과세 · 3억 원 이하 22% · 초과분 33%
+function taxOf(won) {
+  if (!(won > 50000)) return 0;
+  if (won <= 3e8) return won * 0.22;
+  return 3e8 * 0.22 + (won - 3e8) * 0.33;
+}
+// 숫자(원) → "7억 300만 원"·"1,000만 원"·"4,000원" 형태의 한국식 표기
+function wonKor(n) {
+  n = Math.round(n);
+  if (n < 1e4) return n.toLocaleString("ko-KR") + "원";
+  const eok = Math.floor(n / 1e8);
+  const man = Math.floor((n % 1e8) / 1e4);
+  let s = "";
+  if (eok) s += eok + "억 ";
+  if (man) s += man.toLocaleString("ko-KR") + "만 ";
+  return s.trim() + " 원";
+}
+// 등수별 당첨금·세금·예상 실수령액 표 (상세 페이지 전용)
+function takeHomeSection(typeCd, name) {
+  const p = PRIZE[typeCd];
+  if (!p) return "";
+  const rows = p.rows.map((r) => {
+    const won = wonOf(r[1]);
+    if (!isFinite(won)) return `<tr><td class="tg">${r[0]}</td><td>${r[1]}</td><td>-</td><td class="tprize">-</td></tr>`;
+    const tax = taxOf(won), net = won - tax;
+    const taxTxt = tax <= 0 ? "비과세" : "약 " + wonKor(tax);
+    const netTxt = (tax > 0 ? "약 " : "") + wonKor(net);
+    return `<tr><td class="tg">${r[0]}</td><td>${r[1]}</td><td>${taxTxt}</td><td class="tprize">${netTxt}</td></tr>`;
+  }).join("");
+  return `<div class="section-h" style="margin-top:6px"><h2>${name} 등수별 당첨금 · 예상 실수령액</h2><span class="desc">세금 제외 후 추정</span></div>
+    <div class="itable-wrap"><table class="itable"><thead><tr><th>등위</th><th>당첨금</th><th>세금(추정)</th><th>실수령(추정)</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="disc" style="margin-top:10px;color:var(--faint);font-size:12px">※ 기타소득세 기준(5만 원 이하 비과세 · 3억 원 이하 22% · 3억 원 초과분 33%)으로 계산한 추정치입니다. 실제 수령액과 다를 수 있어요. 자세한 내용은 <a href="/guide-tax">당첨금 세금 가이드</a>를 참고하세요.</p>`;
+}
+
 function gamePage(typeCd) {
   const m = TYPE_META[typeCd];
   const name = ({ SP2000: "스피또2000", SP1000: "스피또1000", SP500: "스피또500" })[typeCd];
@@ -454,6 +488,11 @@ ${siteFooter("본 사이트는 동행복권과 무관한 비공식 정보 제공
 <script>
   window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');
   document.querySelectorAll('ins.adsbygoogle').forEach(function(){try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});
+  // 회차 카드 아무 곳이나 클릭 → 상세 회차로 이동 (버튼·링크 제외)
+  document.addEventListener('click',function(e){
+    if(e.target.closest('button,a,label,input'))return;
+    var c=e.target.closest('.card[data-href]'); if(c)location.href=c.dataset.href;
+  });
 </script>
 </body>
 </html>`;
@@ -1057,6 +1096,8 @@ ${STYLE}
         <tr><td class="tg">판매기한</td><td>${g.saleEndDate || "-"}</td></tr>
         <tr><td class="tg">지급기한(당첨금 수령)</td><td>${g.giveEndDate || "-"}</td></tr>
       </tbody></table></div>
+
+      ${takeHomeSection(g.typeCd, name)}
 
       ${adUnit()}
 
