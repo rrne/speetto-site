@@ -9,3 +9,10 @@ dist/
 
 # 당첨판매점 수집 중간 산출물(빌드시 재생성)
 stores.json
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
